@@ -1,17 +1,18 @@
 import { wait } from '@/utils';
 
-const initiallized = false;
+let initiallized = false;
+let go: Go;
 
-export async function initializeWasm(url: string): Promise<void> {
+export async function initializeWasm(url: string): Promise<Go | null> {
   if (initiallized) {
-    return;
+    return null;
   }
 
   if (typeof window === 'undefined') {
-    return Promise.resolve();
+    return Promise.resolve(null);
   }
 
-  const go = new Go();
+  go = new Go();
   if ('instantiateStreaming' in WebAssembly) {
     const wasm = await WebAssembly.instantiateStreaming(
       fetch(url),
@@ -26,4 +27,14 @@ export async function initializeWasm(url: string): Promise<void> {
   }
 
   await wait(100);
+
+  return go;
+}
+
+export function reset() {
+  initiallized = false;
+}
+
+export function getGO() {
+  return go;
 }

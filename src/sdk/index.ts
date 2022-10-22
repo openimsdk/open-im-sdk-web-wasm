@@ -1,8 +1,8 @@
+import { initDatabaseAPI } from '@/api';
+import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
-import { initDatabaseAPI } from '../api';
-import { initializeWasm } from './initialize';
-import Emitter from '../utils/emitter';
 import { WSEvent } from '../types';
+import { getGO, initializeWasm } from './initialize';
 
 import {
   AdvancedMsgParams,
@@ -36,6 +36,10 @@ async function _invoker(
 
   let response: { data?: any } = {};
   try {
+    if (!getGO() || getGO().exited) {
+      throw 'wasm exist already, fail to run';
+    }
+
     let data = await func(...args);
     if (processor) {
       console.info(

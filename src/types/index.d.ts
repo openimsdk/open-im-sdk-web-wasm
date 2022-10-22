@@ -148,6 +148,7 @@ declare global {
     exec: (sql: string) => Promise<any>;
   }
   class Go {
+    exited: boolean;
     importObject: WebAssembly.Imports;
     run: (instance: WebAssembly.Instance) => Promise<void>;
   }
