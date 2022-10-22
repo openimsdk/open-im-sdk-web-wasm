@@ -1,6 +1,7 @@
 import { RPC, RPCMessageEvent } from 'rpc-shooter';
 import {
   init,
+  close,
   // message
   getMessage,
   getMultipleMessage,
@@ -65,6 +66,7 @@ const rpc = new RPC({
 });
 
 rpc.registerMethod('initDB', init);
+rpc.registerMethod('close', close);
 
 rpc.registerMethod('getMessage', getMessage);
 rpc.registerMethod('getMultipleMessage', getMultipleMessage);

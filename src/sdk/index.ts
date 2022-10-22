@@ -108,8 +108,8 @@ class SDK extends Emitter {
 
     return await window.login(operationID, params.userID, params.token);
   }
-  async logout() {
-    return await _invoker('logout', window.logout, []);
+  async logout(operationID = uuidv4()) {
+    return await _invoker('logout', window.logout, [operationID]);
   }
   async getAllConversationList(operationID = uuidv4()) {
     return await _invoker(

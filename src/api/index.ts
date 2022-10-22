@@ -54,6 +54,7 @@ export function initDatabaseAPI(): void {
   }
 
   window.initDB = registeMethodOnWindow('initDB');
+  window.close = registeMethodOnWindow('close');
 
   // message
   window.getMessage = registeMethodOnWindow('getMessage');

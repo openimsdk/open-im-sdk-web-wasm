@@ -49,3 +49,15 @@ export async function init(userId: string, dir: string): Promise<string> {
     );
   }
 }
+
+export async function close() {
+  console.info('=> (database api) invoke close');
+
+  try {
+    const db = await getInstance();
+
+    db.close();
+  } catch (error) {
+    console.error(error);
+  }
+}
