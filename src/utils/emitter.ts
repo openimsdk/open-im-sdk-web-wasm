@@ -1,4 +1,5 @@
-import { CbEvents, WSEvent } from '../types';
+import { WSEvent } from '../types';
+import { CbEvents } from '../constant';
 
 interface Events {
   [key: string]: Cbfn[];

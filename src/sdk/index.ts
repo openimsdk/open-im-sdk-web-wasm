@@ -1,7 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
 import { initDatabaseAPI } from '@/api';
-import { initializeWasm, getGO } from './initialize';
 import Emitter from '@/utils/emitter';
+import { v4 as uuidv4 } from 'uuid';
+import { WSEvent } from '../types';
+import { getGO, initializeWasm } from './initialize';
+
 import {
   AdvancedMsgParams,
   AdvancedQuoteMsgParams,
@@ -11,15 +13,14 @@ import {
   GetHistoryMsgParams,
   GetOneCveParams,
   ImageMsgParams,
-  IMConfig,
   LoginParam,
   MarkC2CParams,
   MarkNotiParams,
   QuoteMsgParams,
   SendMsgParams,
-  WSEvent,
-  WsResponse,
-} from '@/types';
+} from '../types/params';
+
+import { IMConfig, WsResponse } from '../types/entity';
 
 async function _invoker(
   functionName: string,
