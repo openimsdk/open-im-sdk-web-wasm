@@ -1,4 +1,4 @@
-import { RequestFunc } from '@/constant';
+import { RequestFunc } from '../constant';
 
 type WsResponse = {
   event: RequestFunc;
