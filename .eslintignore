@@ -1,0 +1,4 @@
+src/types/global.d.ts
+assets/
+lib/
+wasm_exec.js
