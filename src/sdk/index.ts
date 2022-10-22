@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { initDatabaseAPI } from '@/api';
-import { initializeWasm } from './initialize';
+import { initializeWasm, getGO } from './initialize';
 import Emitter from '@/utils/emitter';
 import {
   AdvancedMsgParams,
@@ -35,6 +35,10 @@ async function _invoker(
 
   let response: { data?: any } = {};
   try {
+    if (!getGO() || getGO().exited) {
+      throw 'wasm exist already, fail to run';
+    }
+
     let data = await func(...args);
     if (processor) {
       console.info(
