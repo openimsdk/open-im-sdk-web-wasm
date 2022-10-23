@@ -102,13 +102,24 @@ export function decrConversationUnreadCount(
   conversationID: string,
   count: number
 ): QueryExecResult[] {
-  return db.exec(
+  db.exec('begin');
+  db.exec(
     `
         update local_conversations set 
             unread_count=unread_count-${count} 
         where conversation_id = '${conversationID}';
     `
   );
+  const current = db.exec(
+    `select unread_count from local_conversations where conversation_id = '${conversationID}'`
+  );
+
+  if (Number(current[0].values[0]) >= 0) {
+    return db.exec('commit');
+  } else {
+    db.exec('rollback');
+    throw 'decrConversationUnreadCount rollback for unread_count < 0 after exec';
+  }
 }
 
 export function batchInsertConversationList(
