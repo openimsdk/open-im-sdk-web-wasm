@@ -139,7 +139,7 @@ export function initDatabaseAPI(): void {
     'superGroupGetMultipleMessage'
   );
   window.superGroupGetNormalMinSeq = registeMethodOnWindow(
-    'getSuperGroupNormalMsgSeq'
+    'superGroupGetNormalMinSeq'
   );
   window.getSuperGroupNormalMsgSeq = registeMethodOnWindow(
     'getSuperGroupNormalMsgSeq'

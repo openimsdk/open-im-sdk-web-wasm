@@ -4,6 +4,7 @@ import {
   superGroupGetMessage as databaseSuperGroupGetMessage,
   superGroupGetMultipleMessage as databaseSuperGroupGetMultipleMessage,
   getSuperGroupNormalMsgSeq as databaseGetSuperGroupNormalMsgSeq,
+  superGroupGetNormalMinSeq as databaseSuperGroupGetNormalMinSeq,
   superGroupUpdateMessageTimeAndStatus as databaseSuperGroupUpdateMessageTimeAndStatus,
   superGroupUpdateMessage as databaseSuperGroupUpdateMessage,
   superGroupInsertMessage as databaseSuperGroupInsertMessage,
@@ -82,6 +83,26 @@ export async function getSuperGroupNormalMsgSeq(
     const db = await getInstance();
 
     const execResult = databaseGetSuperGroupNormalMsgSeq(db, groupID);
+
+    return formatResponse(execResult[0]?.values[0]?.[0]);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupGetNormalMinSeq(
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupGetNormalMinSeq(db, groupID);
 
     return formatResponse(execResult[0]?.values[0]?.[0]);
   } catch (e) {
