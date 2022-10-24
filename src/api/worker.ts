@@ -56,7 +56,7 @@ import {
   superGroupGetMessageList,
 } from '@/api/database';
 
-import getInstance from './database/instance';
+import { getInstance } from './database/instance';
 
 const ctx = self;
 const rpc = new RPC({

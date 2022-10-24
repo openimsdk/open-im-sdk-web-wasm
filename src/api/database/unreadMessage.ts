@@ -5,7 +5,7 @@ import {
   deleteConversationUnreadMessageList as databaseDeleteConversationUnreadMessageList,
 } from '@/sqls';
 import { convertToSnakeCaseObject, formatResponse } from '@/utils';
-import getInstance from './instance';
+import { getInstance } from './instance';
 
 export async function deleteConversationUnreadMessageList(
   conversationID: string,

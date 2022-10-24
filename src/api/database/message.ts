@@ -18,7 +18,7 @@ import {
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
-import getInstance from './instance';
+import { getInstance } from './instance';
 
 export async function getMessage(messageId: string): Promise<string> {
   try {

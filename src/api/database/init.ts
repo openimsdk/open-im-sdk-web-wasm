@@ -8,7 +8,7 @@ import {
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
-import getInstance from './instance';
+import { getInstance, resetInstance } from './instance';
 
 export async function init(userId: string, dir: string): Promise<string> {
   console.info(
@@ -54,10 +54,16 @@ export async function close() {
   console.info('=> (database api) invoke close');
 
   try {
-    const db = await getInstance();
+    await resetInstance();
 
-    db.close();
-  } catch (error) {
-    console.error(error);
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
   }
 }

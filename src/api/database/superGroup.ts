@@ -13,7 +13,7 @@ import {
   convertToSnakeCaseObject,
   convertObjectField,
 } from '@/utils';
-import getInstance from './instance';
+import { getInstance } from './instance';
 
 export async function getJoinedSuperGroupList(): Promise<string> {
   try {
