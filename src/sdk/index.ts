@@ -310,6 +310,10 @@ class SDK extends Emitter {
 let instance: SDK;
 
 export function getSDK(url = '/main.wasm'): SDK {
+  if (typeof window === 'undefined') {
+    return {} as SDK;
+  }
+
   if (instance) {
     return instance;
   }

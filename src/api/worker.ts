@@ -47,6 +47,7 @@ import {
   superGroupGetMessage,
   superGroupGetMultipleMessage,
   getSuperGroupNormalMsgSeq,
+  superGroupGetNormalMinSeq,
   superGroupUpdateMessageTimeAndStatus,
   superGroupUpdateMessage,
   superGroupInsertMessage,
@@ -123,6 +124,8 @@ rpc.registerMethod(
   superGroupGetMultipleMessage
 );
 rpc.registerMethod('getSuperGroupNormalMsgSeq', getSuperGroupNormalMsgSeq);
+rpc.registerMethod('superGroupGetNormalMinSeq', superGroupGetNormalMinSeq);
+
 rpc.registerMethod(
   'superGroupUpdateMessageTimeAndStatus',
   superGroupUpdateMessageTimeAndStatus

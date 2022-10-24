@@ -58,6 +58,19 @@ export function getSuperGroupNormalMsgSeq(
   );
 }
 
+export function superGroupGetNormalMinSeq(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  return db.exec(
+    `
+        select ifnull(min(seq),0) from local_sg_chat_logs_${groupID} where seq >0;
+    `
+  );
+}
+
 export function superGroupGetMessage(
   db: Database,
   groupID: string,
