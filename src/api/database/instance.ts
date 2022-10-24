@@ -1,14 +1,19 @@
-import initSqlJs, { Database } from '@jlongster/sql.js';
+import initSqlJs, { Database, SqlJsStatic } from '@jlongster/sql.js';
 import { SQLiteFS } from 'absurd-sql';
 import IndexedDBBackend from 'absurd-sql/dist/indexeddb-backend';
 
-async function InitializeDB(filePath: string) {
-  const SQL = await initSqlJs({ locateFile: () => '/sql-wasm.wasm' });
-  const sqlFS = new SQLiteFS(SQL.FS, new IndexedDBBackend());
+let instance: Promise<Database> | undefined;
+let SQL: SqlJsStatic | undefined;
 
-  SQL.register_for_idb(sqlFS);
-  SQL.FS.mkdir('/sql');
-  SQL.FS.mount(sqlFS, {}, '/sql');
+async function InitializeDB(filePath: string) {
+  if (!SQL) {
+    SQL = await initSqlJs({ locateFile: () => '/sql-wasm.wasm' });
+    const sqlFS = new SQLiteFS(SQL.FS, new IndexedDBBackend());
+
+    SQL.register_for_idb(sqlFS);
+    SQL.FS.mkdir('/sql');
+    SQL.FS.mount(sqlFS, {}, '/sql');
+  }
 
   const db = new SQL.Database(`/sql/${filePath}`, { filename: true });
   db.exec(`
@@ -18,8 +23,6 @@ async function InitializeDB(filePath: string) {
 
   return db;
 }
-
-let instance: Promise<Database> | undefined;
 
 export function getInstance(filePath?: string): Promise<Database> {
   if (instance) {
