@@ -21,7 +21,7 @@ async function InitializeDB(filePath: string) {
 
 let instance: Promise<Database> | undefined;
 
-function getInstance(filePath?: string): Promise<Database> {
+export function getInstance(filePath?: string): Promise<Database> {
   if (instance) {
     return instance;
   }
@@ -38,4 +38,13 @@ function getInstance(filePath?: string): Promise<Database> {
   return instance;
 }
 
-export default getInstance;
+export async function resetInstance() {
+  if (!instance) {
+    return;
+  }
+
+  const db = await instance;
+
+  db.close();
+  instance = undefined;
+}

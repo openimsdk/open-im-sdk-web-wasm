@@ -17,7 +17,7 @@ import {
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
-import getInstance from './instance';
+import { getInstance } from './instance';
 
 export async function superGroupGetMessage(
   groupID: string,
