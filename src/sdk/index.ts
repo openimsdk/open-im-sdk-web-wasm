@@ -1,4 +1,4 @@
-import { initDatabaseAPI } from '@/api';
+import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { WSEvent } from '../types';
@@ -91,6 +91,7 @@ class SDK extends Emitter {
       })}`
     );
 
+    await workerPromise;
     await this.wasmInitializedPromise;
     window.commonEventFunc(event => {
       try {
