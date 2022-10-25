@@ -167,3 +167,5 @@ export function initDatabaseAPI(): void {
   window.exec = registeMethodOnWindow('exec');
   window.getRowsModified = registeMethodOnWindow('getRowsModified');
 }
+
+export const workerPromise = rpc?.connect(5000);
