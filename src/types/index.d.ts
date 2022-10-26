@@ -161,3 +161,10 @@ export type WSEvent = {
   errMsg: string;
   operationID: string;
 };
+
+export enum SessionType {
+  SINGLECVE = 1,
+  GROUPCVE = 2,
+  SUPERGROUP = 3,
+  NOTIFICATION = 4,
+}
