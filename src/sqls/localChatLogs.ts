@@ -132,15 +132,18 @@ export function getMessageList(
   sessionType: number,
   count: number,
   startTime: number,
-  isReverse: boolean
+  isReverse: boolean,
+  loginUserID: string
 ): QueryExecResult[] {
+  const isSelf = loginUserID === sourceID;
   return db.exec(
     `
         select * from local_chat_logs
         where
             recv_id = "${sourceID}"
+            ${isSelf ? 'and' : 'or'}  send_id = "${sourceID}"
             and status <= 3
-            and send_time < ${startTime}
+            and send_time ${isReverse ? '>' : '<'} ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
@@ -153,13 +156,16 @@ export function getMessageListNoTime(
   sourceID: string,
   sessionType: number,
   count: number,
-  isReverse: boolean
+  isReverse: boolean,
+  loginUserID: string
 ): QueryExecResult[] {
+  const isSelf = loginUserID === sourceID;
   return db.exec(
     `
         select * from local_chat_logs
         where
             recv_id = "${sourceID}"
+            ${isSelf ? 'and' : 'or'}  send_id = "${sourceID}"
             and status <= 3
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
