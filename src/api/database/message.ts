@@ -247,7 +247,8 @@ export async function getMessageList(
   sessionType: number,
   count: number,
   startTime: number,
-  isReverse = false
+  isReverse = false,
+  loginUserID: string
 ): Promise<string> {
   try {
     const db = await getInstance();
@@ -258,7 +259,8 @@ export async function getMessageList(
       sessionType,
       count,
       startTime,
-      isReverse
+      isReverse,
+      loginUserID
     );
 
     return formatResponse(
