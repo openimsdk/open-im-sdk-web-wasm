@@ -2,7 +2,7 @@ import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { WSEvent } from '../types';
-import { getGO, initializeWasm } from './initialize';
+import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
 
 import {
   AdvancedMsgParams,
@@ -22,67 +22,82 @@ import {
 
 import { IMConfig, WsResponse } from '../types/entity';
 
-async function _invoker(
-  functionName: string,
-  func: (...args: any[]) => Promise<any>,
-  args: any[],
-  processor?: (data: string) => string
-) {
-  console.info(
-    `SDK => [OperationID:${
-      args[0]
-    }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`
-  );
-
-  let response: { data?: any } = {};
-  try {
-    if (!getGO() || getGO().exited) {
-      throw 'wasm exist already, fail to run';
-    }
-
-    let data = await func(...args);
-    if (processor) {
-      console.info(
-        `SDK => [OperationID:${
-          args[0]
-        }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
-          data
-        )}`
-      );
-      data = processor(data);
-    }
-    response = { data };
-  } catch (error) {
-    console.info(
-      `SDK => [OperationID:${
-        args[0]
-      }] (invoked by js) run ${functionName} with error ${JSON.stringify(
-        error
-      )}`
-    );
-  }
-
-  console.info(
-    `SDK => [OperationID:${
-      args[0]
-    }] (invoked by js) run ${functionName} with response ${JSON.stringify(
-      response
-    )}`
-  );
-
-  return response as WsResponse;
-}
-
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<any>;
+  private goExitPromise: Promise<void> | undefined;
+  private goExisted = false;
 
   constructor(url = '/main.wasm') {
     super();
 
     initDatabaseAPI();
     this.wasmInitializedPromise = initializeWasm(url);
+    this.goExitPromise = getGoExitPromsie();
+
+    if (this.goExitPromise) {
+      this.goExitPromise
+        .then(() => {
+          console.info('SDK => wasm exist');
+        })
+        .catch(err => {
+          console.info('SDK => wasm with error ', err);
+        })
+        .finally(() => {
+          this.goExisted = true;
+        });
+    }
   }
 
+  async _invoker(
+    functionName: string,
+    func: (...args: any[]) => Promise<any>,
+    args: any[],
+    processor?: (data: string) => string
+  ) {
+    console.info(
+      `SDK => [OperationID:${
+        args[0]
+      }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`
+    );
+
+    let response: { data?: any } = {};
+    try {
+      if (!getGO() || getGO().exited || this.goExisted) {
+        throw 'wasm exist already, fail to run';
+      }
+
+      let data = await func(...args);
+      if (processor) {
+        console.info(
+          `SDK => [OperationID:${
+            args[0]
+          }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
+            data
+          )}`
+        );
+        data = processor(data);
+      }
+      response = { data };
+    } catch (error) {
+      console.info(
+        `SDK => [OperationID:${
+          args[0]
+        }] (invoked by js) run ${functionName} with error ${JSON.stringify(
+          error
+        )}`
+      );
+    }
+
+    console.info(
+      `SDK => [OperationID:${
+        args[0]
+      }] (invoked by js) run ${functionName} with response ${JSON.stringify(
+        response
+      )}`
+    );
+
+    return response as WsResponse;
+  }
   async login(params: LoginParam, operationID = uuidv4()) {
     console.info(
       `SDK => (invoked by js) run login with args ${JSON.stringify({
@@ -115,27 +130,27 @@ class SDK extends Emitter {
     return await window.login(operationID, params.userID, params.token);
   }
   async logout(operationID = uuidv4()) {
-    return await _invoker('logout', window.logout, [operationID]);
+    return await this._invoker('logout', window.logout, [operationID]);
   }
   async getAllConversationList(operationID = uuidv4()) {
-    return await _invoker(
+    return await this._invoker(
       'getAllConversationList',
       window.getAllConversationList,
       [operationID]
     );
   }
   async getOneConversation(params: GetOneCveParams, operationID = uuidv4()) {
-    return await _invoker('getOneConversation', window.getOneConversation, [
-      operationID,
-      params.sessionType,
-      params.sourceID,
-    ]);
+    return await this._invoker(
+      'getOneConversation',
+      window.getOneConversation,
+      [operationID, params.sessionType, params.sourceID]
+    );
   }
   async getAdvancedHistoryMessageList(
     params: GetAdvancedHistoryMsgParams,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'getAdvancedHistoryMessageList',
       window.getAdvancedHistoryMessageList,
       [operationID, JSON.stringify(params)]
@@ -145,14 +160,14 @@ class SDK extends Emitter {
     params: GetHistoryMsgParams,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'getHistoryMessageList',
       window.getHistoryMessageList,
       [operationID, JSON.stringify(params)]
     );
   }
   async getGroupsInfo(params: string[], operationID = uuidv4()) {
-    return await _invoker('getGroupsInfo', window.getGroupsInfo, [
+    return await this._invoker('getGroupsInfo', window.getGroupsInfo, [
       operationID,
       JSON.stringify(params),
     ]);
@@ -161,24 +176,24 @@ class SDK extends Emitter {
     conversationID: string,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'deleteConversationFromLocalAndSvr',
       window.deleteConversationFromLocalAndSvr,
       [operationID, conversationID]
     );
   }
   async markC2CMessageAsRead(params: MarkC2CParams, operationID = uuidv4()) {
-    return await _invoker('markC2CMessageAsRead', window.markC2CMessageAsRead, [
-      operationID,
-      params.userID,
-      JSON.stringify(params.msgIDList),
-    ]);
+    return await this._invoker(
+      'markC2CMessageAsRead',
+      window.markC2CMessageAsRead,
+      [operationID, params.userID, JSON.stringify(params.msgIDList)]
+    );
   }
   async markMessageAsReadByConID(
     params: MarkNotiParams,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'markMessageAsReadByConID',
       window.markMessageAsReadByConID,
       [operationID, params.conversationID, JSON.stringify(params.msgIDList)]
@@ -188,7 +203,7 @@ class SDK extends Emitter {
     conversationID: string,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'markNotifyMessageHasRead',
       window.markMessageAsReadByConID,
       [operationID, conversationID, '[]']
@@ -198,16 +213,14 @@ class SDK extends Emitter {
     params: GetGroupMemberParams,
     operationID = uuidv4()
   ) {
-    return await _invoker('getGroupMemberList', window.getGroupMemberList, [
-      operationID,
-      params.groupID,
-      params.filter,
-      params.offset,
-      params.count,
-    ]);
+    return await this._invoker(
+      'getGroupMemberList',
+      window.getGroupMemberList,
+      [operationID, params.groupID, params.filter, params.offset, params.count]
+    );
   }
   async createTextMessage(text: string, operationID = uuidv4()) {
-    return await _invoker(
+    return await this._invoker(
       'createTextMessage',
       window.createTextMessage,
       [operationID, text],
@@ -218,7 +231,7 @@ class SDK extends Emitter {
     );
   }
   async createImageMessage(params: ImageMsgParams, operationID = uuidv4()) {
-    return await _invoker(
+    return await this._invoker(
       'createImageMessage',
       window.createImageMessageByURL,
       [
@@ -234,7 +247,7 @@ class SDK extends Emitter {
     );
   }
   async createCustomMessage(params: CustomMsgParams, operationID = uuidv4()) {
-    return await _invoker(
+    return await this._invoker(
       'createCustomMessage',
       window.createCustomMessage,
       [operationID, params.data, params.extension, params.description],
@@ -245,7 +258,7 @@ class SDK extends Emitter {
     );
   }
   async createQuoteMessage(params: QuoteMsgParams, operationID = uuidv4()) {
-    return await _invoker(
+    return await this._invoker(
       'createQuoteMessage',
       window.createQuoteMessage,
       [operationID, params.text, params.message],
@@ -259,7 +272,7 @@ class SDK extends Emitter {
     params: AdvancedQuoteMsgParams,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'createAdvancedQuoteMessage',
       window.createAdvancedQuoteMessage,
       [
@@ -278,7 +291,7 @@ class SDK extends Emitter {
     params: AdvancedMsgParams,
     operationID = uuidv4()
   ) {
-    return await _invoker(
+    return await this._invoker(
       'createAdvancedTextMessage',
       window.createAdvancedTextMessage,
       [operationID, params.text, JSON.stringify(params.messageEntityList)],
@@ -289,7 +302,7 @@ class SDK extends Emitter {
     );
   }
   async sendMessage(params: SendMsgParams, operationID = uuidv4()) {
-    return await _invoker('sendMessage', window.sendMessage, [
+    return await this._invoker('sendMessage', window.sendMessage, [
       operationID,
       params.message,
       params.recvID,
@@ -298,7 +311,7 @@ class SDK extends Emitter {
     ]);
   }
   async sendMessageNotOss(params: SendMsgParams, operationID = uuidv4()) {
-    return await _invoker('sendMessageNotOss', window.sendMessageNotOss, [
+    return await this._invoker('sendMessageNotOss', window.sendMessageNotOss, [
       operationID,
       params.message,
       params.recvID,

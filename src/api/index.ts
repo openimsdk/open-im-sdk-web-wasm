@@ -1,49 +1,81 @@
 import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
-import { RPCMessageEvent, RPC } from 'rpc-shooter';
+import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
+import { DatabaseErrorCode } from '@/constant';
 
-function init() {
+let rpc: RPC | undefined;
+let worker: Worker | undefined;
+
+function initWorker() {
   if (typeof window === 'undefined') {
     return;
   }
 
-  const worker = new Worker(new URL('./worker.js', import.meta.url));
+  worker = new Worker(new URL('./worker.js', import.meta.url));
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
   initBackend(worker);
 
-  const rpc = new RPC({
+  rpc = new RPC({
     event: new RPCMessageEvent({
       currentEndpoint: worker,
       targetEndpoint: worker,
     }),
   });
-
-  return rpc;
 }
 
-const rpc = init();
+function resetWorker() {
+  if (rpc) {
+    rpc.destroy();
+    rpc = undefined;
+  }
+  if (worker) {
+    worker.terminate();
+    worker = undefined;
+  }
+}
+
+initWorker();
 
 function registeMethodOnWindow(name: string) {
   console.info(`=> (database api) registe ${name}`);
 
   return async (...args: unknown[]) => {
+    if (!rpc || !worker) {
+      initWorker();
+    }
+
     if (!rpc) {
       return;
     }
 
-    console.info(
-      `=> (invoked by go wasm) run ${name} method with args ${JSON.stringify(
-        args
-      )}`
-    );
-    const response = await rpc.invoke(name, ...args);
-    console.info(
-      `=> (invoked by go wasm) run ${name} method with response `,
-      JSON.stringify(response)
-    );
+    try {
+      console.info(
+        `=> (invoked by go wasm) run ${name} method with args ${JSON.stringify(
+          args
+        )}`
+      );
+      const response = await rpc.invoke(name, ...args, { timeout: 5000 });
+      console.info(
+        `=> (invoked by go wasm) run ${name} method with response `,
+        JSON.stringify(response)
+      );
 
-    return JSON.stringify(response);
+      return JSON.stringify(response);
+    } catch (error: unknown) {
+      // defined in rpc-shooter
+      if ((error as RPCError).code === -32300) {
+        resetWorker();
+
+        return JSON.stringify({
+          data: '',
+          errCode: DatabaseErrorCode.ErrorDBTimeout,
+          errMsg: 'database maybe damaged',
+        });
+      }
+
+      throw error;
+    }
   };
 }
 
