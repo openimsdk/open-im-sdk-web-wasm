@@ -1,5 +1,6 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { SessionType } from '@/types';
 
 export type ClientMessage = { [key: string]: any };
 
@@ -159,7 +160,9 @@ export function getMessageListNoTime(
     `
         select * from local_chat_logs
         where
-            recv_id = "${sourceID}"
+            ${
+              sessionType === SessionType.NOTIFICATION ? 'send_id' : 'recv_id'
+            } = "${sourceID}"
             and status <= 3
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
