@@ -154,9 +154,10 @@ export function getMessageListNoTime(
   sourceID: string,
   sessionType: number,
   count: number,
-  isReverse: boolean
+  isReverse: boolean,
+  loginUserID: string
 ): QueryExecResult[] {
-  const isSelf = false;
+  const isSelf = loginUserID === sourceID;
   return db.exec(
     `
         select * from local_chat_logs

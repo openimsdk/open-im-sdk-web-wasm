@@ -213,7 +213,8 @@ export async function getMessageListNoTime(
   sourceID: string,
   sessionType: number,
   count: number,
-  isReverse = false
+  isReverse = false,
+  loginUserID = ''
 ): Promise<string> {
   try {
     const db = await getInstance();
@@ -223,7 +224,8 @@ export async function getMessageListNoTime(
       sourceID,
       sessionType,
       count,
-      isReverse
+      isReverse,
+      loginUserID
     );
 
     return formatResponse(
