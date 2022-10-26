@@ -160,9 +160,7 @@ export function getMessageListNoTime(
   return db.exec(
     ` select * from local_chat_logs
         where
-            ${
-              sessionType === SessionType.NOTIFICATION ? 'send_id' : 'recv_id'
-            } = "${sourceID}"
+            recv_id = "${sourceID}"
             ${isSelf ? 'and' : 'or'} send_id = "${sourceID}"
             and status <= 3
             and session_type = ${sessionType}
