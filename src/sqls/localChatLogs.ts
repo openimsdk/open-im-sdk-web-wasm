@@ -132,15 +132,18 @@ export function getMessageList(
   sessionType: number,
   count: number,
   startTime: number,
-  isReverse: boolean
+  isReverse: boolean,
+  loginUserID: string
 ): QueryExecResult[] {
+  const isSelf = loginUserID === sourceID;
   return db.exec(
     `
         select * from local_chat_logs
         where
             recv_id = "${sourceID}"
+            ${isSelf ? 'and' : 'or'}  send_id = "${sourceID}"
             and status <= 3
-            and send_time < ${startTime}
+            and send_time ${isReverse ? '>' : '<'} ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
@@ -153,17 +156,75 @@ export function getMessageListNoTime(
   sourceID: string,
   sessionType: number,
   count: number,
-  isReverse: boolean
+  isReverse: boolean,
+  loginUserID: string
 ): QueryExecResult[] {
+  const isSelf = loginUserID === sourceID;
   return db.exec(
     `
         select * from local_chat_logs
         where
             recv_id = "${sourceID}"
+            ${isSelf ? 'and' : 'or'}  send_id = "${sourceID}"
             and status <= 3
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
+    `
+  );
+}
+
+export function messageIfExists(
+  db: Database,
+  clientMsgID: string
+): QueryExecResult[] {
+  return db.exec(
+    `
+        select count(*) from local_chat_logs
+        where 
+            client_msg_id = "${clientMsgID}";
+    `
+  );
+}
+
+export function isExistsInErrChatLogBySeq(
+  db: Database,
+  seq: number
+): QueryExecResult[] {
+  return db.exec(
+    `
+        select count(*) from local_err_chat_logs
+        where 
+            seq = ${seq};
+    `
+  );
+}
+
+export function messageIfExistsBySeq(
+  db: Database,
+  seq: number
+): QueryExecResult[] {
+  return db.exec(
+    `
+        select count(*) from local_chat_logs
+        where 
+            seq = ${seq};
+    `
+  );
+}
+export function updateGroupMessageHasRead(
+  db: Database,
+  clientMsgID: string[],
+  sessionType: number
+): QueryExecResult[] {
+  const values = clientMsgID.map(v => `'${v}'`).join(',');
+  return db.exec(
+    `  
+        update local_chat_logs
+        set is_read =1 
+        where session_type=${sessionType} 
+            and client_msg_id in (${values})    
+        
     `
   );
 }

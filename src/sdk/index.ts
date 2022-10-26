@@ -11,7 +11,7 @@ import {
   GetAdvancedHistoryMsgParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
-  GetOneCveParams,
+  GetOneConversationParams,
   ImageMsgParams,
   LoginParam,
   MarkC2CParams,
