@@ -158,13 +158,15 @@ export function getMessageListNoTime(
 ): QueryExecResult[] {
   const isSelf = false;
   return db.exec(
-    ` select * from local_chat_logs
-        where
-            recv_id = "${sourceID}"
-            ${isSelf ? 'and' : 'or'} send_id = "${sourceID}"
-            and status <= 3
-            and session_type = ${sessionType}
-        order by send_time ${isReverse ? 'asc' : 'desc'}
-        limit ${count}; `
+    `
+        select * from local_chat_logs
+          where
+              recv_id = "${sourceID}"
+              ${isSelf ? 'and' : 'or'} send_id = "${sourceID}"
+              and status <= 3
+              and session_type = ${sessionType}
+          order by send_time ${isReverse ? 'asc' : 'desc'}
+          limit ${count};    
+          `
   );
 }
