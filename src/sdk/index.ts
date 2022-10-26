@@ -139,10 +139,7 @@ class SDK extends Emitter {
       [operationID]
     );
   }
-  async getOneConversation(
-    params: GetOneConversationParams,
-    operationID = uuidv4()
-  ) {
+  async getOneConversation(params: GetOneCveParams, operationID = uuidv4()) {
     return await this._invoker(
       'getOneConversation',
       window.getOneConversation,
