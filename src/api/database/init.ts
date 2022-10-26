@@ -19,6 +19,8 @@ export async function init(userId: string, dir: string): Promise<string> {
   );
 
   try {
+    console.time('SDK => (performance measure) init database used ');
+
     const db = await getInstance(`${dir}${userId}.sqlite`);
     const results: QueryExecResult[][] = [];
     const execResultLocalChatLogs = localChatLogs(db);
@@ -47,6 +49,8 @@ export async function init(userId: string, dir: string): Promise<string> {
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
     );
+  } finally {
+    console.timeEnd('SDK => (performance measure) init database used ');
   }
 }
 

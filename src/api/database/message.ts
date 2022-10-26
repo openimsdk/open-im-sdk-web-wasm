@@ -11,6 +11,10 @@ import {
   batchInsertMessageList as databaseBatchInsertMessageList,
   getMessageList as databaseGetMesageList,
   getMessageListNoTime as databaseGetMessageListNoTime,
+  messageIfExists as databaseMessageIfExists,
+  isExistsInErrChatLogBySeq as databaseIsExistsInErrChatLogBySeq,
+  messageIfExistsBySeq as databaseMessageIfExistsBySeq,
+  updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -262,6 +266,85 @@ export async function getMessageList(
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
     );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function messageIfExists(clientMsgID: string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseMessageIfExists(db, clientMsgID);
+
+    return formatResponse(execResult.length !== 0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function isExistsInErrChatLogBySeq(seq: number): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseIsExistsInErrChatLogBySeq(db, seq);
+
+    return formatResponse(execResult.length !== 0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function messageIfExistsBySeq(seq: number): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseMessageIfExistsBySeq(db, seq);
+
+    return formatResponse(execResult.length !== 0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateGroupMessageHasRead(
+  clientMsgID: string[],
+  sessionType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseUpdateGroupMessageHasRead(
+      db,
+      clientMsgID,
+      sessionType
+    );
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

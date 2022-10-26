@@ -20,6 +20,9 @@ declare global {
     batchInsertMessageList: DatabaseApi;
     getMessageList: DatabaseApi;
     getMessageListNoTime: DatabaseApi;
+    messageIfExists: DatabaseApi;
+    isExistsInErrChatLogBySeq: DatabaseApi;
+    messageIfExistsBySeq: DatabaseApi;
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;

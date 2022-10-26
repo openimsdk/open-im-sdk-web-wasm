@@ -2,6 +2,7 @@ import { wait } from '@/utils';
 
 let initiallized = false;
 let go: Go;
+let goExitPromise: Promise<void> | undefined;
 
 export async function initializeWasm(url: string): Promise<Go | null> {
   if (initiallized) {
@@ -23,7 +24,7 @@ export async function initializeWasm(url: string): Promise<Go | null> {
     const bytes = await fetch(url).then(resp => resp.arrayBuffer());
 
     const wasm = await WebAssembly.instantiate(bytes, go.importObject);
-    go.run(wasm.instance);
+    goExitPromise = go.run(wasm.instance);
   }
 
   await wait(100);
@@ -37,4 +38,8 @@ export function reset() {
 
 export function getGO() {
   return go;
+}
+
+export function getGoExitPromsie() {
+  return goExitPromise;
 }
