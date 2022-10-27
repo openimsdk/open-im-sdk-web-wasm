@@ -2,7 +2,7 @@ import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
 // @ts-ignore
-// import IMWorker from './worker?worker';
+import IMWorker from './worker?worker';
 
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
@@ -12,8 +12,8 @@ function initWorker() {
     return;
   }
 
-  // worker = new IMWorker();
-  worker = new Worker(new URL('./worker.js', import.meta.url));
+  worker = new IMWorker();
+//   worker = new Worker(new URL('./worker.js', import.meta.url));
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
@@ -206,6 +206,53 @@ export function initDatabaseAPI(): void {
   // debug
   window.exec = registeMethodOnWindow('exec');
   window.getRowsModified = registeMethodOnWindow('getRowsModified');
+
+  // black
+  window.getBlackList = registeMethodOnWindow('getBlackList');
+  window.getBlackListUserID = registeMethodOnWindow('getBlackListUserID');
+//   window.getFriendInfoByFriendUserID = registeMethodOnWindow(
+//     'getFriendInfoByFriendUserID'
+//   );
+  window.getBlackInfoList = registeMethodOnWindow('getBlackInfoList');
+  window.insertBlack = registeMethodOnWindow('insertBlack');
+  window.deleteBlack = registeMethodOnWindow('deleteBlack');
+  window.updateBlack = registeMethodOnWindow('updateBlack');
+
+  //friend_request
+  window.insertFriendRequest = registeMethodOnWindow('insertFriendRequest');
+  window.deleteFriendRequestBothUserID = registeMethodOnWindow(
+    'deleteFriendRequestBothUserID'
+  );
+  window.updateFriendRequest = registeMethodOnWindow('updateFriendRequest');
+  window.getRecvFriendApplication = registeMethodOnWindow(
+    'getRecvFriendApplication'
+  );
+  window.getSendFriendApplication = registeMethodOnWindow(
+    'getSendFriendApplication'
+  );
+  window.getFriendApplicationByBothID = registeMethodOnWindow(
+    'getFriendApplicationByBothID'
+  );
+
+  //friend
+  window.insertFriend = registeMethodOnWindow('insertFriend');
+  window.deleteFriend = registeMethodOnWindow('deleteFriend');
+  window.updateFriend = registeMethodOnWindow('updateFriend');
+  window.getAllFriendList = registeMethodOnWindow('getAllFriendList');
+  window.searchFriendList = registeMethodOnWindow('searchFriendList');
+  window.getFriendInfoByFriendUserID = registeMethodOnWindow(
+    'getFriendInfoByFriendUserID'
+  );
+  window.getFriendInfoList = registeMethodOnWindow('getFriendInfoList');
+
+  //groups
+  window.insertGroup = registeMethodOnWindow('insertGroup');
+  window.deleteGroup = registeMethodOnWindow('deleteGroup');
+  window.updateGroup = registeMethodOnWindow('updateGroup');
+  window.getJoinedGroupList = registeMethodOnWindow('getJoinedGroupList');
+  window.getAllGroupInfoByGroupIDOrGroupName = registeMethodOnWindow(
+    'getAllGroupInfoByGroupIDOrGroupName'
+  );
 }
 
 export const workerPromise = rpc?.connect(5000);

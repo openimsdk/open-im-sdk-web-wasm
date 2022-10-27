@@ -54,6 +54,41 @@ import {
   superGroupBatchInsertMessageList,
   superGroupGetMessageListNoTime,
   superGroupGetMessageList,
+  //black
+  getBlackList,
+  getBlackListUserID,
+  getFriendInfoByFriendUserID,
+  getBlackInfoList,
+  insertBlack,
+  deleteBlack,
+  updateBlack,
+
+  //friend_request
+  insertFriendRequest,
+  deleteFriendRequestBothUserID,
+  updateFriendRequest,
+  getRecvFriendApplication,
+  getSendFriendApplication ,
+  getFriendApplicationByBothID,
+
+ //gtoups
+    insertGroup ,
+    deleteGroup ,
+    updateGroup ,
+    getJoinedGroupList ,
+    getAllGroupInfoByGroupIDOrGroupName ,
+
+
+//friend
+insertFriend ,
+deleteFriend ,
+updateFriend ,
+getAllFriendList ,
+searchFriendList ,
+getFriendInfoList ,
+
+
+
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -137,6 +172,42 @@ rpc.registerMethod(
   superGroupBatchInsertMessageList
 );
 rpc.registerMethod('superGroupGetMessageList', superGroupGetMessageList);
+
+//black
+rpc.registerMethod('getBlackList', getBlackList);
+rpc.registerMethod('getBlackListUserID', getBlackListUserID);
+// rpc.registerMethod('getFriendInfoByFriendUserID', getFriendInfoByFriendUserID);
+rpc.registerMethod('getBlackInfoList', getBlackInfoList);
+rpc.registerMethod('insertBlack', insertBlack);
+rpc.registerMethod('deleteBlack', deleteBlack);
+rpc.registerMethod('updateBlack', updateBlack);
+
+
+//friend_request
+rpc.registerMethod('insertFriendRequest', insertFriendRequest);
+rpc.registerMethod('deleteFriendRequestBothUserID', deleteFriendRequestBothUserID);
+rpc.registerMethod('updateFriendRequest', updateFriendRequest);
+rpc.registerMethod('getRecvFriendApplication', getRecvFriendApplication);
+rpc.registerMethod('getSendFriendApplication', getSendFriendApplication);
+rpc.registerMethod('getFriendApplicationByBothID', getFriendApplicationByBothID);
+
+//groups
+rpc.registerMethod('insertGroup', insertGroup);
+rpc.registerMethod('deleteGroup', deleteGroup);
+rpc.registerMethod('updateGroup', updateGroup);
+rpc.registerMethod('getJoinedGroupList', getJoinedGroupList);
+rpc.registerMethod('getAllGroupInfoByGroupIDOrGroupName', getAllGroupInfoByGroupIDOrGroupName);
+
+//friend
+rpc.registerMethod('insertFriend', insertFriend);
+rpc.registerMethod('deleteFriend', deleteFriend);
+rpc.registerMethod('updateFriend', updateFriend);
+rpc.registerMethod('getAllFriendList', getAllFriendList);
+rpc.registerMethod('searchFriendList', searchFriendList);
+rpc.registerMethod('getFriendInfoByFriendUserID', getFriendInfoByFriendUserID);
+rpc.registerMethod('getFriendInfoList', getFriendInfoList);
+
+
 
 rpc.registerMethod('exec', async (sql: string) => {
   const db = await getInstance();

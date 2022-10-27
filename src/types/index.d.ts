@@ -62,6 +62,45 @@ declare global {
     superGroupGetMessageList: DatabaseApi;
     getRowsModified: DatabaseApi;
 
+
+
+    // black
+    getBlackList : DatabaseApi ;
+    getBlackListUserID : DatabaseApi ;
+    getBlackInfoList : DatabaseApi ;
+    insertBlack : DatabaseApi ;
+    deleteBlack : DatabaseApi ;
+    updateBlack : DatabaseApi ;
+
+
+
+    //friend_request
+    insertFriendRequest  :  DatabaseApi ;
+    deleteFriendRequestBothUserID :  DatabaseApi ;
+    updateFriendRequest :  DatabaseApi ;
+    getRecvFriendApplication :  DatabaseApi ;
+    getSendFriendApplication :  DatabaseApi ;
+    getFriendApplicationByBothID :  DatabaseApi ;
+
+
+    //friend 
+    insertFriend : DatabaseApi ;
+    deleteFriend : DatabaseApi ;
+    updateFriend : DatabaseApi ;
+    getAllFriendList : DatabaseApi ;
+    searchFriendList : DatabaseApi ;
+    getFriendInfoByFriendUserID : DatabaseApi ;
+    getFriendInfoList : DatabaseApi ;
+
+
+    //groups
+    insertGroup :DatabaseApi ;
+    deleteGroup :DatabaseApi ;
+    updateGroup :DatabaseApi ;
+    getJoinedGroupList :DatabaseApi ;
+    getAllGroupInfoByGroupIDOrGroupName :DatabaseApi ;
+
+
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;
     login: (operationID: string, userID: string, token: string) => Promise<any>;

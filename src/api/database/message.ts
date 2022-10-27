@@ -335,27 +335,3 @@ export async function messageIfExistsBySeq(seq: number): Promise<string> {
   }
 }
 
-export async function updateGroupMessageHasRead(
-  clientMsgID: string[],
-  sessionType: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseUpdateGroupMessageHasRead(
-      db,
-      clientMsgID,
-      sessionType
-    );
-
-    return formatResponse('');
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}

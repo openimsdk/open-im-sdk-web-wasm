@@ -1,5 +1,9 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
+  locaBlack,
+  locaFriend,
+  locaGroups,
+  locaFendRequest,
   localChatLogs,
   localConversations,
   localUsers,
@@ -26,6 +30,10 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultLocalChatLogs = localChatLogs(db);
     const execResultLocalConversations = localConversations(db);
     const execResultLocalUsers = localUsers(db);
+    const execResultLocalBlack = locaBlack(db);
+    const execResultLocalFriend = locaFriend(db);
+    const execResuLocalGroup = locaGroups(db);
+    const execResultlocaFendRequest = locaFendRequest(db);
     const execResultLocalSuperGroups = localSuperGroups(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
@@ -37,6 +45,10 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResultLocalUsers,
         execResultLocalSuperGroups,
         execResultLocalConversationUnreadMessages,
+        execResultLocalBlack,
+        execResultLocalFriend,
+        execResuLocalGroup,
+        execResultlocaFendRequest,
       ]
     );
 
