@@ -342,6 +342,7 @@ export async function updateGroupMessageHasRead(
   try {
     const db = await getInstance();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const execResult = databaseUpdateGroupMessageHasRead(
       db,
       clientMsgID,
