@@ -3,7 +3,7 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 6,
-    // "tsconfigRootDir": "__dirname",
+    "tsconfigRootDir": "./",
     "project": ["./tsconfig.json"]
   },
   "plugins": ["@typescript-eslint", "node", "prettier"],
