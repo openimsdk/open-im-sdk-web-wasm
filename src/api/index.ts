@@ -1,7 +1,6 @@
 import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
-// @ts-ignore
 // import IMWorker from './worker?worker';
 
 let rpc: RPC | undefined;
