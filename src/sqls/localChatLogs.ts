@@ -187,19 +187,6 @@ export function messageIfExists(
   );
 }
 
-export function isExistsInErrChatLogBySeq(
-  db: Database,
-  seq: number
-): QueryExecResult[] {
-  return db.exec(
-    `
-        select count(*) from local_err_chat_logs
-        where 
-            seq = ${seq};
-    `
-  );
-}
-
 export function messageIfExistsBySeq(
   db: Database,
   seq: number
@@ -212,80 +199,228 @@ export function messageIfExistsBySeq(
     `
   );
 }
-// export function updateGroupMessageHasRead(
-//   db: Database,
-//   clientMsgID: string[],
-//   sessionType: number
-// ): QueryExecResult[] {
-//   const values = clientMsgID.map(v => `'${v}'`).join(',');
-//   return db.exec(
-//     `  
-//         update local_chat_logs
-//         set is_read =1 
-//         where session_type=${sessionType} 
-//             and client_msg_id in (${values})    
-        
-//     `
-//   );
-// }
 
-
-export function addMemberCount(
+export function searchMessageByKeyword(
   db: Database,
-  groupID : string,
+  contentType: number[],
+  keywordList: string[],
+  keywordListMatchType: number,
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
 ): QueryExecResult[] {
+  // const values = msgIDList.map(v => `'${v}'`).join(',');
+  const finalEndTime = endTime ? endTime : new Date().getTime();
   return db.exec(
     `  
-    update local_groups set member_count = member_count+1 where group_id = '${groupID}'   
+    SELECT * FROM local_chat_logs 
+          WHERE session_type==${sessionType}
+          And (send_id=="${sourceID}" OR recv_id=="${sourceID}") 
+          And send_time  between ${startTime} and ${finalEndTime} 
+          AND status <=3  
+          And content_type IN (101,106) 
+          And (content like '%${keywordList[0]}%')  
+    ORDER BY send_time DESC LIMIT ${count}
     `
   );
 }
+
+export function searchMessageByContentType(
+  db: Database,
+  contentType: number[],
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): QueryExecResult[] {
+  const values = contentType.map(v => `${v}`).join(',');
+  const finalEndTime = endTime ? endTime : new Date().getTime();
+  return db.exec(
+    `  
+    SELECT * FROM local_chat_logs 
+          WHERE session_type==${sessionType}
+          And (send_id=="${sourceID}" OR recv_id=="${sourceID}") 
+          And send_time between ${startTime} and ${finalEndTime} 
+          AND status <=3 
+          And content_type IN (values) 
+    ORDER BY send_time DESC LIMIT ${count}
+    `
+  );
+}
+
+export function searchMessageByContentTypeAndKeyword(
+  db: Database,
+  contentType: number[],
+  keywordList: string[],
+  keywordListMatchType: number,
+  startTime: number,
+  endTime: number
+): QueryExecResult[] {
+  const values = contentType.map(v => `${v}`).join(',');
+  const finalEndTime = endTime ? endTime : new Date().getTime();
+  return db.exec(
+    `  
+    SELECT * FROM local_chat_logs 
+          WHERE send_time between ${startTime} and ${finalEndTime}
+          AND status <=3  
+          And content_type IN (${values})  
+    ORDER BY send_time DESC
+    `
+  );
+}
+
+export function updateMsgSenderNickname(
+  db: Database,
+  sendID: string,
+  nickname: string,
+  sessionType: number
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    UPDATE local_chat_logs 
+          SET sender_nick_name="${nickname}" 
+          WHERE send_id = "${sendID}" 
+          and session_type = ${sessionType}
+          and sender_nick_name != "${nickname}"
+    `
+  );
+}
+
+export function updateMsgSenderFaceURL(
+  db: Database,
+  sendID: string,
+  faceURL: string,
+  sessionType: number
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    UPDATE local_chat_logs 
+          SET sender_face_url="${faceURL}" 
+          WHERE send_id = "${sendID}" 
+          and session_type = ${sessionType}
+          and sender_face_url != "${faceURL}"
+    `
+  );
+}
+
+export function updateMsgSenderFaceURLAndSenderNickname(
+  db: Database,
+  sendID: string,
+  faceURL: string,
+  nickname: string,
+  sessionType: number
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    UPDATE local_chat_logs 
+          SET sender_face_url="${faceURL}",sender_nick_name="${nickname}" 
+          WHERE send_id = "${sendID}" 
+          and session_type = ${sessionType}
+    `
+  );
+}
+
+export function getMsgSeqByClientMsgID(
+  db: Database,
+  clientMsgID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE client_msg_id="${clientMsgID}" 
+    ORDER BY local_chat_logs.client_msg_id LIMIT 1
+    `
+  );
+}
+
+export function getMsgSeqListByGroupID(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE recv_id="${groupID}"
+    `
+  );
+}
+
+export function getMsgSeqListByPeerUserID(
+  db: Database,
+  userID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE recv_id="${userID}" 
+    or send_id="${userID}"
+    `
+  );
+}
+
+export function getMsgSeqListBySelfUserID(
+  db: Database,
+  userID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE recv_id="${userID}" 
+    and send_id="${userID}"
+    `
+  );
+}
+
+export function deleteAllMessage(db: Database): QueryExecResult[] {
+  return db.exec(
+    `  
+    UPDATE local_chat_logs SET content="",status=4
+    `
+  );
+}
+
+export function getAllUnDeleteMessageSeqList(db: Database): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs WHERE status != 4
+    `
+  );
+}
+
+export function updateSingleMessageHasRead(
+  db: Database,
+  sendID: string,
+  clientMsgIDList: string[]
+): QueryExecResult[] {
+  const values = clientMsgIDList.map(v => `'${v}'`).join(',');
+  return db.exec(
+    `  
+    UPDATE local_chat_logs SET is_read=1 
+    WHERE send_id="${sendID}"  
+    AND session_type=1 
+    AND client_msg_id in ("${values}")
+    `
+  );
+}
+
 export function updateGroupMessageHasRead(
   db: Database,
-  sessionType  : number,
-  msgIDList : string[],
+  clientMsgIDList: string[],
+  sessionType: number
 ): QueryExecResult[] {
-       const values = msgIDList.map(v => `'${v}'`).join(',');
+  const values = clientMsgIDList.map(v => `'${v}'`).join(',');
   return db.exec(
-    `  
-    update local_chat_logs set is_read=1 where session_type='${sessionType}' and client_msg_id in (${values})   
     `
-  );
-}
+        update local_chat_logs
+        set is_read =1
+        where session_type=${sessionType}
+            and client_msg_id in (${values})
 
-
-export function subtractMemberCount(
-  db: Database,
-  groupID   : string
-): QueryExecResult[] {
-
-  return db.exec(
-    `  
-    update local_groups set member_count =member_count-1 where group_id = '${groupID}'
-    `
-  );
-}
-
-export function getJoinedWorkingGroupIDList(
-  db: Database,
-): QueryExecResult[] {
-
-  return db.exec(
-    `  
-    select * from local_groups
-    groupType = 2
-    `
-  );
-}
-
-export function getJoinedWorkingGroupList(
-  db: Database,
-): QueryExecResult[] {
-
-  return db.exec(
-    `  
-    select * from local_groups
-    groupType = 2
     `
   );
 }

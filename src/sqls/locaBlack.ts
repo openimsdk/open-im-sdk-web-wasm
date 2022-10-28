@@ -1,9 +1,11 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 
+export type LocalBlack = { [key: string]: any };
+
 export function locaBlack(db: Database): QueryExecResult[] {
-    return db.exec(
-      `
+  return db.exec(
+    `
       create table if not exists 'local_blacks' (
         'owner_user_id'     varchar(64),
         'block_user_id'     varchar(64),
@@ -18,9 +20,8 @@ export function locaBlack(db: Database): QueryExecResult[] {
         primary key  ('owner_user_id', 'block_user_id')
     ) 
       `
-    );
-  }
-
+  );
+}
 
 export function getBlackList(db: Database): QueryExecResult[] {
   return db.exec(
@@ -31,90 +32,85 @@ export function getBlackList(db: Database): QueryExecResult[] {
   );
 }
 
-export function getBlackListUserID(
-  db: Database,
-  blockUserID: string
-): QueryExecResult[] {
+export function getBlackListUserID(db: Database): QueryExecResult[] {
   return db.exec(
     `
-      select *
-        from local_blacks
-        where owner_user_id = "3433303585"
-        and block_user_id = "123"
-        limit 1
+    SELECT block_user_id
+    FROM local_blacks
       `
   );
 }
 
-// export function getFriendInfoByFriendUserID(
-//   db: Database,
-//   blockUserID: string
-// ): QueryExecResult[] {
-//   return db.exec(
-//     `
-//       select *
-//         from local_blacks
-//         where owner_user_id = "3433303585"
-//         and block_user_id = "123"
-//         limit 1
-//       `
-//   );
-// }
+export function getBlackInfoByBlockUserID(
+  db: Database,
+  blockUserID: string,
+  loginUserID: string
+): QueryExecResult[] {
+  return db.exec(
+    `
+      SELECT *
+        FROM local_blacks
+        WHERE owner_user_id = "${loginUserID}"
+          AND block_user_id = "${blockUserID}"
+        LIMIT 1
+      `
+  );
+}
 
 export function getBlackInfoList(
   db: Database,
-  blockUserIDList  : string[]
+  blockUserIDList: string[]
 ): QueryExecResult[] {
+  const ids = blockUserIDList.map(v => `'${v}'`);
   return db.exec(
     `
     select *
     from local_blacks
-    where block_user_id in ("123")
+    where block_user_id in (${ids.join(',')})
       `
   );
 }
 
 export function insertBlack(
   db: Database,
-  LocalBlack     : string
+  localBlack: LocalBlack
 ): QueryExecResult[] {
-  return db.exec(
-    `
-    insert into local_blacks (owner_user_id, block_user_id, nickname, face_url, gender,create_time,
-         add_source, operator_user_id, ex, attached_info)
-         values ("123", "456", "hello", "", 1, 1666779750, 1, "789", "", "")
-      `
-  );
+  const sql = squel
+    .insert()
+    .into('local_blacks')
+    .setFields(localBlack)
+    .toString();
+
+  return db.exec(sql);
+}
+
+export function updateBlack(
+  db: Database,
+  localBlack: LocalBlack
+): QueryExecResult[] {
+  const sql = squel
+    .update()
+    .table('local_blacks')
+    .setFields(localBlack)
+    .where(
+      `owner_user_id = '${localBlack.owner_user_id} and block_user_id = '${localBlack.block_user_id}`
+    )
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function deleteBlack(
   db: Database,
-  blockUserID     : string
+  blockUserID: string,
+  loginUserID: string
 ): QueryExecResult[] {
   return db.exec(
     `
     delete
     from local_blacks
-    where owner_user_id = "3433303585"
-    and block_user_id = "123"
-      `
-  );
-}
-
-export function updateBlack(
-  db: Database,
-  LocalBlack       : string
-): QueryExecResult[] {
-  return db.exec(
-    `
-    update local_blacks
-    set nickname="hello",
-        gender=1,
-        create_time=1666779794,
-        add_source=1,
-        operator_user_id="789"
-        where owner_user_id = "123"
-        and block_user_id = "456"
+    where owner_user_id = "${loginUserID}"
+    and block_user_id = "${blockUserID}"
       `
   );
 }

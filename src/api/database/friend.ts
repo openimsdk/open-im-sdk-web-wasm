@@ -7,6 +7,7 @@ import {
   searchFriendList as databasesearchFriendList,
   getFriendInfoByFriendUserID as databasegetFriendInfoByFriendUserID,
   getFriendInfoList as databasegetFriendInfoList,
+  LocalFriend,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -17,13 +18,15 @@ import {
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { getInstance } from './instance';
 
-
-
-export async function insertFriend(LocalFriend: string): Promise<string> {
+export async function insertFriend(localFriendStr: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseinsertFriend(db, LocalFriend);
+    const localFriend = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(localFriendStr))
+    ) as LocalFriend;
+
+    databaseinsertFriend(db, localFriend);
 
     return formatResponse('');
   } catch (e) {
@@ -37,11 +40,14 @@ export async function insertFriend(LocalFriend: string): Promise<string> {
   }
 }
 
-export async function deleteFriend(friendUserID: string): Promise<string> {
+export async function deleteFriend(
+  friendUserID: string,
+  loginUserID: string
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasedeleteFriend(db, friendUserID);
+    databasedeleteFriend(db, friendUserID, loginUserID);
 
     return formatResponse('');
   } catch (e) {
@@ -55,11 +61,14 @@ export async function deleteFriend(friendUserID: string): Promise<string> {
   }
 }
 
-export async function updateFriend(LocalFriend: string): Promise<string> {
+export async function updateFriend(localFriendStr: string): Promise<string> {
   try {
     const db = await getInstance();
+    const localFriend = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(localFriendStr))
+    ) as LocalFriend;
 
-    const execResult = databaseupdateFriend(db, LocalFriend);
+    databaseupdateFriend(db, localFriend);
 
     return formatResponse('');
   } catch (e) {
@@ -73,15 +82,13 @@ export async function updateFriend(LocalFriend: string): Promise<string> {
   }
 }
 
-export async function getAllFriendList(): Promise<string> {
+export async function getAllFriendList(loginUserID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetAllFriendList(db);
+    const execResult = databasegetAllFriendList(db, loginUserID);
 
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
-    );
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -110,9 +117,7 @@ export async function searchFriendList(
       isSearchRemark
     );
 
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
-    );
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -125,16 +130,19 @@ export async function searchFriendList(
 }
 
 export async function getFriendInfoByFriendUserID(
-  friendUserID: string
+  friendUserID: string,
+  loginUserID: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetFriendInfoByFriendUserID(db, friendUserID);
-
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    const execResult = databasegetFriendInfoByFriendUserID(
+      db,
+      friendUserID,
+      loginUserID
     );
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -147,16 +155,14 @@ export async function getFriendInfoByFriendUserID(
 }
 
 export async function getFriendInfoList(
-    friendUserIDList    : string[]
+  friendUserIDList: string[]
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetFriendInfoList(db,friendUserIDList);
+    const execResult = databasegetFriendInfoList(db, friendUserIDList);
 
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
-    );
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 

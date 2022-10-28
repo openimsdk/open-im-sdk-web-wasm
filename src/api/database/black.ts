@@ -2,11 +2,12 @@ import { DatabaseErrorCode } from '@/constant';
 import {
   getBlackList as databasegetBlackList,
   getBlackListUserID as databasegetBlackListUserID,
-  getFriendInfoByFriendUserID as databasegetFriendInfoByFriendUserID,
+  getBlackInfoByBlockUserID as databaseGetBlackInfoByBlockUserID,
   getBlackInfoList as databasegetBlackInfoList,
   insertBlack as databaseinsertBlack,
   deleteBlack as databasedeleteBlack,
   updateBlack as databaseupdateBlack,
+  LocalBlack,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -14,10 +15,7 @@ import {
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
-import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { getInstance } from './instance';
-
-
 
 export async function getBlackList(): Promise<string> {
   try {
@@ -37,13 +35,11 @@ export async function getBlackList(): Promise<string> {
   }
 }
 
-export async function getBlackListUserID(
-    blockUserID: string
-    ): Promise<string> {
+export async function getBlackListUserID(blockUserID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetBlackListUserID(db, blockUserID);
+    const execResult = databasegetBlackListUserID(db);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -57,25 +53,30 @@ export async function getBlackListUserID(
   }
 }
 
-// export async function getFriendInfoByFriendUserID(
-//   blockUserID: string
-// ): Promise<string> {
-//   try {
-//     const db = await getInstance();
+export async function getBlackInfoByBlockUserID(
+  blockUserID: string,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
 
-//     const execResult = databasegetFriendInfoByFriendUserID(db, blockUserID);
+    const execResult = databaseGetBlackInfoByBlockUserID(
+      db,
+      blockUserID,
+      loginUserID
+    );
 
-//     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
-//   } catch (e) {
-//     console.error(e);
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
 
-//     return formatResponse(
-//       undefined,
-//       DatabaseErrorCode.ErrorInit,
-//       JSON.stringify(e)
-//     );
-//   }
-// }
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
 
 export async function getBlackInfoList(
   blockUserIDList: string[]
@@ -97,11 +98,15 @@ export async function getBlackInfoList(
   }
 }
 
-export async function insertBlack(LocalBlack: string): Promise<string> {
+export async function insertBlack(localBlackStr: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseinsertBlack(db, LocalBlack);
+    const localBlack = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(localBlackStr))
+    ) as LocalBlack;
+
+    databaseinsertBlack(db, localBlack);
 
     return formatResponse('');
   } catch (e) {
@@ -115,11 +120,14 @@ export async function insertBlack(LocalBlack: string): Promise<string> {
   }
 }
 
-export async function deleteBlack(blockUserID: string): Promise<string> {
+export async function deleteBlack(
+  blockUserID: string,
+  loginUserID: string
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasedeleteBlack(db, blockUserID);
+    databasedeleteBlack(db, blockUserID, loginUserID);
 
     return formatResponse('');
   } catch (e) {
@@ -133,11 +141,15 @@ export async function deleteBlack(blockUserID: string): Promise<string> {
   }
 }
 
-export async function updateBlack(LocalBlack: string): Promise<string> {
+export async function updateBlack(localBlackStr: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseupdateBlack(db, LocalBlack);
+    const localBlack = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(localBlackStr))
+    ) as LocalBlack;
+
+    databaseupdateBlack(db, localBlack);
 
     return formatResponse('');
   } catch (e) {
