@@ -212,19 +212,80 @@ export function messageIfExistsBySeq(
     `
   );
 }
-export function updateGroupMessageHasRead(
+// export function updateGroupMessageHasRead(
+//   db: Database,
+//   clientMsgID: string[],
+//   sessionType: number
+// ): QueryExecResult[] {
+//   const values = clientMsgID.map(v => `'${v}'`).join(',');
+//   return db.exec(
+//     `  
+//         update local_chat_logs
+//         set is_read =1 
+//         where session_type=${sessionType} 
+//             and client_msg_id in (${values})    
+        
+//     `
+//   );
+// }
+
+
+export function addMemberCount(
   db: Database,
-  clientMsgID: string[],
-  sessionType: number
+  groupID : string,
 ): QueryExecResult[] {
-  const values = clientMsgID.map(v => `'${v}'`).join(',');
   return db.exec(
     `  
-        update local_chat_logs
-        set is_read =1 
-        where session_type=${sessionType} 
-            and client_msg_id in (${values})    
-        
+    update local_groups set member_count = member_count+1 where group_id = '${groupID}'   
+    `
+  );
+}
+export function updateGroupMessageHasRead(
+  db: Database,
+  sessionType  : number,
+  msgIDList : string[],
+): QueryExecResult[] {
+       const values = msgIDList.map(v => `'${v}'`).join(',');
+  return db.exec(
+    `  
+    update local_chat_logs set is_read=1 where session_type='${sessionType}' and client_msg_id in (${values})   
+    `
+  );
+}
+
+
+export function subtractMemberCount(
+  db: Database,
+  groupID   : string
+): QueryExecResult[] {
+
+  return db.exec(
+    `  
+    update local_groups set member_count =member_count-1 where group_id = '${groupID}'
+    `
+  );
+}
+
+export function getJoinedWorkingGroupIDList(
+  db: Database,
+): QueryExecResult[] {
+
+  return db.exec(
+    `  
+    select * from local_groups
+    groupType = 2
+    `
+  );
+}
+
+export function getJoinedWorkingGroupList(
+  db: Database,
+): QueryExecResult[] {
+
+  return db.exec(
+    `  
+    select * from local_groups
+    groupType = 2
     `
   );
 }

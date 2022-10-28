@@ -240,7 +240,7 @@ export async function batchInsertConversationList(
   }
 }
 
-export async function insertConversation(
+export async function  (
   conversationStr: string
 ): Promise<string> {
   return batchInsertConversationList(`[${conversationStr}]`);

@@ -185,7 +185,71 @@ declare global {
       groupID: string,
       offlinePushInfoStr: string
     ) => Promise<string>;
-
+    getHistoryMessageListReverse: (
+        operationID: string,
+        getMessageOptions: string,
+      ) => Promise<string>;
+      revokeMessage: (
+        operationID: string,
+        params: string,
+      ) => Promise<string>;
+      setOneConversationPrivateChat: (
+        operationID: string,
+        conversationID : string,
+        isPrivate: boolean ,
+      ) => Promise<string>;
+      getLoginStatus: (
+        operationID: string,
+      ) => Promise<string>;
+      iLogin: (
+        operationID: string,
+        token : string,
+        userID: string,
+      ) => Promise<string>;
+      getLoginUser: (
+        operationID: string,
+      ) => Promise<string>;
+      getSelfUserInfo: (
+        operationID: string,
+      ) => Promise<string>;
+      getUsersInfo: (
+        operationID: string,
+        userIDList: string[]
+      ) => Promise<string>;
+      setSelfInfo: (
+        operationID: string,
+        userInfo: string[]
+      ) => Promise<string>;
+      createTextAtMessage: (
+        operationID: string,
+        text: string,
+        atUserIDList: string[],
+        atUsersInfo?: AtUsersInfoItem[],
+        message?: string,
+      ) => Promise<string>;
+      createSoundMessage: (
+        operationID: string,
+        uuid: string,
+        soundPath: string,
+        sourceUrl: string,
+        dataSize: number,
+        duration: number,
+      ) => Promise<string>;
+      createVideoMessage: (
+        operationID: string,
+        videoPath: string,
+        duration: string,
+        videoType: string,
+        snapshotPath: number,
+        videoUUID: number,
+        videoUrl: string,
+        videoSize: number,
+        snapshotUUID: string,
+        snapshotSize: number,
+        snapshotUrl: string,
+        snapshotWidth: number,
+        snapshotHeight: number,
+      ) => Promise<string>;
     // debug
     exec: (sql: string) => Promise<any>;
   }

@@ -15,6 +15,11 @@ import {
   isExistsInErrChatLogBySeq as databaseIsExistsInErrChatLogBySeq,
   messageIfExistsBySeq as databaseMessageIfExistsBySeq,
   updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
+  addMemberCount as databaseaddMemberCount,
+  updateGroupMessageHasRead as databaseupdateGroupMessageHasRead,
+  subtractMemberCount as databasesubtractMemberCount,
+  getJoinedWorkingGroupIDList as databasegetJoinedWorkingGroupIDList,
+  getJoinedWorkingGroupList as databasegetJoinedWorkingGroupList,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -324,6 +329,108 @@ export async function messageIfExistsBySeq(seq: number): Promise<string> {
     const execResult = databaseMessageIfExistsBySeq(db, seq);
 
     return formatResponse(execResult.length !== 0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+
+export async function addMemberCount(groupID : string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseaddMemberCount(db, groupID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateGroupMessageHasRead(
+    sessionType  : number ,
+    msgIDList  : string[] ,
+    ): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseupdateGroupMessageHasRead(db,sessionType,msgIDList);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function subtractMemberCount(
+    groupID   : string ,
+    ): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databasesubtractMemberCount(db,groupID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+
+export async function getJoinedWorkingGroupIDList(
+
+    ): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databasegetJoinedWorkingGroupIDList(db);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+
+export async function getJoinedWorkingGroupList(
+
+    ): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databasegetJoinedWorkingGroupList(db);
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

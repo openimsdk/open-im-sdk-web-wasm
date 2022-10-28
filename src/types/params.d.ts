@@ -355,3 +355,48 @@ type RtcActionParams = {
   opUserID: string;
   invitation: RtcInvite;
 };
+
+
+ type setPrvParams = {
+    conversationID: string;
+    isPrivate: boolean;
+  };
+  
+
+   type LoginParams = {
+    userID: string;
+    token: string;
+  };
+   type AtMsgParams = {
+    text: string;
+    atUserIDList: string[];
+    atUsersInfo?: AtUsersInfoItem[];
+    message?: string;
+  };
+
+   type SoundMsgParams = {
+    uuid: string;
+    soundPath: string;
+    sourceUrl: string;
+    dataSize: number;
+    duration: number;
+  };
+
+   type VideoMsgParams = {
+    videoPath: string;
+    duration: number;
+    videoType: string;
+    snapshotPath: string;
+    videoUUID: string;
+    videoUrl: string;
+    videoSize: number;
+    snapshotUUID: string;
+    snapshotSize: number;
+    snapshotUrl: string;
+    snapshotWidth: number;
+    snapshotHeight: number;
+  };
+
+  
+type PartialUserItem = 
+Partial<Omit<FullUserItem, "userID">> & { userID: string };

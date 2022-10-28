@@ -7,6 +7,7 @@ import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
 import {
   AdvancedMsgParams,
   AdvancedQuoteMsgParams,
+  AtMsgParams,
   CustomMsgParams,
   GetAdvancedHistoryMsgParams,
   GetGroupMemberParams,
@@ -14,10 +15,15 @@ import {
   GetOneConversationParams,
   ImageMsgParams,
   LoginParam,
+  LoginParams,
   MarkC2CParams,
   MarkNotiParams,
+  PartialUserItem,
   QuoteMsgParams,
   SendMsgParams,
+  setPrvParams,
+  SoundMsgParams,
+  VideoMsgParams,
 } from '../types/params';
 
 import { IMConfig, WsResponse } from '../types/entity';
@@ -322,6 +328,111 @@ class SDK extends Emitter {
       JSON.stringify(params.offlinePushInfo),
     ]);
   }
+
+  async getHistoryMessageListReverse (params: GetHistoryMsgParams, operationID = uuidv4()) {
+    return await this._invoker('getHistoryMessageListReverse', window.getHistoryMessageListReverse, [
+      operationID,
+      JSON.stringify(params),
+    ]);
+  }
+  
+  async revokeMessage  (params: string, operationID = uuidv4()) {
+    return await this._invoker('revokeMessage ', window.revokeMessage, [
+      operationID,
+      params,
+
+    ]);
+  }
+
+  async setOneConversationPrivateChat  (params: setPrvParams, operationID = uuidv4()) {
+    return await this._invoker('setOneConversationPrivateChat ', window.setOneConversationPrivateChat, [
+      operationID,
+      params.conversationID,
+      params.isPrivate,
+    ]);
+  }
+  /* ----------------------------------------------新增-------------------------------------------------------- */
+  async getLoginStatus  ( operationID = uuidv4()) {
+    return await this._invoker('getLoginStatus ', window.getLoginStatus, [
+      operationID,
+    ]);
+  }
+  
+  async iLogin  ( data :LoginParams, operationID = uuidv4()) {
+    return await this._invoker('iLogin ', window.iLogin, [
+      operationID,
+      data.token,
+      data.userID
+    ]);
+  }
+
+  async getLoginUser  ( operationID = uuidv4()) {
+    return await this._invoker('getLoginUser ', window.getLoginUser, [
+      operationID,
+    ]);
+  }
+
+  async getSelfUserInfo  ( operationID = uuidv4()) {
+    return await this._invoker('getSelfUserInfo ', window.getSelfUserInfo, [
+      operationID,
+    ]);
+  }
+
+  async getUsersInfo  ( operationID = uuidv4()) {
+    return await this._invoker('getUsersInfo ', window.getUsersInfo, [
+      operationID,
+    ]);
+  }
+
+  async setSelfInfo  (data: PartialUserItem, operationID = uuidv4()) {
+    return await this._invoker('setSelfInfo ', window.setSelfInfo, [
+      operationID,
+      JSON.stringify(data.userInfo)
+    ]);
+  }
+
+  async createTextAtMessage  (data: AtMsgParams, operationID = uuidv4()) {
+    return await this._invoker('createTextAtMessage ', window.createTextAtMessage, [
+      operationID,
+      data.text,
+        JSON.stringify(data.atUsersInfo),
+        JSON.stringify(data.atUserIDList),
+        data.message
+    ]);
+  }
+  async createSoundMessage  (data: SoundMsgParams, operationID = uuidv4()) {
+    return await this._invoker('createSoundMessage ', window.createSoundMessage, [
+      operationID,
+      data.uuid,
+      data.soundPath,
+      data.sourceUrl,
+        JSON.stringify(data.dataSize),
+        JSON.stringify(data.duration),
+    ]);
+  }
+
+  async createVideoMessage  (data: VideoMsgParams, operationID = uuidv4()) {
+    return await this._invoker('createVideoMessage ', window.createVideoMessage, [
+      operationID,
+        data.videoPath,
+        data.duration,
+        data.videoType,
+        JSON.stringify(data.snapshotPath) ,
+        JSON.stringify(data.videoUUID) ,
+        data.videoUrl ,
+        JSON.stringify(data.videoSize) ,
+        data.snapshotUUID,
+        JSON.stringify(data.snapshotSize),
+        data.snapshotUrl ,
+       JSON.stringify( data.snapshotWidth ),
+       JSON.stringify( data.snapshotHeight )
+
+    ]);
+  }
+
+
+
+
 }
 
 let instance: SDK;

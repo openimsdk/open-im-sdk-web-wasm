@@ -13,6 +13,11 @@ import {
   batchInsertMessageList,
   getMessageList,
   getMessageListNoTime,
+  addMemberCount,
+  updateGroupMessageHasRead,
+  subtractMemberCount,
+  getJoinedWorkingGroupIDList,
+  getJoinedWorkingGroupList,
 
   // conversation
   getAllConversationList,
@@ -23,7 +28,7 @@ import {
   updateColumnsConversation,
   decrConversationUnreadCount,
   batchInsertConversationList,
-  insertConversation,
+//   insertConversation,
   getTotalUnreadMsgCount,
 
   // users
@@ -105,6 +110,11 @@ rpc.registerMethod('initDB', init);
 rpc.registerMethod('close', close);
 
 rpc.registerMethod('getMessage', getMessage);
+rpc.registerMethod('updateGroupMessageHasRead', updateGroupMessageHasRead);
+rpc.registerMethod('addMemberCount', addMemberCount);
+rpc.registerMethod('subtractMemberCount', subtractMemberCount);
+rpc.registerMethod('getJoinedWorkingGroupIDList', getJoinedWorkingGroupIDList);
+rpc.registerMethod('getJoinedWorkingGroupList', getJoinedWorkingGroupList);
 rpc.registerMethod('getMultipleMessage', getMultipleMessage);
 rpc.registerMethod('getSendingMessageList', getSendingMessageList);
 rpc.registerMethod('getNormalMsgSeq', getNormalMsgSeq);
@@ -131,7 +141,7 @@ rpc.registerMethod('updateColumnsConversation', updateColumnsConversation);
 rpc.registerMethod('decrConversationUnreadCount', decrConversationUnreadCount);
 rpc.registerMethod('batchInsertConversationList', batchInsertConversationList);
 rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
-rpc.registerMethod('insertConversation', insertConversation);
+// rpc.registerMethod('insertConversation', insertConversation);
 
 rpc.registerMethod('getLoginUser', getLoginUser);
 rpc.registerMethod('insertLoginUser', insertLoginUser);

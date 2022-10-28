@@ -111,6 +111,11 @@ export function initDatabaseAPI(): void {
     'isExistsInErrChatLogBySeq'
   );
   window.messageIfExistsBySeq = registeMethodOnWindow('messageIfExistsBySeq');
+  window.messageIfExistsBySeq = registeMethodOnWindow('addMemberCount');
+  window.messageIfExistsBySeq = registeMethodOnWindow('updateGroupMessageHasRead');
+  window.messageIfExistsBySeq = registeMethodOnWindow('subtractMemberCount');
+  window.messageIfExistsBySeq = registeMethodOnWindow('getJoinedWorkingGroupIDList');
+  window.messageIfExistsBySeq = registeMethodOnWindow('getJoinedWorkingGroupList');
 
   // conversation
   window.getAllConversationListDB = registeMethodOnWindow(

@@ -37,7 +37,9 @@ export async function getBlackList(): Promise<string> {
   }
 }
 
-export async function getBlackListUserID(blockUserID: string): Promise<string> {
+export async function getBlackListUserID(
+    blockUserID: string
+    ): Promise<string> {
   try {
     const db = await getInstance();
 
