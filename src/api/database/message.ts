@@ -14,12 +14,24 @@ import {
   messageIfExists as databaseMessageIfExists,
   isExistsInErrChatLogBySeq as databaseIsExistsInErrChatLogBySeq,
   messageIfExistsBySeq as databaseMessageIfExistsBySeq,
-  updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
   addMemberCount as databaseaddMemberCount,
-  updateGroupMessageHasRead as databaseupdateGroupMessageHasRead,
-  subtractMemberCount as databasesubtractMemberCount,
-  getJoinedWorkingGroupIDList as databasegetJoinedWorkingGroupIDList,
-  getJoinedWorkingGroupList as databasegetJoinedWorkingGroupList,
+  getAbnormalMsgSeq as databaseGetAbnormalMsgSeq,
+  getAbnormalMsgSeqList as databaseGetAbnormalMsgSeqList,
+  batchInsertExceptionMsg as databaseBatchInsertExceptionMsg,
+  searchMessageByKeyword as databaseSearchMessageByKeyword,
+  searchMessageByContentType as databaseSearchMessageByContentType,
+  searchMessageByContentTypeAndKeyword as databaseSearchMessageByContentTypeAndKeyword,
+  updateMsgSenderNickname as databaseUpdateMsgSenderNickname,
+  updateMsgSenderFaceURL as databaseUpdateMsgSenderFaceURL,
+  updateMsgSenderFaceURLAndSenderNickname as databaseUpdateMsgSenderFaceURLAndSenderNickname,
+  getMsgSeqByClientMsgID as databaseGetMsgSeqByClientMsgID,
+  getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
+  getMsgSeqListByPeerUserID as databasegetMsgSeqListByPeerUserID,
+  getMsgSeqListBySelfUserID as databasegetMsgSeqListBySelfUserID,
+  deleteAllMessage as databasedeleteAllMessage,
+  getAllUnDeleteMessageSeqList as databasegetAllUnDeleteMessageSeqList,
+  updateSingleMessageHasRead as databaseupdateSingleMessageHasRead,
+  updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -340,14 +352,13 @@ export async function messageIfExistsBySeq(seq: number): Promise<string> {
   }
 }
 
-
-export async function addMemberCount(groupID : string): Promise<string> {
+export async function getAbnormalMsgSeq(): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseaddMemberCount(db, groupID);
+    const execResult = databaseGetAbnormalMsgSeq(db);
 
-    return formatResponse('');
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -359,16 +370,13 @@ export async function addMemberCount(groupID : string): Promise<string> {
   }
 }
 
-export async function updateGroupMessageHasRead(
-    sessionType  : number ,
-    msgIDList  : string[] ,
-    ): Promise<string> {
+export async function getAbnormalMsgSeqList(): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseupdateGroupMessageHasRead(db,sessionType,msgIDList);
+    const execResult = databaseGetAbnormalMsgSeqList(db);
 
-    return formatResponse('');
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -380,15 +388,19 @@ export async function updateGroupMessageHasRead(
   }
 }
 
-export async function subtractMemberCount(
-    groupID   : string ,
-    ): Promise<string> {
+export async function batchInsertExceptionMsg(
+  messageListStr: string
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasesubtractMemberCount(db,groupID);
+    const messageList = (JSON.parse(messageListStr) as ClientMessage[]).map(
+      (v: Record<string, unknown>) => convertToSnakeCaseObject(v)
+    );
 
-    return formatResponse('');
+    const execResult = databaseBatchInsertExceptionMsg(db, messageList);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -400,16 +412,34 @@ export async function subtractMemberCount(
   }
 }
 
-
-export async function getJoinedWorkingGroupIDList(
-
-    ): Promise<string> {
+export async function searchMessageByKeyword(
+  contentType: number[],
+  keywordList: string[],
+  keywordListMatchType: number,
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetJoinedWorkingGroupIDList(db);
+    const execResult = databaseSearchMessageByKeyword(
+      db,
+      contentType,
+      keywordList,
+      keywordListMatchType,
+      sourceID,
+      startTime,
+      endTime,
+      sessionType,
+      offset,
+      count
+    );
 
-    return formatResponse('');
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
@@ -421,24 +451,27 @@ export async function getJoinedWorkingGroupIDList(
   }
 }
 
+// export async function updateGroupMessageHasRead(
+//   sessionType: number,
+//   msgIDList: string[]
+// ): Promise<string> {
+//   try {
+//     const db = await getInstance();
 
-export async function getJoinedWorkingGroupList(
+//     const execResult = databaseUpdateGroupMessageHasRead(
+//       db,
+//       sessionType,
+//       msgIDList
+//     );
 
-    ): Promise<string> {
-  try {
-    const db = await getInstance();
+//     return formatResponse('');
+//   } catch (e) {
+//     console.error(e);
 
-    const execResult = databasegetJoinedWorkingGroupList(db);
-
-    return formatResponse('');
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
+//     return formatResponse(
+//       undefined,
+//       DatabaseErrorCode.ErrorInit,
+//       JSON.stringify(e)
+//     );
+//   }
+// }

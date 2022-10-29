@@ -1,9 +1,11 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 
+export type LocalGroup = { [key: string]: any };
+
 export function locaGroups(db: Database): QueryExecResult[] {
-    return db.exec(
-      `
+  return db.exec(
+    `
       create table if not exists 'local_groups'
       (
           'group_id'                 varchar(64) PRIMARY KEY,
@@ -24,92 +26,132 @@ export function locaGroups(db: Database): QueryExecResult[] {
           'apply_member_friend'      INTEGER,
           'notification_update_time' INTEGER,
           'notification_user_id  '   TEXT
-      )  ification_user_id  '   TEXT
       )  
       `
-    );
-  }
-
-
-
+  );
+}
 
 export function insertGroup(
   db: Database,
-  LocalGroup: string
+  localGroup: LocalGroup
 ): QueryExecResult[] {
-  return db.exec(
-    `
-      insert into local_groups (group_id, name, notification, introduction, face_url, create_time, status,
-         creator_user_id, group_type, owner_user_id, member_count, ex, attached_info,
-        need_verification, look_member_info, apply_member_friend, notification_update_time,
-        notification_user_id)
-        values ("1234567", "测试1234", "", "", "", 1666777417, 0, "", 0, "", 0, "", "", 0, 0, 0, 0, "")
-          `
-  );
+  const sql = squel
+    .insert()
+    .into('local_groups')
+    .setFields(localGroup)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function deleteGroup(db: Database, groupID: string): QueryExecResult[] {
   return db.exec(
     `
-    delete
-        from local_conversation_unread_messages
-        where conversation_id = "super_group_748402675"
-        and send_time <= 0
-          `
+    DELETE FROM local_groups 
+          WHERE group_id="${groupID}" 
+        `
   );
 }
+
 export function updateGroup(
   db: Database,
-  LocalGroup: string
+  localGroup: LocalGroup
 ): QueryExecResult[] {
-  return db.exec(
-    `
-    update local_groups
-    set group_id="1234567",
-        name="hello",
-        notification="",
-        introduction="",
-        face_url="",
-        create_time=1666777635,
-        status=0,
-        creator_user_id="",
-        group_type=0,
-        owner_user_id="",
-        member_count=0,
-        ex="",
-        attached_info="",
-        need_verification=0,
-        look_member_info=0,
-        apply_member_friend=0,
-        notification_update_time=0,
-        notification_user_id=""
-    where group_id = "1234567"
-    `
-  );
+  const sql = squel
+    .update()
+    .table('local_groups')
+    .setFields(localGroup)
+    .where(`group_id = '${localGroup.group_id}'`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getJoinedGroupList(db: Database): QueryExecResult[] {
   return db.exec(
     `
-    select *
-    from local_group_members
-    where group_id = "748402675"
+    SELECT * FROM local_groups
     `
   );
 }
+
+export function getGroupInfoByGroupID(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  return db.exec(
+    `
+    SELECT *
+      FROM local_groups
+      WHERE group_id = "${groupID}"
+    `
+  );
+}
+
 export function getAllGroupInfoByGroupIDOrGroupName(
   db: Database,
   keyword: string,
   isSearchGroupID: boolean,
   isSearchGroupName: boolean
 ): QueryExecResult[] {
+  let totalConditionStr = '';
+  const groupIDCondition = `group_id like "%${keyword}%"`;
+  const groupNameCondition = `name like "%${keyword}%"`;
+  if (isSearchGroupID) {
+    totalConditionStr = groupIDCondition;
+  }
+  if (isSearchGroupName) {
+    totalConditionStr = groupNameCondition;
+  }
+  if (isSearchGroupName && isSearchGroupID) {
+    totalConditionStr = groupIDCondition + 'or' + groupNameCondition;
+  }
   return db.exec(
     `
     select *
     from local_groups
-    where group_id like "%123%"
-       or name like "%123%"
+    where ${totalConditionStr}
     order by create_time desc
     `
   );
 }
+
+export function subtractMemberCount(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    update local_groups set member_count = member_count-1 where group_id = '${groupID}'
+    `
+  );
+}
+
+export function addMemberCount(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    update local_groups set member_count = member_count+1 where group_id = '${groupID}'   
+    `
+  );
+}
+
+// export function getJoinedWorkingGroupIDList(db: Database): QueryExecResult[] {
+//   return db.exec(
+//     `
+//     select * from local_groups
+//     groupType = 2
+//     `
+//   );
+// }
+
+// export function getJoinedWorkingGroupList(db: Database): QueryExecResult[] {
+//   return db.exec(
+//     `
+//     select * from local_groups
+//     groupType = 2
+//     `
+//   );
+// }

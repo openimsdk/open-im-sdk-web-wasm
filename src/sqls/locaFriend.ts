@@ -1,9 +1,11 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 
-export function locaFriend(db: Database): QueryExecResult[] {
-    return db.exec(
-      `
+export type LocalFriend = { [key: string]: any };
+
+export function localFriend(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
       create table if not exists 'local_friends'
       (
           'owner_user_id'    varchar(64),
@@ -23,86 +25,93 @@ export function locaFriend(db: Database): QueryExecResult[] {
          primary key ('owner_user_id', 'friend_user_id')
       )       
       `
-    );
-  }
-
-
+  );
+}
 
 export function insertFriend(
   db: Database,
-  LocalFriend: string
+  localFriend: LocalFriend
 ): QueryExecResult[] {
-  return db.exec(
-    `
-      insert into local_friends (owner_user_id, friend_user_id, remark, create_time, add_source,
-      operator_user_id, name, face_url, gender, phone_number, birth, email, ex,
-      attached_info)
-     values ("123", "456", "hello", 1666778999, 0, "789", "hhhh", "", 1, "13000000000", 1666778999, "123@qq.com", "", "")
-        `
-  );
+  const sql = squel
+    .insert()
+    .into('local_friends')
+    .setFields(localFriend)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function deleteFriend(
   db: Database,
-  friendUserID: string
+  friendUserID: string,
+  loginUserID: string
 ): QueryExecResult[] {
   return db.exec(
     `
-      delete
-      from local_groups
-      where local_groups.group_id = "1234"
+    DELETE FROM local_friends 
+          WHERE owner_user_id="${loginUserID}" 
+          and friend_user_id="${friendUserID}"
         `
   );
 }
 export function updateFriend(
   db: Database,
-  LocalFriend: string
+  localFriend: LocalFriend
 ): QueryExecResult[] {
-  return db.exec(
-    `
-      update local_friends
-        set owner_user_id="123",
-        friend_user_id="456",
-        remark="hello",
-        create_time=1666779080,
-        add_source=0,
-        operator_user_id="789",
-        name="hhhh",
-        face_url="",
-        birth=1666779080,
-        email="123@qq.com",
-        ex="",
-        attached_info=""
-        where owner_user_id = "123"
-        and friend_user_id = "456"
-        `
-  );
+  const sql = squel
+    .update()
+    .table('local_friends')
+    .setFields(localFriend)
+    .where(
+      `owner_user_id = '${localFriend.owner_user_id} and friend_user_id = '${localFriend.friend_user_id}`
+    )
+    .toString();
+
+  return db.exec(sql);
 }
 
-export function getAllFriendList(db: Database): QueryExecResult[] {
+export function getAllFriendList(
+  db: Database,
+  loginUser: string
+): QueryExecResult[] {
   return db.exec(
     `
       select *
         from local_friends
-        where owner_user_id = "3433303585"
+        where owner_user_id = "${loginUser}"
         `
   );
 }
 
 export function searchFriendList(
   db: Database,
-  key: string,
+  keyword: string,
   isSearchUserID: boolean,
   isSearchNickname: boolean,
   isSearchRemark: boolean
 ): QueryExecResult[] {
+  let totalConditionStr = '';
+  const userIDCondition = `friend_user_id like "%${keyword}%"`;
+  const nicknameCondition = `name like "%${keyword}%"`;
+  const remarkCondition = `remark like "%${keyword}%"`;
+  if (isSearchUserID) {
+    totalConditionStr = userIDCondition;
+  }
+  if (isSearchNickname) {
+    totalConditionStr = totalConditionStr
+      ? totalConditionStr + 'or' + nicknameCondition
+      : nicknameCondition;
+  }
+  if (isSearchRemark) {
+    totalConditionStr = totalConditionStr
+      ? totalConditionStr + 'or' + remarkCondition
+      : remarkCondition;
+  }
   return db.exec(
     `
       select *
         from local_friends
-        where friend_user_id like "%123%"
-        or name like "%123%"
-        or remark like "%123%"
+        where ${totalConditionStr}
         order by create_time desc
         `
   );
@@ -110,14 +119,15 @@ export function searchFriendList(
 
 export function getFriendInfoByFriendUserID(
   db: Database,
-  friendUserID: string
+  friendUserID: string,
+  loginUser: string
 ): QueryExecResult[] {
   return db.exec(
     `
       select *
         from local_friends
-        where owner_user_id = "3433303585"
-         and friend_user_id = "123"
+        where owner_user_id = "${loginUser}"
+         and friend_user_id = "${friendUserID}"
         limit 1
         `
   );
@@ -127,11 +137,12 @@ export function getFriendInfoList(
   db: Database,
   friendUserIDList: string[]
 ): QueryExecResult[] {
+  const values = friendUserIDList.map(v => `'${v}'`).join(',');
   return db.exec(
     `
       select *
         from local_friends
-        where friend_user_id in ("123")
+        where friend_user_id in (${values})
         `
   );
 }
