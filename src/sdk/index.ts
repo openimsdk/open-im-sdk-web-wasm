@@ -6,21 +6,26 @@ import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
 
 import {
     AccessFriendParams,
+    AccessGroupParams,
     AddFriendParams,
   AdvancedMsgParams,
   AdvancedQuoteMsgParams,
   AtMsgParams,
+  ChangeGroupMemberMuteParams,
+  ChangeGroupMuteParams,
   CreateGroupParams,
   CustomMsgParams,
   FaceMessageParams,
   FileMsgFullParams,
   FileMsgParams,
+  FindMessageParams,
   GetAdvancedHistoryMsgParams,
   GetGroupMemberByTimeParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
   GetOneConversationParams,
   GetOneCveParams,
+  GetSubDepParams,
   GroupInfoParams,
   GroupMsgReadParams,
   ImageMsgParams,
@@ -28,6 +33,7 @@ import {
   InsertSingleMsgParams,
   InviteGroupParams,
   isRecvParams,
+  JoinGroupParams,
   LocationMsgParams,
   LoginParam,
   LoginParams,
@@ -39,22 +45,28 @@ import {
   PinCveParams,
   QuoteMsgParams,
   RemarkFriendParams,
+  RtcActionParams,
   SearchFriendParams,
   SearchGroupMemberParams,
+  SearchGroupParams,
+  SearchInOrzParams,
   SearchLocalParams,
   SendMsgParams,
   SetDraftParams,
+  SetGroupRoleParams,
+  SetGroupVerificationParams,
   SetMemberAuthParams,
   setPrvParams,
   SoundMsgParams,
   SouondMsgFullParams,
   SplitParams,
+  TransferGroupParams,
   TypingUpdateParams,
   VideoMsgFullParams,
   VideoMsgParams,
 } from '../types/params';
 
-import { IMConfig, WsResponse } from '../types/entity';
+import { IMConfig, RtcInvite, WsResponse } from '../types/entity';
 
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<any>;
@@ -909,8 +921,244 @@ class SDK extends Emitter {
      
     ]);
   }
+  async joinGroup (data: JoinGroupParams, operationID = uuidv4()) {
+    return await this._invoker('joinGroup ', window.joinGroup, [
+      operationID,
+    data.groupID,
+    data.reqMsg,
+    JSON.stringify(data.joinSource)
+     
+    ]);
+  }
+  async searchGroups (data: SearchGroupParams, operationID = uuidv4()) {
+    return await this._invoker('searchGroups ', window.searchGroups, [
+      operationID,
+        JSON.stringify(data.keywordList),
+        JSON.stringify(data.isSearchGroupID),
+        JSON.stringify(data.isSearchGroupName),
+     
+    ]);
+  }
+  async quitGroup (data: string, operationID = uuidv4()) {
+    return await this._invoker('quitGroup ', window.quitGroup, [
+      operationID,
+        data
+     
+    ]);
+  }
+  async dismissGroup (data: string, operationID = uuidv4()) {
+    return await this._invoker('dismissGroup ', window.dismissGroup, [
+      operationID,
+        data
+     
+    ]);
+  }
+  async changeGroupMute (data: ChangeGroupMuteParams, operationID = uuidv4()) {
+    return await this._invoker('changeGroupMute ', window.changeGroupMute, [
+      operationID,
+        data.groupID,
+        JSON.stringify(data.isMute)
+     
+    ]);
+  }
+  async changeGroupMemberMute (data: ChangeGroupMemberMuteParams, operationID = uuidv4()) {
+    return await this._invoker('changeGroupMemberMute ', window.changeGroupMemberMute, [
+      operationID,
+        data.groupID,
+        data.userID ,
+        JSON.stringify(data.mutedSeconds)
+     
+    ]);
+  }
+  async transferGroupOwner (data: TransferGroupParams, operationID = uuidv4()) {
+    return await this._invoker('transferGroupOwner ', window.transferGroupOwner, [
+      operationID,
+        data.groupID,
+        data.newOwnerUserID
+     
+    ]);
+  }
+  async getSendGroupApplicationList ( operationID = uuidv4()) {
+    return await this._invoker('getSendGroupApplicationList ', window.getSendGroupApplicationList, [
+      operationID,
+ 
+     
+    ]);
+  }
+  async getRecvGroupApplicationList ( operationID = uuidv4()) {
+    return await this._invoker('getRecvGroupApplicationList ', window.getRecvGroupApplicationList, [
+      operationID,
+ 
+     
+    ]);
+  }
+  async acceptGroupApplication (data:AccessGroupParams, operationID = uuidv4()) {
+    return await this._invoker('acceptGroupApplication ', window.acceptGroupApplication, [
+      operationID,
+        data.groupID,
+        data.fromUserID,
+        data.handleMsg
+     
+    ]);
+  }
+  async refuseGroupApplication (data:AccessGroupParams, operationID = uuidv4()) {
+    return await this._invoker('refuseGroupApplication ', window.refuseGroupApplication, [
+      operationID,
+        data.groupID,
+        data.fromUserID,
+        data.handleMsg
+     
+    ]);
+  }
+  async signalingInvite (data:RtcInvite, operationID = uuidv4()) {
+    return await this._invoker('signalingInvite ', window.signalingInvite, [
+      operationID,
+        data.inviterUserID,
+        JSON.stringify(data.inviteeUserIDList),
+        data.groupID,
+        data.roomID,
+        JSON.stringify(data.timeout),
+        data.mediaType,
+        JSON.stringify(data.sessionType),
+        JSON.stringify(data.platformID)
+     
+    ]);
+  }
+  async signalingInviteInGroup (data:RtcInvite, operationID = uuidv4()) {
+    return await this._invoker('signalingInviteInGroup ', window.signalingInviteInGroup, [
+      operationID,
+        data.inviterUserID,
+        JSON.stringify(data.inviteeUserIDList),
+        data.groupID,
+        data.roomID,
+        JSON.stringify(data.timeout),
+        data.mediaType,
+        JSON.stringify(data.sessionType),
+        JSON.stringify(data.platformID)
+     
+    ]);
+  }
+  async signalingAccept (data:RtcActionParams, operationID = uuidv4()) {
+    return await this._invoker('signalingAccept ', window.signalingAccept, [
+      operationID,
+        data.opUserID,
+        JSON.stringify(data.invitation)
+     
+    ]);
+  }
+  async signalingReject (data:RtcActionParams, operationID = uuidv4()) {
+    return await this._invoker('signalingReject ', window.signalingReject, [
+      operationID,
+        data.opUserID,
+        JSON.stringify(data.invitation)
+     
+    ]);
+  }
+  async signalingCancel (data:RtcActionParams, operationID = uuidv4()) {
+    return await this._invoker('signalingCancel ', window.signalingCancel, [
+      operationID,
+        data.opUserID,
+        JSON.stringify(data.invitation)
+     
+    ]);
+  }
+  async signalingHungUp (data:RtcActionParams, operationID = uuidv4()) {
+    return await this._invoker('signalingHungUp ', window.signalingHungUp, [
+      operationID,
+        data.opUserID,
+        JSON.stringify(data.invitation)
+     
+    ]);
+  }
+  async getSubDepartment (data:GetSubDepParams, operationID = uuidv4()) {
+    return await this._invoker('getSubDepartment ', window.getSubDepartment, [
+      operationID,
+        data.departmentID,
+        JSON.stringify(data.offset),
+        JSON.stringify(data.count),
+     
+    ]);
+  }
+  async getDepartmentMember (data:GetSubDepParams, operationID = uuidv4()) {
+    return await this._invoker('getDepartmentMember ', window.getDepartmentMember, [
+      operationID,
+        data.departmentID,
+        JSON.stringify(data.offset),
+        JSON.stringify(data.count),
+     
+    ]);
+  }
+  async getUserInDepartment (userID: string, operationID = uuidv4()) {
+    return await this._invoker('getUserInDepartment ', window.getUserInDepartment, [
+      operationID,
+      userID,
+     
+    ]);
+  }
+  async getDepartmentMemberAndSubDepartment (departmentID: string, operationID = uuidv4()) {
+    return await this._invoker('getDepartmentMemberAndSubDepartment ', window.getDepartmentMemberAndSubDepartment, [
+      operationID,
+      departmentID,
+     
+    ]);
+  }
+  async getDepartmentInfo (departmentID: string, operationID = uuidv4()) {
+    return await this._invoker('getDepartmentInfo ', window.getDepartmentInfo, [
+      operationID,
+      departmentID,
+     
+    ]);
+  }
+  async searchOrganization (data: SearchInOrzParams, operationID = uuidv4()) {
+    return await this._invoker('searchOrganization ', window.searchOrganization, [
+      operationID,
+      JSON.stringify(data.input),
+      JSON.stringify(data.offset),
+      JSON.stringify(data.count),
+     
+    ]);
+  }
+  async resetConversationGroupAtType (data: string, operationID = uuidv4()) {
+    return await this._invoker('resetConversationGroupAtType ', window.resetConversationGroupAtType, [
+      operationID,
+        data 
+    ]);
+  }
+  async setGroupMemberRoleLevel (data: SetGroupRoleParams, operationID = uuidv4()) {
+    return await this._invoker('setGroupMemberRoleLevel ', window.setGroupMemberRoleLevel, [
+      operationID,
+        data .groupID,
+        data.userID,
+        JSON.stringify(data.roleLevel)
+    ]);
+  }
+  async setGroupVerification (data: SetGroupVerificationParams, operationID = uuidv4()) {
+    return await this._invoker('setGroupVerification ', window.setGroupVerification, [
+      operationID,
+        JSON.stringify(data.verification),
+        data.groupID
+    ]);
+  }
+  async setGlobalRecvMessageOpt (data: { opt: OptType }, operationID = uuidv4()) {
+    return await this._invoker('setGlobalRecvMessageOpt ', window.setGlobalRecvMessageOpt, [
+      operationID,
+        JSON.stringify(data.opt)
+    ]);
+  }
+  async newRevokeMessage (data: string, operationID = uuidv4()) {
+    return await this._invoker('newRevokeMessage ', window.newRevokeMessage, [
+      operationID,
+ data
+    ]);
+  }
+  async findMessageList (data: FindMessageParams, operationID = uuidv4()) {
+    return await this._invoker('findMessageList ', window.findMessageList, [
+      operationID,
+        data.conversationID,
+        JSON.stringify(data.clientMsgIDList)
+    ]);
+  }
 
-//getGroupsInfo?
   
 
 

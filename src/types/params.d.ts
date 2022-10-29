@@ -99,31 +99,6 @@ type VideoMsgFullParams = {
   snapshotFullPath: string;
 };
 
-type FileMsgParams = {
-  filePath: string;
-  fileName: string;
-  uuid: string;
-  sourceUrl: string;
-  fileSize: number;
-};
-
-type FileMsgFullParams = {
-  fileFullPath: string;
-  fileName: string;
-};
-
-type SoundMsgParams = {
-  uuid: string;
-  soundPath: string;
-  sourceUrl: string;
-  dataSize: number;
-  duration: number;
-};
-
-type SouondMsgFullParams = {
-  soundPath: string;
-  duration: number;
-};
 
 type CustomMsgParams = {
   data: string;
@@ -147,51 +122,16 @@ type AdvancedMsgParams = {
   messageEntityList?: MessageEntity[];
 };
 
-type MergerMsgParams = {
-  messageList: MessageItem[];
-  title: string;
-  summaryList: string[];
-};
 
-type FaceMessageParams = {
-  index: number;
-  data: string;
-};
 
-type LocationMsgParams = {
-  description: string;
-  longitude: number;
-  latitude: number;
-};
-
-type AtMsgParams = {
-  text: string;
-  atUserIDList: string[];
-  atUsersInfo?: AtUsersInfoItem[];
-  message?: string;
-};
 
 type SetPrvParams = {
   conversationID: string;
   isPrivate: boolean;
 };
 
-type InsertSingleMsgParams = {
-  message: string;
-  recvID: string;
-  sendID: string;
-};
 
-type InsertGroupMsgParams = {
-  message: string;
-  groupID: string;
-  sendID: string;
-};
 
-type TypingUpdateParams = {
-  recvID: string;
-  msgTip: string;
-};
 
 type SplitConversationParams = {
   offset: number;
@@ -213,90 +153,7 @@ type IsRecvParams = {
   opt: OptType;
 };
 
-type SearchLocalParams = {
-  conversationID: string;
-  keywordList: string[];
-  keywordListMatchType?: number;
-  senderUserIDList?: string[];
-  messageTypeList?: MessageType[];
-  searchTimePosition?: number;
-  searchTimePeriod?: number;
-  pageIndex?: number;
-  count?: number;
-};
-
-type AddFriendParams = {
-  toUserID: string;
-  reqMsg: string;
-};
-
-type SearchFriendParams = {
-  keywordList: string[];
-  isSearchUserID: boolean;
-  isSearchNickname: boolean;
-  isSearchRemark: boolean;
-};
-
-type AccessFriendParams = {
-  toUserID: string;
-  handleMsg: string;
-};
-
-type RemarkFriendParams = {
-  toUserID: string;
-  remark: string;
-};
-
-type InviteGroupParams = {
-  groupID: string;
-  reason: string;
-  userIDList: string[];
-};
-
-type GroupMsgReadParams = {
-  groupID: string;
-  msgIDList: string[];
-};
-
-type GetGroupMemberParams = {
-  groupID: string;
-  filter: number;
-  offset: number;
-  count: number;
-};
-
-type GetGroupMemberByTimeParams = {
-  groupID: string;
-  filterUserIDList: string[];
-  offset: number;
-  count: number;
-  joinTimeBegin: number;
-  joinTimeEnd: number;
-};
-
-type SearchGroupMemberParams = {
-  groupID: string;
-  keywordList: string[];
-  isSearchUserID: boolean;
-  isSearchMemberNickname: boolean;
-  offset: number;
-  count: number;
-};
-
-type SetMemberAuthParams = {
-  rule: AllowType;
-  groupID: string;
-};
-
-type CreateGroupParams = {
-  groupBaseInfo: GroupInitInfo;
-  memberList: CreateMember[];
-};
-
-type GroupInfoParams = {
-  groupID: string;
-  groupInfo: GroupBaseInfo;
-};
+ 
 
 type UpdateMemberNameParams = {
   groupID: string;
@@ -355,7 +212,17 @@ type RtcActionParams = {
   opUserID: string;
   invitation: RtcInvite;
 };
-
+  type RtcInvite = {
+    inviterUserID: string;
+    inviteeUserIDList: string[];
+    groupID: string;
+    roomID: string;
+    timeout: number;
+    mediaType: string;
+    sessionType: number;
+    platformID: number;
+  };
+  
 
  type setPrvParams = {
     conversationID: string;
@@ -382,21 +249,6 @@ type RtcActionParams = {
     duration: number;
   };
 
-   type VideoMsgParams = {
-    videoPath: string;
-    duration: number;
-    videoType: string;
-    snapshotPath: string;
-    videoUUID: string;
-    videoUrl: string;
-    videoSize: number;
-    snapshotUUID: string;
-    snapshotSize: number;
-    snapshotUrl: string;
-    snapshotWidth: number;
-    snapshotHeight: number;
-  };
-
 
    type FileMsgParams = {
     filePath: string;
@@ -418,12 +270,7 @@ type RtcActionParams = {
     duration: number;
   };
 
-   type VideoMsgFullParams = {
-    videoFullPath: string;
-    videoType: string;
-    duration: number;
-    snapshotFullPath: string;
-  };
+
 
    type MergerMsgParams = {
     messageList: MessageItem[];
@@ -544,5 +391,19 @@ type LocationMsgParams = {
     GroupMemberNickname: string;
   };
 
+    type GetSubDepParams = {
+    departmentID: string;
+    offset: number;
+    count: number;
+  };
+    type SearchInOrzParams = {
+    input: SearchInputType;
+    offset: number;
+    count: number;
+  };
+    type FindMessageParams = {
+    conversationID: string;
+    clientMsgIDList: string[]
+  }
 type PartialUserItem = 
 Partial<Omit<FullUserItem, "userID">> & { userID: string };

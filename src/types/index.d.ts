@@ -544,6 +544,164 @@ declare global {
     userID: string,
     GroupMemberNickname: string,
       ) => Promise<string>,
+      joinGroup: (
+        operationID: string,
+        groupID: string,
+        reqMsg: string,
+        joinSource: GroupJoinSource,
+      ) => Promise<string>,
+      searchGroups: (
+        operationID: string,
+        keywordList: string[],
+        isSearchGroupID: boolean,
+        isSearchGroupName: boolean,
+      ) => Promise<string>,
+      quitGroup: (
+        operationID: string,
+        groupID : string
+      ) => Promise<string>,
+      dismissGroup: (
+        operationID: string,
+        groupID : string
+      ) => Promise<string>,
+      changeGroupMute: (
+        operationID: string,
+        groupID: string,
+    isMute: boolean,
+      ) => Promise<string>,
+      changeGroupMemberMute: (
+        operationID: string,
+        groupID: string,
+        userID: string,
+        mutedSeconds: number,
+      ) => Promise<string>,
+      transferGroupOwner: (
+        operationID: string,
+        groupID: string,
+        newOwnerUserID: string,
+      ) => Promise<string>,
+      getSendGroupApplicationList: (
+        operationID: string,
+ 
+      ) => Promise<string>,
+      getRecvGroupApplicationList: (
+        operationID: string,
+ 
+      ) => Promise<string>,
+      acceptGroupApplication: (
+        operationID: string,
+        groupID: string,
+        fromUserID: string,
+        handleMsg: string,
+      ) => Promise<string>,
+      refuseGroupApplication: (
+        operationID: string,
+        groupID: string,
+        fromUserID: string,
+        handleMsg: string,
+      ) => Promise<string>,
+      signalingInvite: (
+        operationID: string,
+        inviterUserID: string,
+        inviteeUserIDList: string[],
+        groupID: string,
+        roomID: string,
+        timeout: number,
+        mediaType: string,
+        sessionType: number,
+        platformID: number,
+      ) => Promise<string>,
+      signalingInviteInGroup: (
+        operationID: string,
+        inviterUserID: string,
+        inviteeUserIDList: string[],
+        groupID: string,
+        roomID: string,
+        timeout: number,
+        mediaType: string,
+        sessionType: number,
+        platformID: number,
+      ) => Promise<string>,
+      signalingAccept: (
+        operationID: string,
+        opUserID: string,
+        invitation: RtcInvite,
+      ) => Promise<string>,
+      signalingReject: (
+        operationID: string,
+        opUserID: string,
+        invitation: RtcInvite,
+      ) => Promise<string>,
+      signalingCancel: (
+        operationID: string,
+        opUserID: string,
+        invitation: RtcInvite,
+      ) => Promise<string>,
+      signalingHungUp: (
+        operationID: string,
+        opUserID: string,
+        invitation: RtcInvite,
+      ) => Promise<string>,
+      getSubDepartment: (
+        operationID: string,
+        departmentID: string,
+        offset: number,
+        count: number,
+      ) => Promise<string>,
+      getDepartmentMember: (
+        operationID: string,
+        operationID: string,
+        departmentID: string,
+        offset: number,
+        count: number,
+      ) => Promise<string>,
+      getUserInDepartment: (
+        operationID: string,
+        userID : string,
+      ) => Promise<string>,
+      getDepartmentMemberAndSubDepartment: (
+        operationID: string,
+        departmentID : string,
+      ) => Promise<string>,
+      getDepartmentInfo: (
+        operationID: string,
+        departmentID : string,
+      ) => Promise<string>,
+      searchOrganization: (
+        operationID: string,
+        input: SearchInputType,
+        offset: number,
+        count: number,
+      ) => Promise<string>,
+      resetConversationGroupAtType: (
+        operationID: string,
+        conversationID:  string,
+ 
+      ) => Promise<string>,
+      setGroupMemberRoleLevel: (
+        operationID: string,
+        groupID: string,
+        userID: string,
+        roleLevel: GroupRole,
+      ) => Promise<string>,
+      setGroupVerification: (
+        operationID: string,
+        verification: GroupVerificationType,
+        groupID: string,
+      ) => Promise<string>,
+      setGlobalRecvMessageOpt: (
+        operationID: string,
+        opt : OptType
+      ) => Promise<string>,
+      newRevokeMessage: (
+        operationID: string,
+        message :  string
+      ) => Promise<string>,
+      findMessageList: (
+        operationID: string,
+        conversationID: string,
+    clientMsgIDList: string[]
+      ) => Promise<string>,
 
     // debug
     exec: (sql: string) => Promise<any>;

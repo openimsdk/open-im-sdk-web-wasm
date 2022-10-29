@@ -1,4 +1,4 @@
-enum OptType {
+enum    OptType {
   Nomal = 0,
   Mute = 1,
   WithoutNotify = 2,
