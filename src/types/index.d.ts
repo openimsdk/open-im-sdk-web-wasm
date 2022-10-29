@@ -395,6 +395,155 @@ declare global {
         conversationID: string,
         isPinned: boolean,
       ) => Promise<string>;
+      getTotalUnreadMsgCount: (
+        operationID: string,
+      ) => Promise<string>;
+      getConversationRecvMessageOpt: (
+        operationID: string,
+        conversationIDList: string[]
+      ) => Promise<string>;
+      setConversationRecvMessageOpt: (
+        operationID: string,
+        conversationIDList: string[],
+    opt: OptType
+      ) => Promise<string>;
+      searchLocalMessages: (
+        operationID: string,
+        conversationID: string,
+        keywordList: string[],
+        keywordListMatchType?: number,
+        senderUserIDList?: string[],
+        messageTypeList?: MessageType[],
+        searchTimePosition?: number,
+        searchTimePeriod?: number,
+        pageIndex?: number,
+        count?: number,
+      ) => Promise<string>;
+      addFriend: (
+        operationID: string,
+        toUserID: string,
+        reqMsg: string
+      ) => Promise<string>;
+      searchFriends: (
+        operationID: string,
+        keywordList: string[],
+        isSearchUserID: boolean,
+        isSearchNickname: boolean,
+        isSearchRemark: boolean,
+      ) => Promise<string>;
+      getDesignatedFriendsInfo: (
+        operationID: string,
+        userIDList: string[]
+      ) => Promise<string>;
+      getRecvFriendApplicationList: (
+        operationID: string,
+      ) => Promise<string>;
+      getSendFriendApplicationList: (
+        operationID: string,
+      ) => Promise<string>;
+      getFriendList: (
+        operationID: string,
+      ) => Promise<string>;
+      setFriendRemark: (
+        operationID: string,
+        toUserID: string,
+        remark: string
+      ) => Promise<string>;
+      checkFriend: (
+        operationID: string,
+        userIDList : string[]
+      ) => Promise<string>;
+      acceptFriendApplication: (
+        operationID: string,
+        toUserID: string,
+        handleMsg: string
+      ) => Promise<string>;
+      refuseFriendApplication: (
+        operationID: string,
+        toUserID: string,
+        handleMsg: string
+      ) => Promise<string>;
+      deleteFriend: (
+        operationID: string,
+        friendUserID: string,
+
+      ) => Promise<string>;
+      addBlack: (
+        operationID: string,
+        blackUserID: string,
+      ) => Promise<string>;
+      removeBlack: (
+        operationID: string,
+        removeUserID: string,
+      ) => Promise<string>;
+      getBlackList: (
+        operationID: string,
+      ) => Promise<string>;
+      inviteUserToGroup: (
+        operationID: string,
+        groupID: string,
+        reason: string,
+        userIDList: string[],
+      ) => Promise<string>;
+      kickGroupMember: (
+        operationID: string,
+        groupID: string,
+        reason: string,
+        userIDList: string[],
+      ) => Promise<string>;
+      getGroupMembersInfo: (
+        operationID: string,
+        groupID: string,
+        reason: string,
+        userIDList: string[],
+      ) => Promise<string>,
+      getGroupMemberListByJoinTimeFilter: (
+        operationID: string,
+        groupID: string,
+        filterUserIDList: string[],
+        offset: number,
+        count: number,
+        joinTimeBegin: number,
+        joinTimeEnd: number,
+      ) => Promise<string>,
+      searchGroupMembers: (
+        operationID: string,
+        groupID: string,
+        keywordList: string[],
+        isSearchUserID: boolean,
+        isSearchMemberNickname: boolean,
+        offset: number,
+        count: number,
+      ) => Promise<string>,
+      setGroupApplyMemberFriend: (
+        operationID: string,
+        rule: AllowType,
+        groupID: string,
+      ) => Promise<string>,
+      setGroupLookMemberInfo: (
+        operationID: string,
+        rule: AllowType,
+        groupID: string,
+      ) => Promise<string>,
+      getJoinedGroupList: (
+        operationID: string,
+      ) => Promise<string>,
+      createGroup: (
+        operationID: string,
+        groupBaseInfo: GroupInitInfo,
+        memberList: Member[],
+      ) => Promise<string>,
+      setGroupInfo: (
+        operationID: string,
+        groupID: string,
+        groupInfo: GroupBaseInfo,
+      ) => Promise<string>,
+      setGroupMemberNickname: (
+        operationID: string,
+        groupID: string,
+    userID: string,
+    GroupMemberNickname: string,
+      ) => Promise<string>,
 
     // debug
     exec: (sql: string) => Promise<any>;

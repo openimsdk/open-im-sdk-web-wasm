@@ -5,33 +5,46 @@ import { WSEvent } from '../types';
 import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
 
 import {
+    AccessFriendParams,
+    AddFriendParams,
   AdvancedMsgParams,
   AdvancedQuoteMsgParams,
   AtMsgParams,
+  CreateGroupParams,
   CustomMsgParams,
   FaceMessageParams,
   FileMsgFullParams,
   FileMsgParams,
   GetAdvancedHistoryMsgParams,
+  GetGroupMemberByTimeParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
   GetOneConversationParams,
   GetOneCveParams,
+  GroupInfoParams,
   GroupMsgReadParams,
   ImageMsgParams,
   InsertGroupMsgParams,
   InsertSingleMsgParams,
+  InviteGroupParams,
+  isRecvParams,
   LocationMsgParams,
   LoginParam,
   LoginParams,
   MarkC2CParams,
   MarkNotiParams,
+  MemberNameParams,
   MergerMsgParams,
   PartialUserItem,
   PinCveParams,
   QuoteMsgParams,
+  RemarkFriendParams,
+  SearchFriendParams,
+  SearchGroupMemberParams,
+  SearchLocalParams,
   SendMsgParams,
   SetDraftParams,
+  SetMemberAuthParams,
   setPrvParams,
   SoundMsgParams,
   SouondMsgFullParams,
@@ -681,8 +694,223 @@ class SDK extends Emitter {
        JSON.stringify(data.isPinned)
     ]);
   }
+  async getTotalUnreadMsgCount  ( operationID = uuidv4()) {
+    return await this._invoker('getTotalUnreadMsgCount ', window.getTotalUnreadMsgCount, [
+      operationID,
+    ]);
+  }
+  async getConversationRecvMessageOpt ( data : string[] , operationID = uuidv4()) {
+    return await this._invoker('getConversationRecvMessageOpt ', window.getConversationRecvMessageOpt, [
+      operationID,
+      JSON.stringify(data)
+    ]);
+  }
+  async setConversationRecvMessageOpt ( data : isRecvParams , operationID = uuidv4()) {
+    return await this._invoker('setConversationRecvMessageOpt ', window.setConversationRecvMessageOpt, [
+      operationID,
+      JSON.stringify(data.conversationIDList),
+      JSON.stringify(data.opt),
+    ]);
+  }
+  async searchLocalMessages ( data : SearchLocalParams , operationID = uuidv4()) {
+    return await this._invoker('searchLocalMessages ', window.searchLocalMessages, [
+      operationID,
+        data.conversationID ,
+        JSON.stringify(data.keywordList),
+        JSON.stringify(data.keywordListMatchType),
+        JSON.stringify(data.senderUserIDList),
+        JSON.stringify(data.messageTypeList),
+        JSON.stringify(data.searchTimePosition),
+        JSON.stringify(data.searchTimePeriod),
+        JSON.stringify(data.pageIndex),
+        JSON.stringify(data.count),
+    ]);
+  }
+  async addFriend ( data : AddFriendParams , operationID = uuidv4()) {
+    return await this._invoker('addFriend ', window.addFriend, [
+      operationID,
+        data.toUserID,
+        data.reqMsg
+    ]);
+  }
+  async searchFriends ( data : SearchFriendParams , operationID = uuidv4()) {
+    return await this._invoker('searchFriends ', window.searchFriends, [
+      operationID,
+        JSON.stringify(data.keywordList),
+        JSON.stringify(data.isSearchUserID),
+        JSON.stringify(data.isSearchNickname),
+        JSON.stringify(data.isSearchRemark),
+    ]);
+  }
+  async getDesignatedFriendsInfo ( data: string[], operationID = uuidv4()) {
+    return await this._invoker('getDesignatedFriendsInfo ', window.getDesignatedFriendsInfo, [
+      operationID,
+        JSON.stringify(data),
 
+    ]);
+  }
+  async getRecvFriendApplicationList (  operationID = uuidv4()) {
+    return await this._invoker('getRecvFriendApplicationList ', window.getRecvFriendApplicationList, [
+      operationID,
 
+    ]);
+  }
+  async getSendFriendApplicationList (  operationID = uuidv4()) {
+    return await this._invoker('getSendFriendApplicationList ', window.getSendFriendApplicationList, [
+      operationID,
+
+    ]);
+  }
+  async getFriendList (  operationID = uuidv4()) {
+    return await this._invoker('getFriendList ', window.getFriendList, [
+      operationID,
+
+    ]);
+  }
+  async setFriendRemark (data:RemarkFriendParams,  operationID = uuidv4()) {
+    return await this._invoker('setFriendRemark ', window.setFriendRemark, [
+      operationID,
+        data.toUserID,
+        data.remark
+    ]);
+  }
+  async checkFriend (data:string[],  operationID = uuidv4()) {
+    return await this._invoker('checkFriend ', window.checkFriend, [
+      operationID,
+        JSON.stringify(data),
+    ]);
+  }
+  async acceptFriendApplication (data:AccessFriendParams,  operationID = uuidv4()) {
+    return await this._invoker('acceptFriendApplication ', window.acceptFriendApplication, [
+      operationID,
+        data.toUserID,
+        data.handleMsg
+    ]);
+  }
+  async refuseFriendApplication (data:AccessFriendParams,  operationID = uuidv4()) {
+    return await this._invoker('refuseFriendApplication ', window.refuseFriendApplication, [
+      operationID,
+        data.toUserID,
+        data.handleMsg
+    ]);
+  }
+  async deleteFriend (data:string,  operationID = uuidv4()) {
+    return await this._invoker('deleteFriend ', window.deleteFriend, [
+      operationID,
+        data,
+    ]);
+  }
+  async addBlack (data:string,  operationID = uuidv4()) {
+    return await this._invoker('addBlack ', window.addBlack, [
+      operationID,
+        data,
+    ]);
+  }
+  async removeBlack (data:string,  operationID = uuidv4()) {
+    return await this._invoker('removeBlack ', window.removeBlack, [
+      operationID,
+        data,
+    ]);
+  }
+  async getBlackList (  operationID = uuidv4()) {
+    return await this._invoker('getBlackList ', window.getBlackList, [
+      operationID,
+ 
+    ]);
+  }
+  async inviteUserToGroup (data: InviteGroupParams,  operationID = uuidv4()) {
+    return await this._invoker('inviteUserToGroup ', window.inviteUserToGroup, [
+      operationID,
+      data.groupID,
+      data.reason,
+        JSON.stringify(data.userIDList),
+    ]);
+  }
+  async kickGroupMember (data: InviteGroupParams,  operationID = uuidv4()) {
+    return await this._invoker('kickGroupMember ', window.kickGroupMember, [
+      operationID,
+      data.groupID,
+      data.reason,
+        JSON.stringify(data.userIDList),
+    ]);
+  }
+  /* 、、、、、、、、、、、、、、、、周一问 */
+  async getGroupMembersInfo (data:Omit<InviteGroupParams, "reason">,  operationID = uuidv4()) {
+    return await this._invoker('getGroupMembersInfo ', window.getGroupMembersInfo, [
+      operationID,
+      data.groupID,
+    //   data.reason,
+        JSON.stringify(data.userIDList),
+    ]);
+  }
+  async getGroupMemberListByJoinTimeFilter (data: GetGroupMemberByTimeParams,  operationID = uuidv4()) {
+    return await this._invoker('getGroupMemberListByJoinTimeFilter ', window.getGroupMemberListByJoinTimeFilter, [
+      operationID,
+      data.groupID,
+        JSON.stringify(data.filterUserIDList),
+        JSON.stringify(data.offset),
+        JSON.stringify(data.count),
+        JSON.stringify(data.joinTimeBegin),
+        JSON.stringify(data.joinTimeEnd),
+    ]);
+  }
+  async searchGroupMembers (data: SearchGroupMemberParams,  operationID = uuidv4()) {
+    return await this._invoker('searchGroupMembers ', window.searchGroupMembers, [
+      operationID,
+      data.groupID,
+        JSON.stringify(data.keywordList),
+        JSON.stringify(data.isSearchUserID),
+        JSON.stringify(data.isSearchMemberNickname),
+        JSON.stringify(data.offset),
+        JSON.stringify(data.count),
+    ]);
+  }
+  async setGroupApplyMemberFriend (data: SetMemberAuthParams,  operationID = uuidv4()) {
+    return await this._invoker('setGroupApplyMemberFriend ', window.setGroupApplyMemberFriend, [
+      operationID,
+        JSON.stringify(data.rule),
+        data.groupID
+    ]);
+  }
+  async setGroupLookMemberInfo (data: SetMemberAuthParams,  operationID = uuidv4()) {
+    return await this._invoker('setGroupLookMemberInfo ', window.setGroupLookMemberInfo, [
+      operationID,
+        JSON.stringify(data.rule),
+        data.groupID
+    ]);
+  }
+  async getJoinedGroupList ( operationID = uuidv4()) {
+    return await this._invoker('getJoinedGroupList ', window.getJoinedGroupList, [
+      operationID,
+
+    ]);
+  }
+  async createGroup (data: CreateGroupParams, operationID = uuidv4()) {
+    return await this._invoker('createGroup ', window.createGroup, [
+      operationID,
+      JSON.stringify(data.groupBaseInfo),
+      JSON.stringify(data.memberList),
+    ]);
+  }
+  async setGroupInfo (data: GroupInfoParams, operationID = uuidv4()) {
+    return await this._invoker('setGroupInfo ', window.setGroupInfo, [
+      operationID,
+      data.groupID,
+      JSON.stringify(data.groupInfo),
+     
+    ]);
+  }
+  async setGroupMemberNickname (data: MemberNameParams, operationID = uuidv4()) {
+    return await this._invoker('setGroupMemberNickname ', window.setGroupMemberNickname, [
+      operationID,
+      data.groupID,
+      data.userID ,
+      data.GroupMemberNickname,
+     
+    ]);
+  }
+
+//getGroupsInfo?
   
 
 

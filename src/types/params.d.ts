@@ -472,5 +472,77 @@ type LocationMsgParams = {
     sourceID: string;
     sessionType: number;
   };
+   type isRecvParams = {
+    conversationIDList: string[];
+    opt: OptType;
+  };
+ type SearchLocalParams = {
+    conversationID: string;
+    keywordList: string[];
+    keywordListMatchType?: number;
+    senderUserIDList?: string[];
+    messageTypeList?: MessageType[];
+    searchTimePosition?: number;
+    searchTimePeriod?: number;
+    pageIndex?: number;
+    count?: number;
+  };
+   type AddFriendParams = {
+    toUserID: string;
+    reqMsg: string;
+  };
+    type SearchFriendParams = {
+    keywordList: string[];
+    isSearchUserID: boolean;
+    isSearchNickname: boolean;
+    isSearchRemark: boolean;
+  };
+    type RemarkFriendParams = {
+    toUserID: string;
+    remark: string;
+  };
+    type AccessFriendParams = {
+    toUserID: string;
+    handleMsg: string;
+  };
+    type InviteGroupParams = {
+    groupID: string;
+    reason: string;
+    userIDList: string[];
+  };
+    type GetGroupMemberByTimeParams = {
+    groupID: string;
+    filterUserIDList: string[];
+    offset: number;
+    count: number;
+    joinTimeBegin: number;
+    joinTimeEnd: number;
+  };
+    type SearchGroupMemberParams = {
+    groupID: string;
+    keywordList: string[];
+    isSearchUserID: boolean;
+    isSearchMemberNickname: boolean;
+    offset: number;
+    count: number;
+  };
+    type SetMemberAuthParams = {
+    rule: AllowType;
+    groupID: string;
+  }
+   type CreateGroupParams = {
+    groupBaseInfo: GroupInitInfo;
+    memberList: Member[];
+  };
+    type GroupInfoParams = {
+    groupID: string;
+    groupInfo: GroupBaseInfo;
+  };
+    type MemberNameParams = {
+    groupID: string;
+    userID: string;
+    GroupMemberNickname: string;
+  };
+
 type PartialUserItem = 
 Partial<Omit<FullUserItem, "userID">> & { userID: string };
