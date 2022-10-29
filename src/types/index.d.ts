@@ -250,6 +250,152 @@ declare global {
         snapshotWidth: number,
         snapshotHeight: number,
       ) => Promise<string>;
+      createFileMessage: (
+        operationID: string,
+        filePath: string,
+        fileName: string,
+        uuid: string,
+        sourceUrl: string,
+        fileSize: number,
+      ) => Promise<string>;
+      createFileMessageFromFullPath: (
+        operationID: string,
+        fileFullPath: string,
+        fileName: string,
+      ) => Promise<string>;
+      createImageMessageFromFullPath: (
+        operationID: string,
+        imageFullPath: string,
+      ) => Promise<string>;
+      createSoundMessageFromFullPath: (
+        operationID: string,
+        soundPath: string,
+        duration: number,
+      ) => Promise<string>;
+      createVideoMessageFromFullPath: (
+        operationID: string,
+        videoFullPath: string,
+        videoType: string,
+        duration: number,
+        snapshotFullPath: string,
+      ) => Promise<string>;
+      createMergerMessage: (
+        operationID: string,
+        messageList: MessageItem[],
+        title: string,
+        summaryList: string[],
+      ) => Promise<string>;
+      createForwardMessage: (
+        operationID: string,
+        m : string
+      ) => Promise<string>;
+      createFaceMessage: (
+        operationID: string,
+        index: number,
+        data: string,
+      ) => Promise<string>;
+      createLocationMessage: (
+        operationID: string,
+        description: string,
+        longitude: number,
+        latitude: number,
+      ) => Promise<string>;
+      createCardMessage: (
+        operationID: string,
+        cardInfo : string
+      ) => Promise<string>;
+      deleteMessageFromLocalStorage: (
+        operationID: string,
+        message : string
+      ) => Promise<string>;
+      deleteMessageFromLocalAndSvr: (
+        operationID: string,
+        message : string
+      ) => Promise<string>;
+      deleteAllConversationFromLocal: (
+        operationID: string,
+      ) => Promise<string>;
+      deleteAllMsgFromLocal: (
+        operationID: string,
+      ) => Promise<string>;
+      deleteAllMsgFromLocalAndSvr: (
+        operationID: string,
+      ) => Promise<string>;
+      markGroupMessageHasRead: (
+        operationID: string,
+        groupID : string
+      ) => Promise<string>;
+      markGroupMessageAsRead: (
+        operationID: string,
+        groupID : string ,
+        msgIDList: string[]
+      ) => Promise<string>;
+      insertSingleMessageToLocalStorage: (
+        operationID: string,
+        message: string ,
+        recvID: string,
+        sendID: string,
+      ) => Promise<string>;
+      insertGroupMessageToLocalStorage: (
+        operationID: string,
+        message: string ,
+        groupID: string,
+        sendID: string,
+      ) => Promise<string>;
+      typingStatusUpdate: (
+        operationID: string,
+        recvID: string,
+        msgTip: string
+      ) => Promise<string>;
+      markNotifyMessageHasRead: (
+        operationID: string,
+        conversationID: string,
+      ) => Promise<string>;
+      clearC2CHistoryMessage: (
+        operationID: string,
+        userID: string,
+      ) => Promise<string>;
+      clearC2CHistoryMessageFromLocalAndSvr: (
+        operationID: string,
+        userID: string,
+      ) => Promise<string>;
+      clearGroupHistoryMessage: (
+        operationID: string,
+        groupID: string,
+      ) => Promise<string>;
+      clearGroupHistoryMessageFromLocalAndSvr: (
+        operationID: string,
+        groupID: string,
+      ) => Promise<string>;
+      getConversationListSplit: (
+        operationID: string,
+        offset: number ,
+        count: number
+      ) => Promise<string>;
+      getConversationIDBySessionType: (
+        operationID: string,
+        sourceID: string,
+        sessionType: number
+      ) => Promise<string>;
+      getMultipleConversation: (
+        operationID: string,
+        conversationIDList: string[]
+      ) => Promise<string>;
+      deleteConversation: (
+        operationID: string,
+        conversationID: string
+      ) => Promise<string>;
+      setConversationDraft: (
+        operationID: string,
+        conversationID: string,
+        draftText: string
+      ) => Promise<string>;
+      pinConversation: (
+        operationID: string,
+        conversationID: string,
+        isPinned: boolean,
+      ) => Promise<string>;
+
     // debug
     exec: (sql: string) => Promise<any>;
   }

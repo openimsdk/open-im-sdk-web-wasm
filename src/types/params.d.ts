@@ -397,6 +397,80 @@ type RtcActionParams = {
     snapshotHeight: number;
   };
 
+
+   type FileMsgParams = {
+    filePath: string;
+    fileName: string;
+    uuid: string;
+    sourceUrl: string;
+    fileSize: number;
+  };
+
+   type FileMsgFullParams = {
+    fileFullPath: string;
+    fileName: string;
+  };
+
+
+
+   type SouondMsgFullParams = {
+    soundPath: string;
+    duration: number;
+  };
+
+   type VideoMsgFullParams = {
+    videoFullPath: string;
+    videoType: string;
+    duration: number;
+    snapshotFullPath: string;
+  };
+
+   type MergerMsgParams = {
+    messageList: MessageItem[];
+    title: string;
+    summaryList: string[];
+  };
+
+   type FaceMessageParams = {
+    index: number;
+    data: string;
+  };
+
+type LocationMsgParams = {
+    description: string;
+    longitude: number;
+    latitude: number;
+  };
   
+
+   type GroupMsgReadParams = {
+    groupID: string;
+    msgIDList: string[];
+  };
+   type InsertSingleMsgParams = {
+    message: string;
+    recvID: string;
+    sendID: string;
+  };
+  
+   type InsertGroupMsgParams = {
+    message: string;
+    groupID: string;
+    sendID: string;
+  };
+
+   type TypingUpdateParams = {
+    recvID: string;
+    msgTip: string;
+  };
+  
+   type SplitParams = {
+    offset: number;
+    count: number;
+  };
+   type GetOneCveParams = {
+    sourceID: string;
+    sessionType: number;
+  };
 type PartialUserItem = 
 Partial<Omit<FullUserItem, "userID">> & { userID: string };

@@ -9,20 +9,35 @@ import {
   AdvancedQuoteMsgParams,
   AtMsgParams,
   CustomMsgParams,
+  FaceMessageParams,
+  FileMsgFullParams,
+  FileMsgParams,
   GetAdvancedHistoryMsgParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
   GetOneConversationParams,
+  GetOneCveParams,
+  GroupMsgReadParams,
   ImageMsgParams,
+  InsertGroupMsgParams,
+  InsertSingleMsgParams,
+  LocationMsgParams,
   LoginParam,
   LoginParams,
   MarkC2CParams,
   MarkNotiParams,
+  MergerMsgParams,
   PartialUserItem,
+  PinCveParams,
   QuoteMsgParams,
   SendMsgParams,
+  SetDraftParams,
   setPrvParams,
   SoundMsgParams,
+  SouondMsgFullParams,
+  SplitParams,
+  TypingUpdateParams,
+  VideoMsgFullParams,
   VideoMsgParams,
 } from '../types/params';
 
@@ -214,7 +229,7 @@ class SDK extends Emitter {
   ) {
     return await this._invoker(
       'markNotifyMessageHasRead',
-      window.markMessageAsReadByConID,
+      window.markNotifyMessageHasRead,
       [operationID, conversationID, '[]']
     );
   }
@@ -429,6 +444,257 @@ class SDK extends Emitter {
 
     ]);
   }
+
+
+  async createFileMessage  (data: FileMsgParams, operationID = uuidv4()) {
+    return await this._invoker('createFileMessage ', window.createFileMessage, [
+      operationID,
+      data.filePath,
+      data.fileName,
+      data.uuid,
+      data.sourceUrl,
+      JSON.stringify(data.fileSize),
+    ]);
+  }
+
+  
+  async createFileMessageFromFullPath  (data: FileMsgFullParams, operationID = uuidv4()) {
+    return await this._invoker('createFileMessageFromFullPath ', window.createFileMessageFromFullPath, [
+      operationID,
+      data.fileFullPath,
+      data.fileName,
+    ]);
+  }
+  
+  async createImageMessageFromFullPath  (data: string, operationID = uuidv4()) {
+    return await this._invoker('createImageMessageFromFullPath ', window.createImageMessageFromFullPath, [
+      operationID,
+      data
+    ]);
+  }
+  
+  
+  async createSoundMessageFromFullPath  (data: SouondMsgFullParams, operationID = uuidv4()) {
+    return await this._invoker('createSoundMessageFromFullPath ', window.createSoundMessageFromFullPath, [
+      operationID,
+      data.soundPath,
+      JSON.stringify(data.duration)
+    ]);
+  }
+  
+
+
+  
+  async createVideoMessageFromFullPath  (data: VideoMsgFullParams, operationID = uuidv4()) {
+    return await this._invoker('createVideoMessageFromFullPath ', window.createVideoMessageFromFullPath, [
+      operationID,
+     data.videoFullPath ,
+    data. videoType ,
+     JSON.stringify( data.duration) ,
+     data.snapshotFullPath
+    ]);
+  }
+  
+    
+  async createMergerMessage  (data: MergerMsgParams, operationID = uuidv4()) {
+    return await this._invoker('createMergerMessage ', window.createMergerMessage, [
+      operationID,
+    JSON.stringify(data.messageList) ,
+    data.title ,
+    JSON.stringify(data.summaryList)
+    ]);
+  }
+
+  async createForwardMessage  (data: string, operationID = uuidv4()) {
+    return await this._invoker('createForwardMessage ', window.createForwardMessage, [
+      operationID,
+        data
+    ]);
+  }
+  
+
+
+  async createFaceMessage  (data: FaceMessageParams, operationID = uuidv4()) {
+    return await this._invoker('createFaceMessage ', window.createFaceMessage, [
+      operationID,
+        JSON.stringify(data.index) ,
+        data.data
+    ]);
+  }
+  
+
+  async createLocationMessage  (data: LocationMsgParams, operationID = uuidv4()) {
+    return await this._invoker('createLocationMessage ', window.createLocationMessage, [
+      operationID,
+        data.description,
+        JSON.stringify(data.longitude),
+        JSON.stringify(data.latitude),
+    ]);
+  }
+  
+  async createCardMessage  (data: string, operationID = uuidv4()) {
+    return await this._invoker('createCardMessage ', window.createCardMessage, [
+      operationID,
+    data
+    ]);
+  }
+  
+  async deleteMessageFromLocalStorage  (data: string, operationID = uuidv4()) {
+    return await this._invoker('deleteMessageFromLocalStorage ', window.deleteMessageFromLocalStorage, [
+      operationID,
+    data
+    ]);
+  }
+  
+  async deleteMessageFromLocalAndSvr  (data: string, operationID = uuidv4()) {
+    return await this._invoker('deleteMessageFromLocalAndSvr ', window.deleteMessageFromLocalAndSvr, [
+      operationID,
+    data
+    ]);
+  }
+  
+  async deleteAllConversationFromLocal  ( operationID = uuidv4()) {
+    return await this._invoker('deleteAllConversationFromLocal ', window.deleteAllConversationFromLocal, [
+      operationID,
+    ]);
+  }
+  
+  async deleteAllMsgFromLocal  ( operationID = uuidv4()) {
+    return await this._invoker('deleteAllMsgFromLocal ', window.deleteAllMsgFromLocal, [
+      operationID,
+    ]);
+  }
+  
+  async deleteAllMsgFromLocalAndSvr  ( operationID = uuidv4()) {
+    return await this._invoker('deleteAllMsgFromLocalAndSvr ', window.deleteAllMsgFromLocalAndSvr, [
+      operationID,
+    ]);
+  }
+  
+  async markGroupMessageHasRead  (data : string , operationID = uuidv4()) {
+    return await this._invoker('markGroupMessageHasRead ', window.markGroupMessageHasRead, [
+      operationID,
+      data,
+    ]);
+  }
+  
+  async markGroupMessageAsRead  (data : GroupMsgReadParams , operationID = uuidv4()) {
+    return await this._invoker('markGroupMessageAsRead ', window.markGroupMessageAsRead, [
+      operationID,
+      data.groupID,
+      JSON.stringify(data.msgIDList)
+    ]);
+  }
+  
+
+  async insertSingleMessageToLocalStorage  (data : InsertSingleMsgParams , operationID = uuidv4()) {
+    return await this._invoker('insertSingleMessageToLocalStorage ', window.insertSingleMessageToLocalStorage, [
+      operationID,
+     data.message,
+     data.recvID,
+     data.sendID,
+    ]);
+  }
+  
+  async insertGroupMessageToLocalStorage  (data : InsertGroupMsgParams , operationID = uuidv4()) {
+    return await this._invoker('insertGroupMessageToLocalStorage ', window.insertGroupMessageToLocalStorage, [
+      operationID,
+        data.message,
+        data.groupID,
+        data.sendID,
+    ]);
+  }
+  async typingStatusUpdate  (data : TypingUpdateParams , operationID = uuidv4()) {
+    return await this._invoker('typingStatusUpdate ', window.typingStatusUpdate, [
+      operationID,
+        data.recvID,
+        data.msgTip
+    ]);
+  }
+  async clearC2CHistoryMessage  (data : string , operationID = uuidv4()) {
+    return await this._invoker('clearC2CHistoryMessage ', window.clearC2CHistoryMessage, [
+      operationID,
+      data 
+    ]);
+  }
+  async clearC2CHistoryMessageFromLocalAndSvr  (data : string , operationID = uuidv4()) {
+    return await this._invoker('clearC2CHistoryMessageFromLocalAndSvr ', window.clearC2CHistoryMessageFromLocalAndSvr, [
+      operationID,
+      data 
+    ]);
+  }
+
+  async clearGroupHistoryMessage  (data : string , operationID = uuidv4()) {
+    return await this._invoker('clearGroupHistoryMessage ', window.clearGroupHistoryMessage, [
+      operationID,
+      data 
+    ]);
+  }
+  async clearGroupHistoryMessageFromLocalAndSvr  (data : string , operationID = uuidv4()) {
+    return await this._invoker('clearGroupHistoryMessageFromLocalAndSvr ', window.clearGroupHistoryMessageFromLocalAndSvr, [
+      operationID,
+      data 
+    ]);
+  }
+  async getConversationListSplit  (data : SplitParams , operationID = uuidv4()) {
+    return await this._invoker('getConversationListSplit ', window.getConversationListSplit, [
+      operationID,
+      JSON.stringify(data.offset) ,
+      JSON.stringify(data.count) 
+    ]);
+  }
+  async getConversationIDBySessionType  (data : GetOneCveParams , operationID = uuidv4()) {
+    return await this._invoker('getConversationIDBySessionType ', window.getConversationIDBySessionType, [
+      operationID,
+        data.sourceID ,
+      JSON.stringify(data.sessionType) 
+    ]);
+  }
+
+
+  
+  async getMultipleConversation  (data : string[] , operationID = uuidv4()) {
+    return await this._invoker('getMultipleConversation ', window.getMultipleConversation, [
+      operationID,
+        JSON.stringify(data)
+    ]);
+  }
+
+  async deleteConversation  (data : string , operationID = uuidv4()) {
+    return await this._invoker('deleteConversation ', window.deleteConversation, [
+      operationID,
+        data,
+    ]);
+  }
+
+  async setConversationDraft  (data : SetDraftParams , operationID = uuidv4()) {
+    return await this._invoker('setConversationDraft ', window.setConversationDraft, [
+      operationID,
+        data.conversationID,
+    ]);
+  }
+
+  async pinConversation  (data : PinCveParams , operationID = uuidv4()) {
+    return await this._invoker('pinConversation ', window.pinConversation, [
+      operationID,
+       JSON.stringify(data.conversationID) ,
+       JSON.stringify(data.isPinned)
+    ]);
+  }
+
+
+  
+
+
+
+
+  
+
+
+
+  
+
+
 
 
 
