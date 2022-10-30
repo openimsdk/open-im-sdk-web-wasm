@@ -37,6 +37,21 @@ function resetWorker() {
 
 initWorker();
 
+function catchErrorHandle(error: unknown) {
+  // defined in rpc-shooter
+  if ((error as RPCError).code === -32300) {
+    resetWorker();
+
+    return JSON.stringify({
+      data: '',
+      errCode: DatabaseErrorCode.ErrorDBTimeout,
+      errMsg: 'database maybe damaged',
+    });
+  }
+
+  throw error;
+}
+
 function registeMethodOnWindow(name: string) {
   console.info(`=> (database api) registe ${name}`);
 
@@ -64,17 +79,7 @@ function registeMethodOnWindow(name: string) {
       return JSON.stringify(response);
     } catch (error: unknown) {
       // defined in rpc-shooter
-      if ((error as RPCError).code === -32300) {
-        resetWorker();
-
-        return JSON.stringify({
-          data: '',
-          errCode: DatabaseErrorCode.ErrorDBTimeout,
-          errMsg: 'database maybe damaged',
-        });
-      }
-
-      throw error;
+      catchErrorHandle(error);
     }
   };
 }
@@ -198,6 +203,27 @@ export function initDatabaseAPI(): void {
   // debug
   window.exec = registeMethodOnWindow('exec');
   window.getRowsModified = registeMethodOnWindow('getRowsModified');
+  window.exportDB = async () => {
+    if (!rpc || !worker) {
+      initWorker();
+    }
+
+    if (!rpc) {
+      return;
+    }
+
+    try {
+      console.info('=> (invoked by go wasm) run exportDB method ');
+      const result = await rpc.invoke('exportDB', undefined, { timeout: 5000 });
+      console.info(
+        '=> (invoked by go wasm) run exportDB method with response ',
+        JSON.stringify(result)
+      );
+      return result;
+    } catch (error: unknown) {
+      catchErrorHandle(error);
+    }
+  };
 }
 
 export const workerPromise = rpc?.connect(5000);

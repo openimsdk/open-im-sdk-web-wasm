@@ -160,3 +160,17 @@ rpc.registerMethod('getRowsModified', async () => {
     console.info('sql debug with getRowsModified return ', error);
   }
 });
+
+rpc.registerMethod('exportDB', async () => {
+  const db = await getInstance();
+
+  try {
+    const data = db.export();
+    const blob = new Blob([data]);
+    const blobHref = URL.createObjectURL(blob);
+
+    return blobHref;
+  } catch (error) {
+    console.info('sql export error, return ', error);
+  }
+});

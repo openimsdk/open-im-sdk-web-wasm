@@ -11,7 +11,7 @@ import {
   GetAdvancedHistoryMsgParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
-  GetOneCveParams,
+  GetOneConversationParams,
   ImageMsgParams,
   LoginParam,
   MarkC2CParams,
@@ -139,7 +139,10 @@ class SDK extends Emitter {
       [operationID]
     );
   }
-  async getOneConversation(params: GetOneCveParams, operationID = uuidv4()) {
+  async getOneConversation(
+    params: GetOneConversationParams,
+    operationID = uuidv4()
+  ) {
     return await this._invoker(
       'getOneConversation',
       window.getOneConversation,
@@ -318,6 +321,9 @@ class SDK extends Emitter {
       params.groupID,
       JSON.stringify(params.offlinePushInfo),
     ]);
+  }
+  async exportDB(operationID = uuidv4()) {
+    return await this._invoker('exportDB', window.exportDB, [operationID]);
   }
 }
 
