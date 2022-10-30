@@ -1,4 +1,4 @@
-import { initBackend } from 'absurd-sql/dist/indexeddb-main-thread';
+import { initBackend } from 'open-absurd-sql/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
 
@@ -70,7 +70,7 @@ function registeMethodOnWindow(name: string) {
           args
         )}`
       );
-      const response = await rpc.invoke(name, ...args, { timeout: 5000 });
+      const response = await rpc.invoke(name, ...args, { timeout: 5000000 });
       console.info(
         `=> (invoked by go wasm) run ${name} method with response `,
         JSON.stringify(response)
