@@ -9,7 +9,7 @@ type LoginParam = {
   logLevel?: number;
 };
 
-type GetOneCveParams = {
+type GetOneConversationParams = {
   sourceID: string;
   sessionType: number;
 };
