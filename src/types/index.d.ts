@@ -146,7 +146,7 @@ declare global {
 
     // debug
     exec: (sql: string) => Promise<any>;
-    exportDB: () => Promise<any>; //return Uint8Array
+    exportDB: () => Promise<string>; //return Uint8Array
   }
   class Go {
     exited: boolean;
