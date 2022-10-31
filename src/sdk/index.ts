@@ -418,9 +418,10 @@ class SDK extends Emitter {
     ]);
   }
 
-  async getUsersInfo  ( operationID = uuidv4()) {
+  async getUsersInfo  (data:string[], operationID = uuidv4()) {
     return await this._invoker('getUsersInfo ', window.getUsersInfo, [
       operationID,
+      JSON.stringify(data),
     ]);
   }
 
@@ -435,19 +436,16 @@ class SDK extends Emitter {
     return await this._invoker('createTextAtMessage ', window.createTextAtMessage, [
       operationID,
       data.text,
+      JSON.stringify(data.atUserIDList),
         JSON.stringify(data.atUsersInfo),
-        JSON.stringify(data.atUserIDList),
         data.message
     ]);
   }
   async createSoundMessage  (data: SoundMsgParams, operationID = uuidv4()) {
     return await this._invoker('createSoundMessage ', window.createSoundMessage, [
       operationID,
-      data.uuid,
       data.soundPath,
-      data.sourceUrl,
-        JSON.stringify(data.dataSize),
-        JSON.stringify(data.duration),
+       data.duration,
     ]);
   }
 
@@ -455,17 +453,9 @@ class SDK extends Emitter {
     return await this._invoker('createVideoMessage ', window.createVideoMessage, [
       operationID,
         data.videoPath,
-        data.duration,
         data.videoType,
-        JSON.stringify(data.snapshotPath) ,
-        JSON.stringify(data.videoUUID) ,
-        data.videoUrl ,
-        JSON.stringify(data.videoSize) ,
-        data.snapshotUUID,
-        JSON.stringify(data.snapshotSize),
-        data.snapshotUrl ,
-       JSON.stringify( data.snapshotWidth ),
-       JSON.stringify( data.snapshotHeight )
+        data.duration,
+       data.snapshotPath,
 
     ]);
   }
@@ -476,9 +466,6 @@ class SDK extends Emitter {
       operationID,
       data.filePath,
       data.fileName,
-      data.uuid,
-      data.sourceUrl,
-      JSON.stringify(data.fileSize),
     ]);
   }
 
@@ -503,7 +490,7 @@ class SDK extends Emitter {
     return await this._invoker('createSoundMessageFromFullPath ', window.createSoundMessageFromFullPath, [
       operationID,
       data.soundPath,
-      JSON.stringify(data.duration)
+      data.duration
     ]);
   }
   
@@ -515,7 +502,7 @@ class SDK extends Emitter {
       operationID,
      data.videoFullPath ,
     data. videoType ,
-     JSON.stringify( data.duration) ,
+     data.duration ,
      data.snapshotFullPath
     ]);
   }
@@ -542,7 +529,7 @@ class SDK extends Emitter {
   async createFaceMessage  (data: FaceMessageParams, operationID = uuidv4()) {
     return await this._invoker('createFaceMessage ', window.createFaceMessage, [
       operationID,
-        JSON.stringify(data.index) ,
+        data.index ,
         data.data
     ]);
   }
@@ -552,8 +539,8 @@ class SDK extends Emitter {
     return await this._invoker('createLocationMessage ', window.createLocationMessage, [
       operationID,
         data.description,
-        JSON.stringify(data.longitude),
-        JSON.stringify(data.latitude),
+                data.longitude,
+                data.latitude,
     ]);
   }
   
@@ -664,15 +651,15 @@ class SDK extends Emitter {
   async getConversationListSplit  (data : SplitParams , operationID = uuidv4()) {
     return await this._invoker('getConversationListSplit ', window.getConversationListSplit, [
       operationID,
-      JSON.stringify(data.offset) ,
-      JSON.stringify(data.count) 
+     data.offset ,
+      data.count 
     ]);
   }
   async getConversationIDBySessionType  (data : GetOneCveParams , operationID = uuidv4()) {
     return await this._invoker('getConversationIDBySessionType ', window.getConversationIDBySessionType, [
       operationID,
         data.sourceID ,
-      JSON.stringify(data.sessionType) 
+      data.sessionType
     ]);
   }
 
@@ -702,8 +689,8 @@ class SDK extends Emitter {
   async pinConversation  (data : PinCveParams , operationID = uuidv4()) {
     return await this._invoker('pinConversation ', window.pinConversation, [
       operationID,
-       JSON.stringify(data.conversationID) ,
-       JSON.stringify(data.isPinned)
+       data.conversationID ,
+       data.isPinned
     ]);
   }
   async getTotalUnreadMsgCount  ( operationID = uuidv4()) {
@@ -721,37 +708,24 @@ class SDK extends Emitter {
     return await this._invoker('setConversationRecvMessageOpt ', window.setConversationRecvMessageOpt, [
       operationID,
       JSON.stringify(data.conversationIDList),
-      JSON.stringify(data.opt),
     ]);
   }
   async searchLocalMessages ( data : SearchLocalParams , operationID = uuidv4()) {
     return await this._invoker('searchLocalMessages ', window.searchLocalMessages, [
       operationID,
-        data.conversationID ,
-        JSON.stringify(data.keywordList),
-        JSON.stringify(data.keywordListMatchType),
-        JSON.stringify(data.senderUserIDList),
-        JSON.stringify(data.messageTypeList),
-        JSON.stringify(data.searchTimePosition),
-        JSON.stringify(data.searchTimePeriod),
-        JSON.stringify(data.pageIndex),
-        JSON.stringify(data.count),
+      JSON.stringify(data)
     ]);
   }
   async addFriend ( data : AddFriendParams , operationID = uuidv4()) {
     return await this._invoker('addFriend ', window.addFriend, [
       operationID,
-        data.toUserID,
-        data.reqMsg
+        JSON.stringify(data)
     ]);
   }
   async searchFriends ( data : SearchFriendParams , operationID = uuidv4()) {
     return await this._invoker('searchFriends ', window.searchFriends, [
       operationID,
-        JSON.stringify(data.keywordList),
-        JSON.stringify(data.isSearchUserID),
-        JSON.stringify(data.isSearchNickname),
-        JSON.stringify(data.isSearchRemark),
+        JSON.stringify(data)
     ]);
   }
   async getDesignatedFriendsInfo ( data: string[], operationID = uuidv4()) {
@@ -782,8 +756,7 @@ class SDK extends Emitter {
   async setFriendRemark (data:RemarkFriendParams,  operationID = uuidv4()) {
     return await this._invoker('setFriendRemark ', window.setFriendRemark, [
       operationID,
-        data.toUserID,
-        data.remark
+      JSON.stringify(data)
     ]);
   }
   async checkFriend (data:string[],  operationID = uuidv4()) {
@@ -795,15 +768,13 @@ class SDK extends Emitter {
   async acceptFriendApplication (data:AccessFriendParams,  operationID = uuidv4()) {
     return await this._invoker('acceptFriendApplication ', window.acceptFriendApplication, [
       operationID,
-        data.toUserID,
-        data.handleMsg
+       JSON.stringify(data)
     ]);
   }
   async refuseFriendApplication (data:AccessFriendParams,  operationID = uuidv4()) {
     return await this._invoker('refuseFriendApplication ', window.refuseFriendApplication, [
       operationID,
-        data.toUserID,
-        data.handleMsg
+       JSON.stringify(data)
     ]);
   }
   async deleteFriend (data:string,  operationID = uuidv4()) {
@@ -851,7 +822,6 @@ class SDK extends Emitter {
     return await this._invoker('getGroupMembersInfo ', window.getGroupMembersInfo, [
       operationID,
       data.groupID,
-    //   data.reason,
         JSON.stringify(data.userIDList),
     ]);
   }
@@ -859,36 +829,34 @@ class SDK extends Emitter {
     return await this._invoker('getGroupMemberListByJoinTimeFilter ', window.getGroupMemberListByJoinTimeFilter, [
       operationID,
       data.groupID,
+        data.offset,
+        data.count,
+        data.joinTimeBegin,
+        data.joinTimeEnd,
         JSON.stringify(data.filterUserIDList),
-        JSON.stringify(data.offset),
-        JSON.stringify(data.count),
-        JSON.stringify(data.joinTimeBegin),
-        JSON.stringify(data.joinTimeEnd),
+
+
     ]);
   }
   async searchGroupMembers (data: SearchGroupMemberParams,  operationID = uuidv4()) {
     return await this._invoker('searchGroupMembers ', window.searchGroupMembers, [
       operationID,
-      data.groupID,
-        JSON.stringify(data.keywordList),
-        JSON.stringify(data.isSearchUserID),
-        JSON.stringify(data.isSearchMemberNickname),
-        JSON.stringify(data.offset),
-        JSON.stringify(data.count),
+      JSON.stringify(data)
     ]);
   }
   async setGroupApplyMemberFriend (data: SetMemberAuthParams,  operationID = uuidv4()) {
     return await this._invoker('setGroupApplyMemberFriend ', window.setGroupApplyMemberFriend, [
       operationID,
-        JSON.stringify(data.rule),
-        data.groupID
+       data.groupID,
+       data.rule
+       
     ]);
   }
   async setGroupLookMemberInfo (data: SetMemberAuthParams,  operationID = uuidv4()) {
     return await this._invoker('setGroupLookMemberInfo ', window.setGroupLookMemberInfo, [
-      operationID,
-        JSON.stringify(data.rule),
-        data.groupID
+        operationID,
+        data.groupID,
+        data.rule
     ]);
   }
   async getJoinedGroupList ( operationID = uuidv4()) {
@@ -933,9 +901,7 @@ class SDK extends Emitter {
   async searchGroups (data: SearchGroupParams, operationID = uuidv4()) {
     return await this._invoker('searchGroups ', window.searchGroups, [
       operationID,
-        JSON.stringify(data.keywordList),
-        JSON.stringify(data.isSearchGroupID),
-        JSON.stringify(data.isSearchGroupName),
+    JSON.stringify(data)
      
     ]);
   }
@@ -957,7 +923,7 @@ class SDK extends Emitter {
     return await this._invoker('changeGroupMute ', window.changeGroupMute, [
       operationID,
         data.groupID,
-        JSON.stringify(data.isMute)
+        data.isMute
      
     ]);
   }
@@ -966,7 +932,7 @@ class SDK extends Emitter {
       operationID,
         data.groupID,
         data.userID ,
-        JSON.stringify(data.mutedSeconds)
+        data.mutedSeconds
      
     ]);
   }
@@ -1013,60 +979,42 @@ class SDK extends Emitter {
   async signalingInvite (data:RtcInvite, operationID = uuidv4()) {
     return await this._invoker('signalingInvite ', window.signalingInvite, [
       operationID,
-        data.inviterUserID,
-        JSON.stringify(data.inviteeUserIDList),
-        data.groupID,
-        data.roomID,
-        JSON.stringify(data.timeout),
-        data.mediaType,
-        JSON.stringify(data.sessionType),
-        JSON.stringify(data.platformID)
+      JSON.stringify(data)
      
     ]);
   }
   async signalingInviteInGroup (data:RtcInvite, operationID = uuidv4()) {
     return await this._invoker('signalingInviteInGroup ', window.signalingInviteInGroup, [
       operationID,
-        data.inviterUserID,
-        JSON.stringify(data.inviteeUserIDList),
-        data.groupID,
-        data.roomID,
-        JSON.stringify(data.timeout),
-        data.mediaType,
-        JSON.stringify(data.sessionType),
-        JSON.stringify(data.platformID)
+        JSON.stringify(data)
      
     ]);
   }
   async signalingAccept (data:RtcActionParams, operationID = uuidv4()) {
     return await this._invoker('signalingAccept ', window.signalingAccept, [
       operationID,
-        data.opUserID,
-        JSON.stringify(data.invitation)
+       JSON.stringify(data)
      
     ]);
   }
   async signalingReject (data:RtcActionParams, operationID = uuidv4()) {
     return await this._invoker('signalingReject ', window.signalingReject, [
       operationID,
-        data.opUserID,
-        JSON.stringify(data.invitation)
+        JSON.stringify(data)
      
     ]);
   }
   async signalingCancel (data:RtcActionParams, operationID = uuidv4()) {
     return await this._invoker('signalingCancel ', window.signalingCancel, [
       operationID,
-        data.opUserID,
-        JSON.stringify(data.invitation)
+      JSON.stringify(data)
      
     ]);
   }
   async signalingHungUp (data:RtcActionParams, operationID = uuidv4()) {
     return await this._invoker('signalingHungUp ', window.signalingHungUp, [
       operationID,
-        data.opUserID,
-        JSON.stringify(data.invitation)
+      JSON.stringify(data)
      
     ]);
   }
@@ -1074,8 +1022,8 @@ class SDK extends Emitter {
     return await this._invoker('getSubDepartment ', window.getSubDepartment, [
       operationID,
         data.departmentID,
-        JSON.stringify(data.offset),
-        JSON.stringify(data.count),
+       data.offset,
+       data.count
      
     ]);
   }
@@ -1083,8 +1031,8 @@ class SDK extends Emitter {
     return await this._invoker('getDepartmentMember ', window.getDepartmentMember, [
       operationID,
         data.departmentID,
-        JSON.stringify(data.offset),
-        JSON.stringify(data.count),
+        data.offset,
+        data.count,
      
     ]);
   }
@@ -1113,8 +1061,8 @@ class SDK extends Emitter {
     return await this._invoker('searchOrganization ', window.searchOrganization, [
       operationID,
       JSON.stringify(data.input),
-      JSON.stringify(data.offset),
-      JSON.stringify(data.count),
+      data.offset,
+      data.count,
      
     ]);
   }
@@ -1135,8 +1083,8 @@ class SDK extends Emitter {
   async setGroupVerification (data: SetGroupVerificationParams, operationID = uuidv4()) {
     return await this._invoker('setGroupVerification ', window.setGroupVerification, [
       operationID,
+      data.groupID,
         JSON.stringify(data.verification),
-        data.groupID
     ]);
   }
   async setGlobalRecvMessageOpt (data: { opt: OptType }, operationID = uuidv4()) {
@@ -1154,8 +1102,7 @@ class SDK extends Emitter {
   async findMessageList (data: FindMessageParams, operationID = uuidv4()) {
     return await this._invoker('findMessageList ', window.findMessageList, [
       operationID,
-        data.conversationID,
-        JSON.stringify(data.clientMsgIDList)
+        JSON.stringify(data)
     ]);
   }
 

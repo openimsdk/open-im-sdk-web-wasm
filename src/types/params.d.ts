@@ -405,5 +405,5 @@ type LocationMsgParams = {
     conversationID: string;
     clientMsgIDList: string[]
   }
-type PartialUserItem = 
+type PartialUserItem =  Partial<Omit<FullUserItem, "userID">> & { userID: string };
 Partial<Omit<FullUserItem, "userID">> & { userID: string };
