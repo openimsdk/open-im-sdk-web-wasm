@@ -1,11 +1,11 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
-  insertFriendRequest as databaseinsertFriendRequest,
+  insertFriendRequest as databaseInsertFriendRequest,
   deleteFriendRequestBothUserID as databasedeleteFriendRequestBothUserID,
   updateFriendRequest as databaseupdateFriendRequest,
-  getRecvFriendApplication as databasegetRecvFriendApplication,
-  getSendFriendApplication as databasegetSendFriendApplication,
-  getFriendApplicationByBothID as databasegetFriendApplicationByBothID,
+  getRecvFriendApplication as databaseGetRecvFriendApplication,
+  getSendFriendApplication as databaseGetSendFriendApplication,
+  getFriendApplicationByBothID as databaseGetFriendApplicationByBothID,
   LocalFriendRequest,
 } from '@/sqls';
 import {
@@ -14,7 +14,6 @@ import {
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
-import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { getInstance } from './instance';
 
 export async function insertFriendRequest(
@@ -26,7 +25,7 @@ export async function insertFriendRequest(
       convertObjectField(JSON.parse(localFriendRequestStr))
     ) as LocalFriendRequest;
 
-    databaseinsertFriendRequest(db, localFriendRequest);
+    databaseInsertFriendRequest(db, localFriendRequest);
 
     return formatResponse('');
   } catch (e) {
@@ -89,7 +88,7 @@ export async function getRecvFriendApplication(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetRecvFriendApplication(db, loginUserID);
+    const execResult = databaseGetRecvFriendApplication(db, loginUserID);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -109,7 +108,7 @@ export async function getSendFriendApplication(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetSendFriendApplication(db, fromUserId);
+    const execResult = databaseGetSendFriendApplication(db, fromUserId);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -130,7 +129,7 @@ export async function getFriendApplicationByBothID(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetFriendApplicationByBothID(
+    const execResult = databaseGetFriendApplicationByBothID(
       db,
       fromUserID,
       toUserID

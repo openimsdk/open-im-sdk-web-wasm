@@ -263,12 +263,27 @@ export function searchMessageByContentTypeAndKeyword(
 ): QueryExecResult[] {
   const values = contentType.map(v => `${v}`).join(',');
   const finalEndTime = endTime ? endTime : new Date().getTime();
+  let subCondition = '';
+  const connectStr = keywordListMatchType === 0 ? 'or ' : 'and ';
+  keywordList.forEach((keyword, index) => {
+    if (index == 0) {
+      subCondition += 'And (';
+    }
+    if (index + 1 >= keywordList.length) {
+      subCondition += 'content like ' + "'%" + keywordList[index] + "%') ";
+    } else {
+      subCondition +=
+        'content like ' + "'%" + keywordList[index] + "%' " + connectStr;
+    }
+  });
+
   return db.exec(
     `  
     SELECT * FROM local_chat_logs 
           WHERE send_time between ${startTime} and ${finalEndTime}
           AND status <=3  
-          And content_type IN (${values})  
+          And content_type IN (${values})
+          ${subCondition}
     ORDER BY send_time DESC
     `
   );
@@ -333,7 +348,7 @@ export function getMsgSeqByClientMsgID(
     `  
     SELECT seq FROM local_chat_logs 
     WHERE client_msg_id="${clientMsgID}" 
-    ORDER BY local_chat_logs.client_msg_id LIMIT 1
+    LIMIT 1
     `
   );
 }

@@ -99,7 +99,6 @@ type VideoMsgFullParams = {
   snapshotFullPath: string;
 };
 
-
 type CustomMsgParams = {
   data: string;
   extension: string;
@@ -122,16 +121,10 @@ type AdvancedMsgParams = {
   messageEntityList?: MessageEntity[];
 };
 
-
-
-
 type SetPrvParams = {
   conversationID: string;
   isPrivate: boolean;
 };
-
-
-
 
 type SplitConversationParams = {
   offset: number;
@@ -152,8 +145,6 @@ type IsRecvParams = {
   conversationIDList: string[];
   opt: OptType;
 };
-
- 
 
 type UpdateMemberNameParams = {
   groupID: string;
@@ -212,198 +203,191 @@ type RtcActionParams = {
   opUserID: string;
   invitation: RtcInvite;
 };
-  type RtcInvite = {
-    inviterUserID: string;
-    inviteeUserIDList: string[];
-    groupID: string;
-    roomID: string;
-    timeout: number;
-    mediaType: string;
-    sessionType: number;
-    platformID: number;
-  };
-  
+type RtcInvite = {
+  inviterUserID: string;
+  inviteeUserIDList: string[];
+  groupID: string;
+  roomID: string;
+  timeout: number;
+  mediaType: string;
+  sessionType: number;
+  platformID: number;
+};
 
- type setPrvParams = {
-    conversationID: string;
-    isPrivate: boolean;
-  };
-  
+type setPrvParams = {
+  conversationID: string;
+  isPrivate: boolean;
+};
 
-   type LoginParams = {
-    userID: string;
-    token: string;
-  };
-   type AtMsgParams = {
-    text: string;
-    atUserIDList: string[];
-    atUsersInfo?: AtUsersInfoItem[];
-    message?: string;
-  };
+type LoginParams = {
+  userID: string;
+  token: string;
+};
+type AtMsgParams = {
+  text: string;
+  atUserIDList: string[];
+  atUsersInfo?: AtUsersInfoItem[];
+  message?: string;
+};
 
-   type SoundMsgParams = {
-    uuid: string;
-    soundPath: string;
-    sourceUrl: string;
-    dataSize: number;
-    duration: number;
-  };
+type SoundMsgParams = {
+  uuid: string;
+  soundPath: string;
+  sourceUrl: string;
+  dataSize: number;
+  duration: number;
+};
 
+type FileMsgParams = {
+  filePath: string;
+  fileName: string;
+  uuid: string;
+  sourceUrl: string;
+  fileSize: number;
+};
 
-   type FileMsgParams = {
-    filePath: string;
-    fileName: string;
-    uuid: string;
-    sourceUrl: string;
-    fileSize: number;
-  };
+type FileMsgFullParams = {
+  fileFullPath: string;
+  fileName: string;
+};
 
-   type FileMsgFullParams = {
-    fileFullPath: string;
-    fileName: string;
-  };
+type SouondMsgFullParams = {
+  soundPath: string;
+  duration: number;
+};
 
+type MergerMsgParams = {
+  messageList: MessageItem[];
+  title: string;
+  summaryList: string[];
+};
 
-
-   type SouondMsgFullParams = {
-    soundPath: string;
-    duration: number;
-  };
-
-
-
-   type MergerMsgParams = {
-    messageList: MessageItem[];
-    title: string;
-    summaryList: string[];
-  };
-
-   type FaceMessageParams = {
-    index: number;
-    data: string;
-  };
+type FaceMessageParams = {
+  index: number;
+  data: string;
+};
 
 type LocationMsgParams = {
-    description: string;
-    longitude: number;
-    latitude: number;
-  };
-  
+  description: string;
+  longitude: number;
+  latitude: number;
+};
 
-   type GroupMsgReadParams = {
-    groupID: string;
-    msgIDList: string[];
-  };
-   type InsertSingleMsgParams = {
-    message: string;
-    recvID: string;
-    sendID: string;
-  };
-  
-   type InsertGroupMsgParams = {
-    message: string;
-    groupID: string;
-    sendID: string;
-  };
+type GroupMsgReadParams = {
+  groupID: string;
+  msgIDList: string[];
+};
+type InsertSingleMsgParams = {
+  message: string;
+  recvID: string;
+  sendID: string;
+};
 
-   type TypingUpdateParams = {
-    recvID: string;
-    msgTip: string;
-  };
-  
-   type SplitParams = {
-    offset: number;
-    count: number;
-  };
-   type GetOneCveParams = {
-    sourceID: string;
-    sessionType: number;
-  };
-   type isRecvParams = {
-    conversationIDList: string[];
-    opt: OptType;
-  };
- type SearchLocalParams = {
-    conversationID: string;
-    keywordList: string[];
-    keywordListMatchType?: number;
-    senderUserIDList?: string[];
-    messageTypeList?: MessageType[];
-    searchTimePosition?: number;
-    searchTimePeriod?: number;
-    pageIndex?: number;
-    count?: number;
-  };
-   type AddFriendParams = {
-    toUserID: string;
-    reqMsg: string;
-  };
-    type SearchFriendParams = {
-    keywordList: string[];
-    isSearchUserID: boolean;
-    isSearchNickname: boolean;
-    isSearchRemark: boolean;
-  };
-    type RemarkFriendParams = {
-    toUserID: string;
-    remark: string;
-  };
-    type AccessFriendParams = {
-    toUserID: string;
-    handleMsg: string;
-  };
-    type InviteGroupParams = {
-    groupID: string;
-    reason: string;
-    userIDList: string[];
-  };
-    type GetGroupMemberByTimeParams = {
-    groupID: string;
-    filterUserIDList: string[];
-    offset: number;
-    count: number;
-    joinTimeBegin: number;
-    joinTimeEnd: number;
-  };
-    type SearchGroupMemberParams = {
-    groupID: string;
-    keywordList: string[];
-    isSearchUserID: boolean;
-    isSearchMemberNickname: boolean;
-    offset: number;
-    count: number;
-  };
-    type SetMemberAuthParams = {
-    rule: AllowType;
-    groupID: string;
-  }
-   type CreateGroupParams = {
-    groupBaseInfo: GroupInitInfo;
-    memberList: Member[];
-  };
-    type GroupInfoParams = {
-    groupID: string;
-    groupInfo: GroupBaseInfo;
-  };
-    type MemberNameParams = {
-    groupID: string;
-    userID: string;
-    GroupMemberNickname: string;
-  };
+type InsertGroupMsgParams = {
+  message: string;
+  groupID: string;
+  sendID: string;
+};
 
-    type GetSubDepParams = {
-    departmentID: string;
-    offset: number;
-    count: number;
-  };
-    type SearchInOrzParams = {
-    input: SearchInputType;
-    offset: number;
-    count: number;
-  };
-    type FindMessageParams = {
-    conversationID: string;
-    clientMsgIDList: string[]
-  }
-type PartialUserItem =  Partial<Omit<FullUserItem, "userID">> & { userID: string };
-Partial<Omit<FullUserItem, "userID">> & { userID: string };
+type TypingUpdateParams = {
+  recvID: string;
+  msgTip: string;
+};
+
+type SplitParams = {
+  offset: number;
+  count: number;
+};
+type GetOneCveParams = {
+  sourceID: string;
+  sessionType: number;
+};
+type isRecvParams = {
+  conversationIDList: string[];
+  opt: OptType;
+};
+type SearchLocalParams = {
+  conversationID: string;
+  keywordList: string[];
+  keywordListMatchType?: number;
+  senderUserIDList?: string[];
+  messageTypeList?: MessageType[];
+  searchTimePosition?: number;
+  searchTimePeriod?: number;
+  pageIndex?: number;
+  count?: number;
+};
+type AddFriendParams = {
+  toUserID: string;
+  reqMsg: string;
+};
+type SearchFriendParams = {
+  keywordList: string[];
+  isSearchUserID: boolean;
+  isSearchNickname: boolean;
+  isSearchRemark: boolean;
+};
+type RemarkFriendParams = {
+  toUserID: string;
+  remark: string;
+};
+type AccessFriendParams = {
+  toUserID: string;
+  handleMsg: string;
+};
+type InviteGroupParams = {
+  groupID: string;
+  reason: string;
+  userIDList: string[];
+};
+type GetGroupMemberByTimeParams = {
+  groupID: string;
+  filterUserIDList: string[];
+  offset: number;
+  count: number;
+  joinTimeBegin: number;
+  joinTimeEnd: number;
+};
+type SearchGroupMemberParams = {
+  groupID: string;
+  keywordList: string[];
+  isSearchUserID: boolean;
+  isSearchMemberNickname: boolean;
+  offset: number;
+  count: number;
+};
+type SetMemberAuthParams = {
+  rule: AllowType;
+  groupID: string;
+};
+type CreateGroupParams = {
+  groupBaseInfo: GroupInitInfo;
+  memberList: Member[];
+};
+type GroupInfoParams = {
+  groupID: string;
+  groupInfo: GroupBaseInfo;
+};
+type MemberNameParams = {
+  groupID: string;
+  userID: string;
+  GroupMemberNickname: string;
+};
+
+type GetSubDepParams = {
+  departmentID: string;
+  offset: number;
+  count: number;
+};
+type SearchInOrzParams = {
+  input: SearchInputType;
+  offset: number;
+  count: number;
+};
+type FindMessageParams = {
+  conversationID: string;
+  clientMsgIDList: string[];
+};
+type PartialUserItem = Partial<Omit<FullUserItem, 'userID'>> & {
+  userID: string;
+};

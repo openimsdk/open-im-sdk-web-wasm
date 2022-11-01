@@ -13,7 +13,7 @@ function initWorker() {
   }
 
   worker = new IMWorker();
-//   worker = new Worker(new URL('./worker.js', import.meta.url));
+  //   worker = new Worker(new URL('./worker.js', import.meta.url));
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
@@ -111,11 +111,51 @@ export function initDatabaseAPI(): void {
     'isExistsInErrChatLogBySeq'
   );
   window.messageIfExistsBySeq = registeMethodOnWindow('messageIfExistsBySeq');
-  window.messageIfExistsBySeq = registeMethodOnWindow('addMemberCount');
-  window.messageIfExistsBySeq = registeMethodOnWindow('updateGroupMessageHasRead');
-  window.messageIfExistsBySeq = registeMethodOnWindow('subtractMemberCount');
-  window.messageIfExistsBySeq = registeMethodOnWindow('getJoinedWorkingGroupIDList');
-  window.messageIfExistsBySeq = registeMethodOnWindow('getJoinedWorkingGroupList');
+  window.getAbnormalMsgSeq = registeMethodOnWindow('getAbnormalMsgSeq');
+  window.getAbnormalMsgSeqList = registeMethodOnWindow('getAbnormalMsgSeqList');
+  window.batchInsertExceptionMsg = registeMethodOnWindow(
+    'batchInsertExceptionMsg'
+  );
+  window.searchMessageByKeyword = registeMethodOnWindow(
+    'searchMessageByKeyword'
+  );
+  window.searchMessageByContentType = registeMethodOnWindow(
+    'searchMessageByContentType'
+  );
+  window.searchMessageByContentTypeAndKeyword = registeMethodOnWindow(
+    'searchMessageByContentTypeAndKeyword'
+  );
+  window.updateMsgSenderNickname = registeMethodOnWindow(
+    'updateMsgSenderNickname'
+  );
+  window.updateMsgSenderFaceURL = registeMethodOnWindow(
+    'updateMsgSenderFaceURL'
+  );
+  window.updateMsgSenderFaceURLAndSenderNickname = registeMethodOnWindow(
+    'updateMsgSenderFaceURLAndSenderNickname'
+  );
+  window.getMsgSeqByClientMsgID = registeMethodOnWindow(
+    'getMsgSeqByClientMsgID'
+  );
+  window.getMsgSeqListByGroupID = registeMethodOnWindow(
+    'getMsgSeqListByGroupID'
+  );
+  window.getMsgSeqListByPeerUserID = registeMethodOnWindow(
+    'getMsgSeqListByPeerUserID'
+  );
+  window.getMsgSeqListBySelfUserID = registeMethodOnWindow(
+    'getMsgSeqListBySelfUserID'
+  );
+  window.deleteAllMessage = registeMethodOnWindow('deleteAllMessage');
+  window.getAllUnDeleteMessageSeqList = registeMethodOnWindow(
+    'getAllUnDeleteMessageSeqList'
+  );
+  window.updateSingleMessageHasRead = registeMethodOnWindow(
+    'updateSingleMessageHasRead'
+  );
+  window.updateGroupMessageHasRead = registeMethodOnWindow(
+    'updateGroupMessageHasRead'
+  );
 
   // conversation
   window.getAllConversationListDB = registeMethodOnWindow(
@@ -215,15 +255,15 @@ export function initDatabaseAPI(): void {
   // black
   window.getBlackList = registeMethodOnWindow('getBlackList');
   window.getBlackListUserID = registeMethodOnWindow('getBlackListUserID');
-//   window.getFriendInfoByFriendUserID = registeMethodOnWindow(
-//     'getFriendInfoByFriendUserID'
-//   );
+  window.getBlackInfoByBlockUserID = registeMethodOnWindow(
+    'getBlackInfoByBlockUserID'
+  );
   window.getBlackInfoList = registeMethodOnWindow('getBlackInfoList');
   window.insertBlack = registeMethodOnWindow('insertBlack');
   window.deleteBlack = registeMethodOnWindow('deleteBlack');
   window.updateBlack = registeMethodOnWindow('updateBlack');
 
-  //friend_request
+  // friendRequest
   window.insertFriendRequest = registeMethodOnWindow('insertFriendRequest');
   window.deleteFriendRequestBothUserID = registeMethodOnWindow(
     'deleteFriendRequestBothUserID'
@@ -239,7 +279,7 @@ export function initDatabaseAPI(): void {
     'getFriendApplicationByBothID'
   );
 
-  //friend
+  // friend
   window.insertFriend = registeMethodOnWindow('insertFriend');
   window.deleteFriend = registeMethodOnWindow('deleteFriend');
   window.updateFriend = registeMethodOnWindow('updateFriend');
@@ -250,13 +290,34 @@ export function initDatabaseAPI(): void {
   );
   window.getFriendInfoList = registeMethodOnWindow('getFriendInfoList');
 
-  //groups
+  // groups
   window.insertGroup = registeMethodOnWindow('insertGroup');
   window.deleteGroup = registeMethodOnWindow('deleteGroup');
   window.updateGroup = registeMethodOnWindow('updateGroup');
   window.getJoinedGroupList = registeMethodOnWindow('getJoinedGroupList');
+  window.getGroupInfoByGroupID = registeMethodOnWindow('getGroupInfoByGroupID');
   window.getAllGroupInfoByGroupIDOrGroupName = registeMethodOnWindow(
     'getAllGroupInfoByGroupIDOrGroupName'
+  );
+
+  // groupRequest
+  window.insertGroupRequest = registeMethodOnWindow('insertGroupRequest');
+  window.deleteGroupRequest = registeMethodOnWindow('deleteGroupRequest');
+  window.updateGroupRequest = registeMethodOnWindow('updateGroupRequest');
+  window.getSendGroupApplication = registeMethodOnWindow(
+    'getSendGroupApplication'
+  );
+  window.insertAdminGroupRequest = registeMethodOnWindow(
+    'insertAdminGroupRequest'
+  );
+  window.deleteAdminGroupRequest = registeMethodOnWindow(
+    'deleteAdminGroupRequest'
+  );
+  window.updateAdminGroupRequest = registeMethodOnWindow(
+    'updateAdminGroupRequest'
+  );
+  window.getAdminGroupApplication = registeMethodOnWindow(
+    'getAdminGroupApplication'
   );
 }
 

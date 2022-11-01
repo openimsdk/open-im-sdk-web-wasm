@@ -3,7 +3,7 @@ import { Database, QueryExecResult } from '@jlongster/sql.js';
 
 export type LocalBlack = { [key: string]: any };
 
-export function locaBlack(db: Database): QueryExecResult[] {
+export function locaBlacks(db: Database): QueryExecResult[] {
   return db.exec(
     `
       create table if not exists 'local_blacks' (

@@ -14,7 +14,6 @@ import {
   messageIfExists as databaseMessageIfExists,
   isExistsInErrChatLogBySeq as databaseIsExistsInErrChatLogBySeq,
   messageIfExistsBySeq as databaseMessageIfExistsBySeq,
-  addMemberCount as databaseaddMemberCount,
   getAbnormalMsgSeq as databaseGetAbnormalMsgSeq,
   getAbnormalMsgSeqList as databaseGetAbnormalMsgSeqList,
   batchInsertExceptionMsg as databaseBatchInsertExceptionMsg,
@@ -26,11 +25,11 @@ import {
   updateMsgSenderFaceURLAndSenderNickname as databaseUpdateMsgSenderFaceURLAndSenderNickname,
   getMsgSeqByClientMsgID as databaseGetMsgSeqByClientMsgID,
   getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
-  getMsgSeqListByPeerUserID as databasegetMsgSeqListByPeerUserID,
-  getMsgSeqListBySelfUserID as databasegetMsgSeqListBySelfUserID,
-  deleteAllMessage as databasedeleteAllMessage,
-  getAllUnDeleteMessageSeqList as databasegetAllUnDeleteMessageSeqList,
-  updateSingleMessageHasRead as databaseupdateSingleMessageHasRead,
+  getMsgSeqListByPeerUserID as databaseGetMsgSeqListByPeerUserID,
+  getMsgSeqListBySelfUserID as databaseGetMsgSeqListBySelfUserID,
+  deleteAllMessage as databaseDeleteAllMessage,
+  getAllUnDeleteMessageSeqList as databaseGetAllUnDeleteMessageSeqList,
+  updateSingleMessageHasRead as databaseUpdateSingleMessageHasRead,
   updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
 } from '@/sqls';
 import {
@@ -451,27 +450,297 @@ export async function searchMessageByKeyword(
   }
 }
 
-// export async function updateGroupMessageHasRead(
-//   sessionType: number,
-//   msgIDList: string[]
-// ): Promise<string> {
-//   try {
-//     const db = await getInstance();
+export async function searchMessageByContentType(
+  contentType: number[],
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
 
-//     const execResult = databaseUpdateGroupMessageHasRead(
-//       db,
-//       sessionType,
-//       msgIDList
-//     );
+    const execResult = databaseSearchMessageByContentType(
+      db,
+      contentType,
+      sourceID,
+      startTime,
+      endTime,
+      sessionType,
+      offset,
+      count
+    );
 
-//     return formatResponse('');
-//   } catch (e) {
-//     console.error(e);
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
 
-//     return formatResponse(
-//       undefined,
-//       DatabaseErrorCode.ErrorInit,
-//       JSON.stringify(e)
-//     );
-//   }
-// }
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function searchMessageByContentTypeAndKeyword(
+  contentType: number[],
+  keywordList: string[],
+  keywordListMatchType: number,
+  startTime: number,
+  endTime: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSearchMessageByContentTypeAndKeyword(
+      db,
+      contentType,
+      keywordList,
+      keywordListMatchType,
+      startTime,
+      endTime
+    );
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateMsgSenderNickname(
+  sendID: string,
+  nickname: string,
+  sessionType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseUpdateMsgSenderNickname(db, sendID, nickname, sessionType);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateMsgSenderFaceURL(
+  sendID: string,
+  faceURL: string,
+  sessionType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseUpdateMsgSenderFaceURL(db, sendID, faceURL, sessionType);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateMsgSenderFaceURLAndSenderNickname(
+  sendID: string,
+  faceURL: string,
+  nickname: string,
+  sessionType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseUpdateMsgSenderFaceURLAndSenderNickname(
+      db,
+      sendID,
+      faceURL,
+      nickname,
+      sessionType
+    );
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMsgSeqByClientMsgID(
+  clientMsgID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqByClientMsgID(db, clientMsgID);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMsgSeqListByGroupID(groupID: string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqListByGroupID(db, groupID);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMsgSeqListByPeerUserID(
+  userID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqListByPeerUserID(db, userID);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMsgSeqListBySelfUserID(
+  userID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqListBySelfUserID(db, userID);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteAllMessage(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseDeleteAllMessage(db);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getAllUnDeleteMessageSeqList(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetAllUnDeleteMessageSeqList(db);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateSingleMessageHasRead(
+  sendID: string,
+  clientMsgIDList: string[]
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseUpdateSingleMessageHasRead(db, sendID, clientMsgIDList);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateGroupMessageHasRead(
+  clientMsgIDList: string[],
+  sessionType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseUpdateGroupMessageHasRead(db, clientMsgIDList, sessionType);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}

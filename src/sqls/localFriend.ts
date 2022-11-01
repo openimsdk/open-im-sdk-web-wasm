@@ -3,7 +3,7 @@ import { Database, QueryExecResult } from '@jlongster/sql.js';
 
 export type LocalFriend = { [key: string]: any };
 
-export function localFriend(db: Database): QueryExecResult[] {
+export function localFriends(db: Database): QueryExecResult[] {
   return db.exec(
     `
       create table if not exists 'local_friends'

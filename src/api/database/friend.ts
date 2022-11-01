@@ -1,12 +1,12 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
-  insertFriend as databaseinsertFriend,
+  insertFriend as databaseInsertFriend,
   deleteFriend as databasedeleteFriend,
   updateFriend as databaseupdateFriend,
-  getAllFriendList as databasegetAllFriendList,
+  getAllFriendList as databaseGetAllFriendList,
   searchFriendList as databasesearchFriendList,
-  getFriendInfoByFriendUserID as databasegetFriendInfoByFriendUserID,
-  getFriendInfoList as databasegetFriendInfoList,
+  getFriendInfoByFriendUserID as databaseGetFriendInfoByFriendUserID,
+  getFriendInfoList as databaseGetFriendInfoList,
   LocalFriend,
 } from '@/sqls';
 import {
@@ -26,7 +26,7 @@ export async function insertFriend(localFriendStr: string): Promise<string> {
       convertObjectField(JSON.parse(localFriendStr))
     ) as LocalFriend;
 
-    databaseinsertFriend(db, localFriend);
+    databaseInsertFriend(db, localFriend);
 
     return formatResponse('');
   } catch (e) {
@@ -86,7 +86,7 @@ export async function getAllFriendList(loginUserID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetAllFriendList(db, loginUserID);
+    const execResult = databaseGetAllFriendList(db, loginUserID);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -136,7 +136,7 @@ export async function getFriendInfoByFriendUserID(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetFriendInfoByFriendUserID(
+    const execResult = databaseGetFriendInfoByFriendUserID(
       db,
       friendUserID,
       loginUserID
@@ -160,7 +160,7 @@ export async function getFriendInfoList(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetFriendInfoList(db, friendUserIDList);
+    const execResult = databaseGetFriendInfoList(db, friendUserIDList);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {

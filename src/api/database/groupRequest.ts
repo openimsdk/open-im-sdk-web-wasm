@@ -63,7 +63,7 @@ export async function deleteGroupRequest(
   }
 }
 
-export async function updateFriendRequest(
+export async function updateGroupRequest(
   localGroupRequestStr: string
 ): Promise<string> {
   try {

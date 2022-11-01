@@ -1,10 +1,10 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
-  getBlackList as databasegetBlackList,
-  getBlackListUserID as databasegetBlackListUserID,
+  getBlackList as databaseGetBlackList,
+  getBlackListUserID as databaseGetBlackListUserID,
   getBlackInfoByBlockUserID as databaseGetBlackInfoByBlockUserID,
-  getBlackInfoList as databasegetBlackInfoList,
-  insertBlack as databaseinsertBlack,
+  getBlackInfoList as databaseGetBlackInfoList,
+  insertBlack as databaseInsertBlack,
   deleteBlack as databasedeleteBlack,
   updateBlack as databaseupdateBlack,
   LocalBlack,
@@ -21,7 +21,7 @@ export async function getBlackList(): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetBlackList(db);
+    const execResult = databaseGetBlackList(db);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -39,7 +39,7 @@ export async function getBlackListUserID(blockUserID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetBlackListUserID(db);
+    const execResult = databaseGetBlackListUserID(db);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -84,7 +84,7 @@ export async function getBlackInfoList(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetBlackInfoList(db, blockUserIDList);
+    const execResult = databaseGetBlackInfoList(db, blockUserIDList);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -106,7 +106,7 @@ export async function insertBlack(localBlackStr: string): Promise<string> {
       convertObjectField(JSON.parse(localBlackStr))
     ) as LocalBlack;
 
-    databaseinsertBlack(db, localBlack);
+    databaseInsertBlack(db, localBlack);
 
     return formatResponse('');
   } catch (e) {

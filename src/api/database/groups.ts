@@ -1,11 +1,11 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
-  insertGroup as databaseinsertGroup,
+  insertGroup as databaseInsertGroup,
   deleteGroup as databasedeleteGroup,
   updateGroup as databaseupdateGroup,
-  getJoinedGroupList as databasegetJoinedGroupList,
+  getJoinedGroupList as databaseGetJoinedGroupList,
   getGroupInfoByGroupID as databaseGetGroupInfoByGroupID,
-  getAllGroupInfoByGroupIDOrGroupName as databasegetAllGroupInfoByGroupIDOrGroupName,
+  getAllGroupInfoByGroupIDOrGroupName as databaseGetAllGroupInfoByGroupIDOrGroupName,
   subtractMemberCount as databasesubtractMemberCount,
   addMemberCount as databaseaddMemberCount,
   LocalGroup,
@@ -16,7 +16,6 @@ import {
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
-import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { getInstance } from './instance';
 
 export async function insertGroup(localGroupStr: string): Promise<string> {
@@ -27,7 +26,7 @@ export async function insertGroup(localGroupStr: string): Promise<string> {
       convertObjectField(JSON.parse(localGroupStr))
     ) as LocalGroup;
 
-    databaseinsertGroup(db, localGroup);
+    databaseInsertGroup(db, localGroup);
 
     return formatResponse('');
   } catch (e) {
@@ -85,7 +84,7 @@ export async function getJoinedGroupList(): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetJoinedGroupList(db);
+    const execResult = databaseGetJoinedGroupList(db);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -125,7 +124,7 @@ export async function getAllGroupInfoByGroupIDOrGroupName(
   try {
     const db = await getInstance();
 
-    const execResult = databasegetAllGroupInfoByGroupIDOrGroupName(
+    const execResult = databaseGetAllGroupInfoByGroupIDOrGroupName(
       db,
       keyword,
       isSearchGroupID,
@@ -184,7 +183,7 @@ export async function getJoinedWorkingGroupIDList(): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetJoinedGroupList(db);
+    const execResult = databaseGetJoinedGroupList(db);
     const allJoinedGroupList = converSqlExecResult(execResult[0], 'CamelCase');
     const filterIDList = [] as string[];
     allJoinedGroupList.forEach(group => {
@@ -208,7 +207,7 @@ export async function getJoinedWorkingGroupList(): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databasegetJoinedGroupList(db);
+    const execResult = databaseGetJoinedGroupList(db);
     const allJoinedGroupList = converSqlExecResult(execResult[0], 'CamelCase');
 
     return formatResponse(

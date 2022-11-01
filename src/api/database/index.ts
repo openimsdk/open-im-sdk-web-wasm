@@ -7,5 +7,6 @@ export * from './unreadMessage';
 export * from './superGroupMessage';
 export * from './black';
 export * from './friend';
-export * from './friend_request';
+export * from './friendRequest';
 export * from './groups';
+export * from './groupRequest';

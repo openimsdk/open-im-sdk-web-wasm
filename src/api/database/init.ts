@@ -1,10 +1,13 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
-  locaBlack,
-  locaFriend,
-  locaGroups,
-  locaFendRequest,
+  locaBlacks,
+  localFriends,
+  localGroups,
+  localFriendRequests,
   localChatLogs,
+  localErrChatLogs,
+  localGroupRequests,
+  localAdminGroupRequests,
   localConversations,
   localUsers,
   localSuperGroups,
@@ -30,10 +33,13 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultLocalChatLogs = localChatLogs(db);
     const execResultLocalConversations = localConversations(db);
     const execResultLocalUsers = localUsers(db);
-    const execResultLocalBlack = locaBlack(db);
-    const execResultLocalFriend = locaFriend(db);
-    const execResuLocalGroup = locaGroups(db);
-    const execResultlocaFendRequest = locaFendRequest(db);
+    const execResultLocalBlack = locaBlacks(db);
+    const execResultLocalFriend = localFriends(db);
+    const execResuLocalGroup = localGroups(db);
+    const execResuLocalErrChatLos = localErrChatLogs(db);
+    const execResuLocalGroupRequest = localGroupRequests(db);
+    const execResuLocalAdminGroupRequest = localAdminGroupRequests(db);
+    const execResultlocaFendRequest = localFriendRequests(db);
     const execResultLocalSuperGroups = localSuperGroups(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
@@ -49,6 +55,9 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResultLocalFriend,
         execResuLocalGroup,
         execResultlocaFendRequest,
+        execResuLocalErrChatLos,
+        execResuLocalGroupRequest,
+        execResuLocalAdminGroupRequest,
       ]
     );
 

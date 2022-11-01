@@ -3,7 +3,7 @@ import { Database, QueryExecResult } from '@jlongster/sql.js';
 
 export type LocalGroup = { [key: string]: any };
 
-export function locaGroups(db: Database): QueryExecResult[] {
+export function localGroups(db: Database): QueryExecResult[] {
   return db.exec(
     `
       create table if not exists 'local_groups'
