@@ -10,3 +10,5 @@ export * from './friend';
 export * from './friendRequest';
 export * from './groups';
 export * from './groupRequest';
+export * from './groupMember';
+export * from './tempCacheChatLogs';

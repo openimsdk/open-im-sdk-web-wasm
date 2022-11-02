@@ -12,6 +12,8 @@ import {
   localUsers,
   localSuperGroups,
   localConversationUnreadMessages,
+  localGroupMembers,
+  tempCacheLocalChatLogs,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
@@ -38,9 +40,11 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResuLocalGroup = localGroups(db);
     const execResuLocalErrChatLos = localErrChatLogs(db);
     const execResuLocalGroupRequest = localGroupRequests(db);
+    const execResuLocalGroupMembers = localGroupMembers(db);
     const execResuLocalAdminGroupRequest = localAdminGroupRequests(db);
     const execResultlocaFendRequest = localFriendRequests(db);
     const execResultLocalSuperGroups = localSuperGroups(db);
+    const execResultTempCacheLocalChatLogs = tempCacheLocalChatLogs(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
 
@@ -54,10 +58,12 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResultLocalBlack,
         execResultLocalFriend,
         execResuLocalGroup,
+        execResuLocalGroupMembers,
         execResultlocaFendRequest,
         execResuLocalErrChatLos,
         execResuLocalGroupRequest,
         execResuLocalAdminGroupRequest,
+        execResultTempCacheLocalChatLogs,
       ]
     );
 

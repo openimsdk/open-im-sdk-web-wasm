@@ -11,3 +11,5 @@ export * from './localGroups';
 export * from './localGroupRequests';
 export * from './localAdminGroupRequests';
 export * from './localFriendRequest';
+export * from './localGroupMembers';
+export * from './tempCacheLocalChatLogs';

@@ -31,6 +31,7 @@ import {
   getAllUnDeleteMessageSeqList as databaseGetAllUnDeleteMessageSeqList,
   updateSingleMessageHasRead as databaseUpdateSingleMessageHasRead,
   updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
+  setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -69,12 +70,12 @@ export async function getMessage(messageId: string): Promise<string> {
 }
 
 export async function getMultipleMessage(
-  messageIds: string[]
+  messageIDStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMultipleMessage(db, messageIds);
+    const execResult = databaseGetMultipleMessage(db, JSON.parse(messageIDStr));
 
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
@@ -451,7 +452,7 @@ export async function searchMessageByKeyword(
 }
 
 export async function searchMessageByContentType(
-  contentType: number[],
+  contentTypeStr: string,
   sourceID: string,
   startTime: number,
   endTime: number,
@@ -464,7 +465,7 @@ export async function searchMessageByContentType(
 
     const execResult = databaseSearchMessageByContentType(
       db,
-      contentType,
+      JSON.parse(contentTypeStr),
       sourceID,
       startTime,
       endTime,
@@ -486,8 +487,8 @@ export async function searchMessageByContentType(
 }
 
 export async function searchMessageByContentTypeAndKeyword(
-  contentType: number[],
-  keywordList: string[],
+  contentTypeStr: string,
+  keywordListStr: string,
   keywordListMatchType: number,
   startTime: number,
   endTime: number
@@ -497,8 +498,8 @@ export async function searchMessageByContentTypeAndKeyword(
 
     const execResult = databaseSearchMessageByContentTypeAndKeyword(
       db,
-      contentType,
-      keywordList,
+      JSON.parse(contentTypeStr),
+      JSON.parse(keywordListStr),
       keywordListMatchType,
       startTime,
       endTime
@@ -705,12 +706,16 @@ export async function getAllUnDeleteMessageSeqList(): Promise<string> {
 
 export async function updateSingleMessageHasRead(
   sendID: string,
-  clientMsgIDList: string[]
+  clientMsgIDListStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    databaseUpdateSingleMessageHasRead(db, sendID, clientMsgIDList);
+    databaseUpdateSingleMessageHasRead(
+      db,
+      sendID,
+      JSON.parse(clientMsgIDListStr)
+    );
 
     return formatResponse('');
   } catch (e) {
@@ -725,13 +730,17 @@ export async function updateSingleMessageHasRead(
 }
 
 export async function updateGroupMessageHasRead(
-  clientMsgIDList: string[],
+  clientMsgIDListStr: string,
   sessionType: number
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    databaseUpdateGroupMessageHasRead(db, clientMsgIDList, sessionType);
+    databaseUpdateGroupMessageHasRead(
+      db,
+      JSON.parse(clientMsgIDListStr),
+      sessionType
+    );
 
     return formatResponse('');
   } catch (e) {

@@ -10,6 +10,20 @@ import {
   updateColumnsConversation as databaseUpdateColumnsConversation,
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
   getMultipleConversation as databaseGetMultipleConversation,
+  getConversationByUserID as databaseGetConversationByUserID,
+  getConversationListSplit as databaseGetConversationListSplit,
+  incrConversationUnreadCount as databaseIncrConversationUnreadCount,
+  updateConversation as databaseUpdateConversation,
+  deleteConversation as databaseDeleteConversation,
+  conversationIfExists as databaseConversationIfExists,
+  resetConversation as databaseResetConversation,
+  resetAllConversation as databaseResetAllConversation,
+  clearConversation as databaseClearConversation,
+  clearAllConversation as databaseClearAllConversation,
+  setConversationDraft as databaseSetConversationDraft,
+  removeConversationDraft as databaseRemoveConversationDraft,
+  unPinConversation as databaseUnPinConversation,
+  setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -253,6 +267,368 @@ export async function getTotalUnreadMsgCount(): Promise<string> {
     const execResult = databaseGetTotalUnreadMsgCount(db);
 
     return formatResponse(execResult[0]?.values[0]?.[0]);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getConversationByUserID(userID: string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetConversationByUserID(db, userID);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isPinned',
+        'isPrivateChat',
+        'isNotInGroup',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getConversationListSplit(
+  offset: number,
+  count: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetConversationListSplit(db, offset, count);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isPinned',
+        'isPrivateChat',
+        'isNotInGroup',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteConversation(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseDeleteConversation(db, conversationID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateConversation(
+  conversationStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const localConversation = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(conversationStr))
+    ) as ClientConversation;
+
+    databaseUpdateConversation(db, localConversation);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function batchUpdateConversationList(
+  conversationListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const conversationList = (
+      (JSON.parse(conversationListStr) || []) as ClientConversation[]
+    ).map((v: Record<string, unknown>) => convertToSnakeCaseObject(v));
+
+    if (conversationList.length === 0) {
+      return formatResponse('');
+    }
+
+    conversationList.forEach(conversation => {
+      databaseUpdateConversation(db, conversation);
+    });
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function conversationIfExists(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseConversationIfExists(db, conversationID);
+
+    return formatResponse(execResult.length !== 0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function resetConversation(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseResetConversation(db, conversationID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function resetAllConversation(): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseResetAllConversation(db);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function clearConversation(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseClearConversation(db, conversationID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function clearAllConversation(): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseClearAllConversation(db);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function setConversationDraft(
+  conversationID: string,
+  draftText: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseSetConversationDraft(
+      db,
+      conversationID,
+      draftText
+    );
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function removeConversationDraft(
+  conversationID: string,
+  draftText: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseRemoveConversationDraft(
+      db,
+      conversationID,
+      draftText
+    );
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function unPinConversation(
+  conversationID: string,
+  isPinned: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseUnPinConversation(db, conversationID, isPinned);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+// export async function updateAllConversation(
+//   conversationID: string,
+//   conversation: ClientConversation | string
+// ): Promise<string> {
+//   try {
+//     const db = await getInstance();
+//     let parsedConversation = conversation as ClientConversation;
+//     if (typeof conversation === 'string') {
+//       parsedConversation = convertToSnakeCaseObject(
+//         convertObjectField(JSON.parse(conversation))
+//       ) as ClientConversation;
+//     }
+
+//     const execResult = databaseUpdateColumnsConversation(
+//       db,
+//       conversationID,
+//       parsedConversation
+//     );
+//     const modifed = db.getRowsModified();
+
+//     if (modifed === 0) {
+//       throw 'updateColumnsConversation no record updated';
+//     }
+
+//     return formatResponse(execResult);
+//   } catch (e) {
+//     console.error(e);
+
+//     return formatResponse(
+//       undefined,
+//       DatabaseErrorCode.ErrorInit,
+//       JSON.stringify(e)
+//     );
+//   }
+// }
+
+export async function incrConversationUnreadCount(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseIncrConversationUnreadCount(db, conversationID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function setMultipleConversationRecvMsgOpt(
+  conversationIDListStr: string,
+  opt: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseSetMultipleConversationRecvMsgOpt(
+      db,
+      JSON.parse(conversationIDListStr),
+      opt
+    );
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

@@ -79,12 +79,15 @@ export async function getBlackInfoByBlockUserID(
 }
 
 export async function getBlackInfoList(
-  blockUserIDList: string[]
+  blockUserIDListStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetBlackInfoList(db, blockUserIDList);
+    const execResult = databaseGetBlackInfoList(
+      db,
+      JSON.parse(blockUserIDListStr)
+    );
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
@@ -103,7 +106,10 @@ export async function insertBlack(localBlackStr: string): Promise<string> {
     const db = await getInstance();
 
     const localBlack = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localBlackStr))
+      convertObjectField(JSON.parse(localBlackStr), {
+        userID: 'block_user_id',
+        name: 'nickname',
+      })
     ) as LocalBlack;
 
     databaseInsertBlack(db, localBlack);

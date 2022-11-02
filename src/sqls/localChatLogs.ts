@@ -46,7 +46,7 @@ export function getMultipleMessage(
 
   return db.exec(
     `
-      select * from local_sg_chat_logs where client_msg_id in (${values}) order by send_time desc;
+    SELECT * FROM local_chat_logs WHERE client_msg_id IN (${values}) ORDER BY send_time DESC
     `
   );
 }
@@ -160,12 +160,14 @@ export function getMessageListNoTime(
   loginUserID: string
 ): QueryExecResult[] {
   const isSelf = loginUserID === sourceID;
+  const condition = isSelf
+    ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
+    : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
   return db.exec(
     `
         select * from local_chat_logs
         where
-            recv_id = "${sourceID}"
-            ${isSelf ? 'and' : 'or'}  send_id = "${sourceID}"
+            ${condition}
             and status <= 3
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
@@ -247,7 +249,7 @@ export function searchMessageByContentType(
           And (send_id=="${sourceID}" OR recv_id=="${sourceID}") 
           And send_time between ${startTime} and ${finalEndTime} 
           AND status <=3 
-          And content_type IN (values) 
+          And content_type IN (${values}) 
     ORDER BY send_time DESC LIMIT ${count}
     `
   );
@@ -418,7 +420,7 @@ export function updateSingleMessageHasRead(
     UPDATE local_chat_logs SET is_read=1 
     WHERE send_id="${sendID}"  
     AND session_type=1 
-    AND client_msg_id in ("${values}")
+    AND client_msg_id in (${values})
     `
   );
 }

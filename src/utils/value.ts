@@ -10,7 +10,8 @@ import {
 export function converSqlExecResult(
   record: QueryExecResult,
   keyType: KeyType = 'CamelCase',
-  booleanKeys: string[] = []
+  booleanKeys: string[] = [],
+  convertMap: Record<string, string> = {}
 ) {
   const { columns = [], values = [] } = record || {};
   const result: Record<string, unknown>[] = [];
@@ -30,6 +31,8 @@ export function converSqlExecResult(
       if (booleanKeys.find(bk => bk === ck)) {
         cv = !!cv;
       }
+
+      ck = convertMap[k] || ck;
 
       converted[ck] = cv;
     });

@@ -9,23 +9,23 @@ export function localGroups(db: Database): QueryExecResult[] {
       create table if not exists 'local_groups'
       (
           'group_id'                 varchar(64) PRIMARY KEY,
-          'name   '                  TEXT,
-          'notification '            varchar(255),
-          'introduction '            varchar(255),
-          'face_url      '           varchar(255),
-          'create_time '             INTEGER,
-          'status     '              INTEGER,
-         ' creator_user_id    '      varchar(64),
-          'group_type '              INTEGER,
-          'owner_user_id  '          varchar(64),
-          'member_count '            INTEGER,
-          'ex    '                   varchar(1024),
-          'attached_info '           varchar(1024),
-          'need_verification   '     INTEGER,
-          'look_member_info    '     INTEGER,
+          'name'                  TEXT,
+          'notification'            varchar(255),
+          'introduction'            varchar(255),
+          'face_url'           varchar(255),
+          'create_time'             INTEGER,
+          'status'              INTEGER,
+          'creator_user_id'      varchar(64),
+          'group_type'              INTEGER,
+          'owner_user_id'          varchar(64),
+          'member_count'            INTEGER,
+          'ex'                   varchar(1024),
+          'attached_info'           varchar(1024),
+          'need_verification'     INTEGER,
+          'look_member_info'     INTEGER,
           'apply_member_friend'      INTEGER,
           'notification_update_time' INTEGER,
-          'notification_user_id  '   TEXT
+          'notification_user_id'   TEXT
       )  
       `
   );

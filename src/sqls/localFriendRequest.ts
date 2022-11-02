@@ -11,19 +11,19 @@ export function localFriendRequests(db: Database): QueryExecResult[] {
           'from_user_id'    varchar(64),
           'from_nickname'   varchar(255),
           'from_face_url'   varchar(255),
-         'from_gender'     INTEGER,
+          'from_gender'     INTEGER,
           'to_user_id'   varchar(64),
           'to_nickname'   varchar(255),
           'to_face_url'     varchar(255),
           'to_gender'      INTEGER,
-         ' handle_result'    INTEGER,
-         ' req_msg '        varchar(255),
+          'handle_result'    INTEGER,
+          'req_msg'        varchar(255),
           'create_time'   INTEGER,
           'handler_user_id'  varchar(64),
-         ' handle_msg'    varchar(255),
-          'handle_time '    INTEGER,
+          'handle_msg'    varchar(255),
+          'handle_time'    INTEGER,
           'ex'           varchar(1024),
-         ' attached_info'   varchar(1024),
+          'attached_info'   varchar(1024),
           primary key ('from_user_id', 'to_user_id')
       );  
       `
@@ -94,8 +94,7 @@ export function getSendFriendApplication(
 ): QueryExecResult[] {
   return db.exec(
     `
-      select *
-      from local_friend_requests
+      select * from local_friend_requests
       where from_user_id = "${loginUserID}"
       order by create_time desc
       `

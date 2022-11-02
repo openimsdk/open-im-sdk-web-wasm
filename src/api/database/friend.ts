@@ -15,15 +15,16 @@ import {
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
-import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { getInstance } from './instance';
 
 export async function insertFriend(localFriendStr: string): Promise<string> {
   try {
     const db = await getInstance();
-
     const localFriend = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localFriendStr))
+      convertObjectField(JSON.parse(localFriendStr), {
+        userID: 'friend_user_id',
+        nickname: 'name',
+      })
     ) as LocalFriend;
 
     databaseInsertFriend(db, localFriend);
@@ -88,7 +89,9 @@ export async function getAllFriendList(loginUserID: string): Promise<string> {
 
     const execResult = databaseGetAllFriendList(db, loginUserID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], { name: 'nickname' })
+    );
   } catch (e) {
     console.error(e);
 
@@ -155,12 +158,15 @@ export async function getFriendInfoByFriendUserID(
 }
 
 export async function getFriendInfoList(
-  friendUserIDList: string[]
+  friendUserIDListStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetFriendInfoList(db, friendUserIDList);
+    const execResult = databaseGetFriendInfoList(
+      db,
+      JSON.parse(friendUserIDListStr)
+    );
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {

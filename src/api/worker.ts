@@ -45,6 +45,20 @@ import {
   batchInsertConversationList,
   insertConversation,
   getTotalUnreadMsgCount,
+  batchUpdateConversationList,
+  clearAllConversation,
+  clearConversation,
+  conversationIfExists,
+  deleteConversation,
+  getConversationByUserID,
+  getConversationListSplit,
+  incrConversationUnreadCount,
+  removeConversationDraft,
+  resetAllConversation,
+  resetConversation,
+  setConversationDraft,
+  setMultipleConversationRecvMsgOpt,
+  unPinConversation,
 
   // users
   getLoginUser,
@@ -121,10 +135,35 @@ import {
   searchFriendList,
   getFriendInfoList,
   getFriendInfoByFriendUserID,
+
+  // groupMember
+  batchInsertGroupMember,
+  deleteGroupAllMembers,
+  deleteGroupMember,
+  getAllGroupMemberList,
+  getAllGroupMemberUserIDList,
+  getGroupAdminID,
+  getGroupMemberCount,
+  getGroupMemberInfoByGroupIDUserID,
+  getGroupMemberListByGroupID,
+  getGroupMemberListSplit,
+  getGroupMemberListSplitByJoinTimeFilter,
+  getGroupMemberOwner,
+  getGroupMemberOwnerAndAdmin,
+  getGroupMemberUIDListByGroupID,
+  getGroupOwnerAndAdminByGroupID,
+  getGroupSomeMemberInfo,
+  insertGroupMember,
+  searchGroupMembers,
+  updateGroupMember,
+  updateGroupMemberField,
+
+  // temp cache chatlogs
+  batchInsertTempCacheMessageList,
+  InsertTempCacheMessage,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
-
 const ctx = self;
 const rpc = new RPC({
   event: new RPCMessageEvent({
@@ -195,6 +234,23 @@ rpc.registerMethod('decrConversationUnreadCount', decrConversationUnreadCount);
 rpc.registerMethod('batchInsertConversationList', batchInsertConversationList);
 rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
 rpc.registerMethod('insertConversation', insertConversation);
+rpc.registerMethod('getConversationByUserID', getConversationByUserID);
+rpc.registerMethod('getConversationListSplit', getConversationListSplit);
+rpc.registerMethod('deleteConversation', deleteConversation);
+rpc.registerMethod('batchUpdateConversationList', batchUpdateConversationList);
+rpc.registerMethod('conversationIfExists', conversationIfExists);
+rpc.registerMethod('resetConversation', resetConversation);
+rpc.registerMethod('resetAllConversation', resetAllConversation);
+rpc.registerMethod('clearConversation', clearConversation);
+rpc.registerMethod('clearAllConversation', clearAllConversation);
+rpc.registerMethod('setConversationDraft', setConversationDraft);
+rpc.registerMethod('removeConversationDraft', removeConversationDraft);
+rpc.registerMethod('unPinConversation', unPinConversation);
+rpc.registerMethod('incrConversationUnreadCount', incrConversationUnreadCount);
+rpc.registerMethod(
+  'setMultipleConversationRecvMsgOpt',
+  setMultipleConversationRecvMsgOpt
+);
 
 rpc.registerMethod('getLoginUser', getLoginUser);
 rpc.registerMethod('insertLoginUser', insertLoginUser);
@@ -274,6 +330,40 @@ rpc.registerMethod('addMemberCount', addMemberCount);
 rpc.registerMethod('getJoinedWorkingGroupIDList', getJoinedWorkingGroupIDList);
 rpc.registerMethod('getJoinedWorkingGroupList', getJoinedWorkingGroupList);
 
+// groupMembers
+rpc.registerMethod(
+  'getGroupMemberInfoByGroupIDUserID',
+  getGroupMemberInfoByGroupIDUserID
+);
+rpc.registerMethod('getAllGroupMemberList', getAllGroupMemberList);
+rpc.registerMethod('getAllGroupMemberUserIDList', getAllGroupMemberUserIDList);
+rpc.registerMethod('getGroupMemberCount', getGroupMemberCount);
+rpc.registerMethod('getGroupSomeMemberInfo', getGroupSomeMemberInfo);
+rpc.registerMethod('getGroupAdminID', getGroupAdminID);
+rpc.registerMethod('getGroupMemberListByGroupID', getGroupMemberListByGroupID);
+rpc.registerMethod('getGroupMemberListSplit', getGroupMemberListSplit);
+rpc.registerMethod('getGroupMemberOwnerAndAdmin', getGroupMemberOwnerAndAdmin);
+rpc.registerMethod('getGroupMemberOwner', getGroupMemberOwner);
+rpc.registerMethod(
+  'getGroupMemberListSplitByJoinTimeFilter',
+  getGroupMemberListSplitByJoinTimeFilter
+);
+rpc.registerMethod(
+  'getGroupOwnerAndAdminByGroupID',
+  getGroupOwnerAndAdminByGroupID
+);
+rpc.registerMethod(
+  'getGroupMemberUIDListByGroupID',
+  getGroupMemberUIDListByGroupID
+);
+rpc.registerMethod('insertGroupMember', insertGroupMember);
+rpc.registerMethod('batchInsertGroupMember', batchInsertGroupMember);
+rpc.registerMethod('deleteGroupMember', deleteGroupMember);
+rpc.registerMethod('deleteGroupAllMembers', deleteGroupAllMembers);
+rpc.registerMethod('updateGroupMember', updateGroupMember);
+rpc.registerMethod('updateGroupMemberField', updateGroupMemberField);
+rpc.registerMethod('searchGroupMembers', searchGroupMembers);
+
 // groupRequest
 rpc.registerMethod('insertGroupRequest', insertGroupRequest);
 rpc.registerMethod('deleteGroupRequest', deleteGroupRequest);
@@ -292,6 +382,13 @@ rpc.registerMethod('getAllFriendList', getAllFriendList);
 rpc.registerMethod('searchFriendList', searchFriendList);
 rpc.registerMethod('getFriendInfoByFriendUserID', getFriendInfoByFriendUserID);
 rpc.registerMethod('getFriendInfoList', getFriendInfoList);
+
+// temp cache chatlogs
+rpc.registerMethod(
+  'batchInsertTempCacheMessageList',
+  batchInsertTempCacheMessageList
+);
+rpc.registerMethod('InsertTempCacheMessage', InsertTempCacheMessage);
 
 rpc.registerMethod('exec', async (sql: string) => {
   const db = await getInstance();

@@ -34,7 +34,7 @@ export function localErrChatLogs(db: Database): QueryExecResult[] {
 export function getAbnormalMsgSeq(db: Database): QueryExecResult[] {
   return db.exec(
     `
-      SELECT IFNULL(max(seq),0) FROM local_err_chat_logs
+      select ifnull(max(seq),0) from local_err_chat_logs;
       `
   );
 }

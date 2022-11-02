@@ -381,7 +381,7 @@ class SDK extends Emitter {
   }
 
   async revokeMessage(params: string, operationID = uuidv4()) {
-    return await this._invoker('revokeMessage ', window.revokeMessage, [
+    return await this._invoker('revokeMessage', window.revokeMessage, [
       operationID,
       params,
     ]);
@@ -392,47 +392,47 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) {
     return await this._invoker(
-      'setOneConversationPrivateChat ',
+      'setOneConversationPrivateChat',
       window.setOneConversationPrivateChat,
       [operationID, params.conversationID, params.isPrivate]
     );
   }
   /* ----------------------------------------------新增-------------------------------------------------------- */
   async getLoginStatus(operationID = uuidv4()) {
-    return await this._invoker('getLoginStatus ', window.getLoginStatus, [
+    return await this._invoker('getLoginStatus', window.getLoginStatus, [
       operationID,
     ]);
   }
 
-  async iLogin(data: LoginParams, operationID = uuidv4()) {
-    return await this._invoker('iLogin ', window.iLogin, [
-      operationID,
-      data.token,
-      data.userID,
-    ]);
-  }
+  // async iLogin(data: LoginParams, operationID = uuidv4()) {
+  //   return await this._invoker('iLogin', window.iLogin, [
+  //     operationID,
+  //     data.token,
+  //     data.userID,
+  //   ]);
+  // }
 
   async getLoginUser(operationID = uuidv4()) {
-    return await this._invoker('getLoginUser ', window.getLoginUser, [
+    return await this._invoker('getLoginUser', window.getLoginUser, [
       operationID,
     ]);
   }
 
   async getSelfUserInfo(operationID = uuidv4()) {
-    return await this._invoker('getSelfUserInfo ', window.getSelfUserInfo, [
+    return await this._invoker('getSelfUserInfo', window.getSelfUserInfo, [
       operationID,
     ]);
   }
 
   async getUsersInfo(data: string[], operationID = uuidv4()) {
-    return await this._invoker('getUsersInfo ', window.getUsersInfo, [
+    return await this._invoker('getUsersInfo', window.getUsersInfo, [
       operationID,
       JSON.stringify(data),
     ]);
   }
 
   async setSelfInfo(data: PartialUserItem, operationID = uuidv4()) {
-    return await this._invoker('setSelfInfo ', window.setSelfInfo, [
+    return await this._invoker('setSelfInfo', window.setSelfInfo, [
       operationID,
       JSON.stringify(data.userInfo),
     ]);
@@ -440,7 +440,7 @@ class SDK extends Emitter {
 
   async createTextAtMessage(data: AtMsgParams, operationID = uuidv4()) {
     return await this._invoker(
-      'createTextAtMessage ',
+      'createTextAtMessage',
       window.createTextAtMessage,
       [
         operationID,
@@ -453,7 +453,7 @@ class SDK extends Emitter {
   }
   async createSoundMessage(data: SoundMsgParams, operationID = uuidv4()) {
     return await this._invoker(
-      'createSoundMessage ',
+      'createSoundMessage',
       window.createSoundMessage,
       [operationID, data.soundPath, data.duration]
     );
@@ -461,7 +461,7 @@ class SDK extends Emitter {
 
   async createVideoMessage(data: VideoMsgParams, operationID = uuidv4()) {
     return await this._invoker(
-      'createVideoMessage ',
+      'createVideoMessage',
       window.createVideoMessage,
       [
         operationID,
@@ -474,7 +474,7 @@ class SDK extends Emitter {
   }
 
   async createFileMessage(data: FileMsgParams, operationID = uuidv4()) {
-    return await this._invoker('createFileMessage ', window.createFileMessage, [
+    return await this._invoker('createFileMessage', window.createFileMessage, [
       operationID,
       data.filePath,
       data.fileName,
@@ -486,7 +486,7 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) {
     return await this._invoker(
-      'createFileMessageFromFullPath ',
+      'createFileMessageFromFullPath',
       window.createFileMessageFromFullPath,
       [operationID, data.fileFullPath, data.fileName]
     );
@@ -819,7 +819,7 @@ class SDK extends Emitter {
     ]);
   }
   async checkFriend(data: string[], operationID = uuidv4()) {
-    return await this._invoker('checkFriend ', window.checkFriend, [
+    return await this._invoker('checkFriend', window.checkFriend, [
       operationID,
       JSON.stringify(data),
     ]);
@@ -829,7 +829,7 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) {
     return await this._invoker(
-      'acceptFriendApplication ',
+      'acceptFriendApplication',
       window.acceptFriendApplication,
       [operationID, JSON.stringify(data)]
     );

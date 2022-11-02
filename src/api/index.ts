@@ -168,7 +168,7 @@ export function initDatabaseAPI(): void {
     'getHiddenConversationList'
   );
   window.getConversation = registeMethodOnWindow('getConversation');
-  window.getMultipleConversation = registeMethodOnWindow(
+  window.getMultipleConversationDB = registeMethodOnWindow(
     'getMultipleConversation'
   );
   window.updateColumnsConversation = registeMethodOnWindow(
@@ -187,8 +187,35 @@ export function initDatabaseAPI(): void {
     'batchInsertConversationList'
   );
   window.insertConversation = registeMethodOnWindow('insertConversation');
-  window.getTotalUnreadMsgCount = registeMethodOnWindow(
+  window.getTotalUnreadMsgCountDB = registeMethodOnWindow(
     'getTotalUnreadMsgCount'
+  );
+  window.getConversationByUserID = registeMethodOnWindow(
+    'getConversationByUserID'
+  );
+  window.getConversationListSplitDB = registeMethodOnWindow(
+    'getConversationListSplit'
+  );
+  window.deleteConversation = registeMethodOnWindow('deleteConversation');
+  window.batchUpdateConversationList = registeMethodOnWindow(
+    'batchUpdateConversationList'
+  );
+  window.conversationIfExists = registeMethodOnWindow('conversationIfExists');
+  window.resetConversation = registeMethodOnWindow('resetConversation');
+  window.resetAllConversation = registeMethodOnWindow('resetAllConversation');
+  window.clearConversation = registeMethodOnWindow('clearConversation');
+  window.clearAllConversation = registeMethodOnWindow('clearAllConversation');
+  window.setConversationDraft = registeMethodOnWindow('setConversationDraft');
+  window.removeConversationDraft = registeMethodOnWindow(
+    'removeConversationDraft'
+  );
+  window.unPinConversation = registeMethodOnWindow('unPinConversation');
+  // window.updateAllConversation = registeMethodOnWindow('updateAllConversation');
+  window.incrConversationUnreadCount = registeMethodOnWindow(
+    'incrConversationUnreadCount'
+  );
+  window.setMultipleConversationRecvMsgOpt = registeMethodOnWindow(
+    'setMultipleConversationRecvMsgOpt'
   );
 
   // users
@@ -253,7 +280,7 @@ export function initDatabaseAPI(): void {
   window.getRowsModified = registeMethodOnWindow('getRowsModified');
 
   // black
-  window.getBlackList = registeMethodOnWindow('getBlackList');
+  window.getBlackListDB = registeMethodOnWindow('getBlackList');
   window.getBlackListUserID = registeMethodOnWindow('getBlackListUserID');
   window.getBlackInfoByBlockUserID = registeMethodOnWindow(
     'getBlackInfoByBlockUserID'
@@ -281,7 +308,7 @@ export function initDatabaseAPI(): void {
 
   // friend
   window.insertFriend = registeMethodOnWindow('insertFriend');
-  window.deleteFriend = registeMethodOnWindow('deleteFriend');
+  window.deleteFriendDB = registeMethodOnWindow('deleteFriend');
   window.updateFriend = registeMethodOnWindow('updateFriend');
   window.getAllFriendList = registeMethodOnWindow('getAllFriendList');
   window.searchFriendList = registeMethodOnWindow('searchFriendList');
@@ -294,10 +321,18 @@ export function initDatabaseAPI(): void {
   window.insertGroup = registeMethodOnWindow('insertGroup');
   window.deleteGroup = registeMethodOnWindow('deleteGroup');
   window.updateGroup = registeMethodOnWindow('updateGroup');
-  window.getJoinedGroupList = registeMethodOnWindow('getJoinedGroupList');
+  window.getJoinedGroupListDB = registeMethodOnWindow('getJoinedGroupList');
   window.getGroupInfoByGroupID = registeMethodOnWindow('getGroupInfoByGroupID');
   window.getAllGroupInfoByGroupIDOrGroupName = registeMethodOnWindow(
     'getAllGroupInfoByGroupIDOrGroupName'
+  );
+  window.subtractMemberCount = registeMethodOnWindow('subtractMemberCount');
+  window.addMemberCount = registeMethodOnWindow('addMemberCount');
+  window.getJoinedWorkingGroupIDList = registeMethodOnWindow(
+    'getJoinedWorkingGroupIDList'
+  );
+  window.getJoinedWorkingGroupList = registeMethodOnWindow(
+    'getJoinedWorkingGroupList'
   );
 
   // groupRequest
@@ -318,6 +353,58 @@ export function initDatabaseAPI(): void {
   );
   window.getAdminGroupApplication = registeMethodOnWindow(
     'getAdminGroupApplication'
+  );
+
+  // groupMember
+  window.getGroupMemberInfoByGroupIDUserID = registeMethodOnWindow(
+    'getGroupMemberInfoByGroupIDUserID'
+  );
+  window.getAllGroupMemberList = registeMethodOnWindow('getAllGroupMemberList');
+  window.getAllGroupMemberUserIDList = registeMethodOnWindow(
+    'getAllGroupMemberUserIDList'
+  );
+  window.getGroupMemberCount = registeMethodOnWindow('getGroupMemberCount');
+  window.getGroupSomeMemberInfo = registeMethodOnWindow(
+    'getGroupSomeMemberInfo'
+  );
+  window.getGroupAdminID = registeMethodOnWindow('getGroupAdminID');
+  window.getGroupMemberListByGroupID = registeMethodOnWindow(
+    'getGroupMemberListByGroupID'
+  );
+  window.getGroupMemberListSplit = registeMethodOnWindow(
+    'getGroupMemberListSplit'
+  );
+  window.getGroupMemberOwnerAndAdmin = registeMethodOnWindow(
+    'getGroupMemberOwnerAndAdmin'
+  );
+  window.getGroupMemberOwner = registeMethodOnWindow('getGroupMemberOwner');
+  window.getGroupMemberListSplitByJoinTimeFilter = registeMethodOnWindow(
+    'getGroupMemberListSplitByJoinTimeFilter'
+  );
+  window.getGroupOwnerAndAdminByGroupID = registeMethodOnWindow(
+    'getGroupOwnerAndAdminByGroupID'
+  );
+  window.getGroupMemberUIDListByGroupID = registeMethodOnWindow(
+    'getGroupMemberUIDListByGroupID'
+  );
+  window.insertGroupMember = registeMethodOnWindow('insertGroupMember');
+  window.batchInsertGroupMember = registeMethodOnWindow(
+    'batchInsertGroupMember'
+  );
+  window.deleteGroupMember = registeMethodOnWindow('deleteGroupMember');
+  window.deleteGroupAllMembers = registeMethodOnWindow('deleteGroupAllMembers');
+  window.updateGroupMember = registeMethodOnWindow('updateGroupMember');
+  window.updateGroupMemberField = registeMethodOnWindow(
+    'updateGroupMemberField'
+  );
+  window.searchGroupMembers = registeMethodOnWindow('searchGroupMembers');
+
+  // temp cache chat logs
+  window.batchInsertTempCacheMessageList = registeMethodOnWindow(
+    'batchInsertTempCacheMessageList'
+  );
+  window.InsertTempCacheMessage = registeMethodOnWindow(
+    'InsertTempCacheMessage'
   );
 }
 

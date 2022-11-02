@@ -45,14 +45,28 @@ declare global {
     getAllConversationListToSync: DatabaseApi;
     getHiddenConversationList: DatabaseApi;
     getConversation: DatabaseApi;
-    getMultipleConversation: DatabaseApi;
+    getMultipleConversationDB: DatabaseApi;
     updateColumnsConversation: DatabaseApi;
     updateConversation: DatabaseApi;
     updateConversationForSync: DatabaseApi;
     decrConversationUnreadCount: DatabaseApi;
     batchInsertConversationList: DatabaseApi;
     insertConversation: DatabaseApi;
-    getTotalUnreadMsgCount: DatabaseApi;
+    getTotalUnreadMsgCountDB: DatabaseApi;
+    batchUpdateConversationList: DatabaseApi;
+    clearAllConversation: DatabaseApi;
+    clearConversation: DatabaseApi;
+    conversationIfExists: DatabaseApi;
+    deleteConversation: DatabaseApi;
+    getConversationByUserID: DatabaseApi;
+    getConversationListSplitDB: DatabaseApi;
+    incrConversationUnreadCount: DatabaseApi;
+    removeConversationDraft: DatabaseApi;
+    resetAllConversation: DatabaseApi;
+    resetConversation: DatabaseApi;
+    setConversationDraft: DatabaseApi;
+    setMultipleConversationRecvMsgOpt: DatabaseApi;
+    unPinConversation: DatabaseApi;
     // users
     getLoginUser: DatabaseApi;
     insertLoginUser: DatabaseApi;
@@ -80,7 +94,7 @@ declare global {
     getRowsModified: DatabaseApi;
 
     // black
-    getBlackList: DatabaseApi;
+    getBlackListDB: DatabaseApi;
     getBlackListUserID: DatabaseApi;
     getBlackInfoByBlockUserID: DatabaseApi;
     getBlackInfoList: DatabaseApi;
@@ -98,7 +112,7 @@ declare global {
 
     // friend
     insertFriend: DatabaseApi;
-    deleteFriend: DatabaseApi;
+    deleteFriendDB: DatabaseApi;
     updateFriend: DatabaseApi;
     getAllFriendList: DatabaseApi;
     searchFriendList: DatabaseApi;
@@ -109,9 +123,13 @@ declare global {
     insertGroup: DatabaseApi;
     deleteGroup: DatabaseApi;
     updateGroup: DatabaseApi;
-    getJoinedGroupList: DatabaseApi;
+    getJoinedGroupListDB: DatabaseApi;
     getGroupInfoByGroupID: DatabaseApi;
     getAllGroupInfoByGroupIDOrGroupName: DatabaseApi;
+    subtractMemberCount: DatabaseApi;
+    addMemberCount: DatabaseApi;
+    getJoinedWorkingGroupIDList: DatabaseApi;
+    getJoinedWorkingGroupList: DatabaseApi;
 
     // groupRequest
     insertGroupRequest: DatabaseApi;
@@ -122,6 +140,32 @@ declare global {
     deleteAdminGroupRequest: DatabaseApi;
     updateAdminGroupRequest: DatabaseApi;
     getAdminGroupApplication: DatabaseApi;
+
+    // groupMember
+    getGroupMemberInfoByGroupIDUserID: DatabaseApi;
+    getAllGroupMemberList: DatabaseApi;
+    getAllGroupMemberUserIDList: DatabaseApi;
+    getGroupMemberCount: DatabaseApi;
+    getGroupSomeMemberInfo: DatabaseApi;
+    getGroupAdminID: DatabaseApi;
+    getGroupMemberListByGroupID: DatabaseApi;
+    getGroupMemberListSplit: DatabaseApi;
+    getGroupMemberOwnerAndAdmin: DatabaseApi;
+    getGroupMemberOwner: DatabaseApi;
+    getGroupMemberListSplitByJoinTimeFilter: DatabaseApi;
+    getGroupOwnerAndAdminByGroupID: DatabaseApi;
+    getGroupMemberUIDListByGroupID: DatabaseApi;
+    insertGroupMember: DatabaseApi;
+    batchInsertGroupMember: DatabaseApi;
+    deleteGroupMember: DatabaseApi;
+    deleteGroupAllMembers: DatabaseApi;
+    updateGroupMember: DatabaseApi;
+    updateGroupMemberField: DatabaseApi;
+    searchGroupMembers: DatabaseApi;
+
+    // temp chche logs
+    batchInsertTempCacheMessageList: DatabaseApi;
+    InsertTempCacheMessage: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;

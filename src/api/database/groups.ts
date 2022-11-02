@@ -23,7 +23,7 @@ export async function insertGroup(localGroupStr: string): Promise<string> {
     const db = await getInstance();
 
     const localGroup = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupStr))
+      convertObjectField(JSON.parse(localGroupStr), { groupName: 'name' })
     ) as LocalGroup;
 
     databaseInsertGroup(db, localGroup);
@@ -63,7 +63,7 @@ export async function updateGroup(localGroupStr: string): Promise<string> {
     const db = await getInstance();
 
     const localGroup = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupStr))
+      convertObjectField(JSON.parse(localGroupStr), { groupName: 'name' })
     ) as LocalGroup;
 
     databaseupdateGroup(db, localGroup);
@@ -86,7 +86,9 @@ export async function getJoinedGroupList(): Promise<string> {
 
     const execResult = databaseGetJoinedGroupList(db);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], { name: 'groupName' })
+    );
   } catch (e) {
     console.error(e);
 
@@ -191,7 +193,7 @@ export async function getJoinedWorkingGroupIDList(): Promise<string> {
         filterIDList.push(group.group_id as string);
       }
     });
-    return formatResponse(filterIDList);
+    return formatResponse(JSON.stringify(filterIDList));
   } catch (e) {
     console.error(e);
 
@@ -208,11 +210,17 @@ export async function getJoinedWorkingGroupList(): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetJoinedGroupList(db);
-    const allJoinedGroupList = converSqlExecResult(execResult[0], 'CamelCase');
-
-    return formatResponse(
-      allJoinedGroupList.filter(group => group.group_type === 2)
+    const allJoinedGroupList = converSqlExecResult(
+      execResult[0],
+      'CamelCase',
+      [],
+      { name: 'groupName' }
     );
+    const filterList = allJoinedGroupList.filter(
+      group => group.group_type === 2
+    );
+
+    return formatResponse(JSON.stringify(filterList));
   } catch (e) {
     console.error(e);
 
