@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import initSqlJs, { Database, SqlJsStatic } from '@jlongster/sql.js';
-import { SQLiteFS } from 'absurd-sql';
-import IndexedDBBackend from 'absurd-sql/dist/indexeddb-backend';
+import { SQLiteFS } from 'open-absurd-sql';
+import IndexedDBBackend from 'open-absurd-sql/dist/indexeddb-backend';
 
 let instance: Promise<Database> | undefined;
 let SQL: SqlJsStatic | undefined;
@@ -15,7 +17,17 @@ async function InitializeDB(filePath: string) {
     SQL.FS.mount(sqlFS, {}, '/sql');
   }
 
-  const db = new SQL.Database(`/sql/${filePath}`, { filename: true });
+  const path = `/sql/${filePath}`;
+  const db = new SQL.Database(path, { filename: true });
+
+  if (typeof SharedArrayBuffer === 'undefined') {
+    // @ts-ignore
+    const stream = SQL.FS.open(path, 'a+');
+    await stream.node.contents.readIfFallback();
+    // @ts-ignore
+    SQL.FS.close(stream);
+  }
+
   db.exec(`
     PRAGMA page_size=8192;
     PRAGMA journal_mode=MEMORY;

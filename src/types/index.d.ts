@@ -712,6 +712,7 @@ declare global {
 
     // debug
     exec: (sql: string) => Promise<any>;
+    exportDB: () => Promise<string>; //return Uint8Array
   }
   class Go {
     exited: boolean;
@@ -727,3 +728,10 @@ export type WSEvent = {
   errMsg: string;
   operationID: string;
 };
+
+export enum SessionType {
+  SINGLECVE = 1,
+  GROUPCVE = 2,
+  SUPERGROUP = 3,
+  NOTIFICATION = 4,
+}

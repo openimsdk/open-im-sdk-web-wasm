@@ -1,5 +1,6 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { SessionType } from '@/types';
 
 export type ClientMessage = { [key: string]: any };
 
@@ -136,7 +137,7 @@ export function getMessageList(
   loginUserID: string
 ): QueryExecResult[] {
   const isSelf = loginUserID === sourceID;
-  const condition = isSelf
+const condition = isSelf
     ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
     : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
   return db.exec(`
@@ -160,7 +161,7 @@ export function getMessageListNoTime(
   loginUserID: string
 ): QueryExecResult[] {
   const isSelf = loginUserID === sourceID;
-  const condition = isSelf
+const condition = isSelf
     ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
     : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
   return db.exec(
