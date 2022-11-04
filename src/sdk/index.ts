@@ -434,7 +434,7 @@ class SDK extends Emitter {
   async setSelfInfo(data: PartialUserItem, operationID = uuidv4()) {
     return await this._invoker('setSelfInfo', window.setSelfInfo, [
       operationID,
-      JSON.stringify(data.userInfo),
+      JSON.stringify(data),
     ]);
   }
 
@@ -448,37 +448,47 @@ class SDK extends Emitter {
         JSON.stringify(data.atUserIDList),
         JSON.stringify(data.atUsersInfo),
         data.message,
-      ]
+      ],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
   async createSoundMessage(data: SoundMsgParams, operationID = uuidv4()) {
     return await this._invoker(
       'createSoundMessage',
-      window.createSoundMessage,
-      [operationID, data.soundPath, data.duration]
+      window.createSoundMessageByURL,
+      [operationID, JSON.stringify(data)],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
   async createVideoMessage(data: VideoMsgParams, operationID = uuidv4()) {
     return await this._invoker(
       'createVideoMessage',
-      window.createVideoMessage,
-      [
-        operationID,
-        data.videoPath,
-        data.videoType,
-        data.duration,
-        data.snapshotPath,
-      ]
+      window.createVideoMessageByURL,
+      [operationID, JSON.stringify(data)],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
   async createFileMessage(data: FileMsgParams, operationID = uuidv4()) {
-    return await this._invoker('createFileMessage', window.createFileMessage, [
-      operationID,
-      data.filePath,
-      data.fileName,
-    ]);
+    return await this._invoker(
+      'createFileMessage',
+      window.createFileMessageByURL,
+      [operationID, JSON.stringify(data)],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
   }
 
   async createFileMessageFromFullPath(
@@ -488,7 +498,11 @@ class SDK extends Emitter {
     return await this._invoker(
       'createFileMessageFromFullPath',
       window.createFileMessageFromFullPath,
-      [operationID, data.fileFullPath, data.fileName]
+      [operationID, data.fileFullPath, data.fileName],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
@@ -496,7 +510,11 @@ class SDK extends Emitter {
     return await this._invoker(
       'createImageMessageFromFullPath ',
       window.createImageMessageFromFullPath,
-      [operationID, data]
+      [operationID, data],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
@@ -507,7 +525,11 @@ class SDK extends Emitter {
     return await this._invoker(
       'createSoundMessageFromFullPath ',
       window.createSoundMessageFromFullPath,
-      [operationID, data.soundPath, data.duration]
+      [operationID, data.soundPath, data.duration],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
@@ -524,7 +546,11 @@ class SDK extends Emitter {
         data.videoType,
         data.duration,
         data.snapshotFullPath,
-      ]
+      ],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
@@ -537,7 +563,11 @@ class SDK extends Emitter {
         JSON.stringify(data.messageList),
         data.title,
         JSON.stringify(data.summaryList),
-      ]
+      ],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
@@ -545,31 +575,48 @@ class SDK extends Emitter {
     return await this._invoker(
       'createForwardMessage ',
       window.createForwardMessage,
-      [operationID, data]
+      [operationID, data],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
   async createFaceMessage(data: FaceMessageParams, operationID = uuidv4()) {
-    return await this._invoker('createFaceMessage ', window.createFaceMessage, [
-      operationID,
-      data.index,
-      data.data,
-    ]);
+    return await this._invoker(
+      'createFaceMessage ',
+      window.createFaceMessage,
+      [operationID, data.index, data.data],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
   }
 
   async createLocationMessage(data: LocationMsgParams, operationID = uuidv4()) {
     return await this._invoker(
       'createLocationMessage ',
       window.createLocationMessage,
-      [operationID, data.description, data.longitude, data.latitude]
+      [operationID, data.description, data.longitude, data.latitude],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
     );
   }
 
   async createCardMessage(data: string, operationID = uuidv4()) {
-    return await this._invoker('createCardMessage ', window.createCardMessage, [
-      operationID,
-      data,
-    ]);
+    return await this._invoker(
+      'createCardMessage ',
+      window.createCardMessage,
+      [operationID, data],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
   }
 
   async deleteMessageFromLocalStorage(data: string, operationID = uuidv4()) {
@@ -764,7 +811,7 @@ class SDK extends Emitter {
     return await this._invoker(
       'setConversationRecvMessageOpt ',
       window.setConversationRecvMessageOpt,
-      [operationID, JSON.stringify(data.conversationIDList)]
+      [operationID, JSON.stringify(data.conversationIDList), data.opt]
     );
   }
   async searchLocalMessages(data: SearchLocalParams, operationID = uuidv4()) {
@@ -1150,7 +1197,7 @@ class SDK extends Emitter {
     return await this._invoker(
       'setGroupMemberRoleLevel ',
       window.setGroupMemberRoleLevel,
-      [operationID, data.groupID, data.userID, JSON.stringify(data.roleLevel)]
+      [operationID, data.groupID, data.userID, data.roleLevel]
     );
   }
   async setGroupVerification(
@@ -1160,7 +1207,7 @@ class SDK extends Emitter {
     return await this._invoker(
       'setGroupVerification ',
       window.setGroupVerification,
-      [operationID, data.groupID, JSON.stringify(data.verification)]
+      [operationID, data.groupID, data.verification]
     );
   }
   async setGlobalRecvMessageOpt(
@@ -1170,7 +1217,7 @@ class SDK extends Emitter {
     return await this._invoker(
       'setGlobalRecvMessageOpt ',
       window.setGlobalRecvMessageOpt,
-      [operationID, JSON.stringify(data.opt)]
+      [operationID, data.opt]
     );
   }
   async newRevokeMessage(data: string, operationID = uuidv4()) {

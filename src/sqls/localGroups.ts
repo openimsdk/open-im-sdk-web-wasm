@@ -55,13 +55,14 @@ export function deleteGroup(db: Database, groupID: string): QueryExecResult[] {
 
 export function updateGroup(
   db: Database,
+  groupID: string,
   localGroup: LocalGroup
 ): QueryExecResult[] {
   const sql = squel
     .update()
     .table('local_groups')
     .setFields(localGroup)
-    .where(`group_id = '${localGroup.group_id}'`)
+    .where(`group_id = '${groupID}'`)
     .toString();
 
   return db.exec(sql);

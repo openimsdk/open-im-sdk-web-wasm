@@ -40,6 +40,7 @@ const InternalConstraint = [
   ['handle_time', 'handleTime'],
   ['handle_result', 'handleResult'],
   ['handler_user_id', 'handlerUserID'],
+  ['handle_user_id', 'handleUserID'],
   ['inviter_user_id', 'inviterUserID'],
   ['mute_end_time', 'muteEndTime'],
   ['role_level', 'roleLevel'],

@@ -67,7 +67,7 @@ export function updateFriend(
     .table('local_friends')
     .setFields(localFriend)
     .where(
-      `owner_user_id = '${localFriend.owner_user_id} and friend_user_id = '${localFriend.friend_user_id}`
+      `owner_user_id = '${localFriend.owner_user_id}' and friend_user_id = '${localFriend.friend_user_id}'`
     )
     .toString();
 

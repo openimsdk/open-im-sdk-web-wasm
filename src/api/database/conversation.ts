@@ -604,7 +604,7 @@ export async function incrConversationUnreadCount(
     const db = await getInstance();
     const execResult = databaseIncrConversationUnreadCount(db, conversationID);
 
-    return formatResponse('');
+    return formatResponse(execResult);
   } catch (e) {
     console.error(e);
 

@@ -43,7 +43,11 @@ export async function getGroupMemberInfoByGroupIDUserID(
       userID
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })[0]
+    );
   } catch (e) {
     console.error(e);
 
@@ -61,7 +65,11 @@ export async function getAllGroupMemberList(): Promise<string> {
 
     const execResult = databaseGetAllGroupMemberList(db);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -97,7 +105,7 @@ export async function getGroupMemberCount(groupID: string): Promise<string> {
 
     const execResult = databaseGetGroupMemberCount(db, groupID);
 
-    return formatResponse(execResult);
+    return formatResponse(execResult[0]?.values[0]?.[0]);
   } catch (e) {
     console.error(e);
 
@@ -122,7 +130,11 @@ export async function getGroupSomeMemberInfo(
       JSON.parse(userIDListStr)
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -160,7 +172,11 @@ export async function getGroupMemberListByGroupID(
 
     const execResult = databaseGetGroupMemberListByGroupID(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -189,7 +205,11 @@ export async function getGroupMemberListSplit(
       count
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -209,7 +229,11 @@ export async function getGroupMemberOwnerAndAdmin(
 
     const execResult = databaseGetGroupMemberOwnerAndAdmin(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -227,7 +251,11 @@ export async function getGroupMemberOwner(groupID: string): Promise<string> {
 
     const execResult = databaseGetGroupMemberOwner(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -260,7 +288,11 @@ export async function getGroupMemberListSplitByJoinTimeFilter(
       JSON.parse(userIDListStr)
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -280,7 +312,11 @@ export async function getGroupOwnerAndAdminByGroupID(
 
     const execResult = databaseGetGroupOwnerAndAdminByGroupID(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -318,7 +354,9 @@ export async function insertGroupMember(
   try {
     const db = await getInstance();
     const localGroup = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupMemberStr))
+      convertObjectField(JSON.parse(localGroupMemberStr), {
+        faceURL: 'user_group_face_url',
+      })
     ) as LocalGroupMember;
 
     databaseInsertGroupMember(db, localGroup);
@@ -409,7 +447,9 @@ export async function updateGroupMember(
   try {
     const db = await getInstance();
     const localGroupMember = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupMemberStr))
+      convertObjectField(JSON.parse(localGroupMemberStr), {
+        faceURL: 'user_group_face_url',
+      })
     ) as LocalGroupMember;
 
     databaseUpdateGroupMember(db, localGroupMember);
@@ -434,7 +474,9 @@ export async function updateGroupMemberField(
   try {
     const db = await getInstance();
     const localGroupMember = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupMemberStr))
+      convertObjectField(JSON.parse(localGroupMemberStr), {
+        faceURL: 'user_group_face_url',
+      })
     ) as LocalGroupMember;
 
     databaseUpdateGroupMemberField(db, groupID, userID, localGroupMember);
@@ -472,7 +514,11 @@ export async function searchGroupMembers(
       count
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
   } catch (e) {
     console.error(e);
 

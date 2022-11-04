@@ -281,7 +281,7 @@ declare global {
       atUsersInfo?: AtUsersInfoItem[],
       message?: string
     ) => Promise<string>;
-    createSoundMessage: (
+    createSoundMessageByURL: (
       operationID: string,
       uuid: string,
       soundPath: string,
@@ -289,7 +289,7 @@ declare global {
       dataSize: number,
       duration: number
     ) => Promise<string>;
-    createVideoMessage: (
+    createVideoMessageByURL: (
       operationID: string,
       videoPath: string,
       duration: string,
@@ -304,7 +304,7 @@ declare global {
       snapshotWidth: number,
       snapshotHeight: number
     ) => Promise<string>;
-    createFileMessage: (
+    createFileMessageByURL: (
       operationID: string,
       filePath: string,
       fileName: string,

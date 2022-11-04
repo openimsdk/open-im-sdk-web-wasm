@@ -93,7 +93,7 @@ export function updateBlack(
     .table('local_blacks')
     .setFields(localBlack)
     .where(
-      `owner_user_id = '${localBlack.owner_user_id} and block_user_id = '${localBlack.block_user_id}`
+      `owner_user_id = '${localBlack.owner_user_id}' and block_user_id = '${localBlack.block_user_id}'`
     )
     .toString();
 

@@ -82,7 +82,7 @@ export function getGroupSomeMemberInfo(
     select *
     from local_group_members
     where group_id = "${groupID}"
-    and user_id in ("${ids.join(',')}")
+    and user_id in (${ids.join(',')})
       `
   );
 }
@@ -294,7 +294,7 @@ export function updateGroupMember(
     .table('local_group_members')
     .setFields(localGroupMember)
     .where(
-      `group_id = '${localGroupMember.group_id} and user_id = '${localGroupMember.user_id}`
+      `group_id = '${localGroupMember.group_id}' and user_id = '${localGroupMember.user_id}'`
     )
     .toString();
 
@@ -311,7 +311,7 @@ export function updateGroupMemberField(
     .update()
     .table('local_group_members')
     .setFields(localGroupMember)
-    .where(`group_id = '${groupID} and user_id = '${userID}`)
+    .where(`group_id = '${groupID}' and user_id = '${userID}'`)
     .toString();
 
   return db.exec(sql);

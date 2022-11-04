@@ -90,7 +90,10 @@ export async function getAllFriendList(loginUserID: string): Promise<string> {
     const execResult = databaseGetAllFriendList(db, loginUserID);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], { name: 'nickname' })
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'nickname',
+        friend_user_id: 'userID',
+      })
     );
   } catch (e) {
     console.error(e);

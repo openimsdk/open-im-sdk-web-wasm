@@ -136,19 +136,19 @@ export function getMessageList(
   loginUserID: string
 ): QueryExecResult[] {
   const isSelf = loginUserID === sourceID;
-  return db.exec(
-    `
+  const condition = isSelf
+    ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
+    : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
+  return db.exec(`
         select * from local_chat_logs
         where
-            recv_id = "${sourceID}"
-            ${isSelf ? 'and' : 'or'}  send_id = "${sourceID}"
+            ${condition}
             and status <= 3
             and send_time ${isReverse ? '>' : '<'} ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
-    `
-  );
+    `);
 }
 
 export function getMessageListNoTime(

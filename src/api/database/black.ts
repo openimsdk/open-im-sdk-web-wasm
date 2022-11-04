@@ -23,7 +23,11 @@ export async function getBlackList(): Promise<string> {
 
     const execResult = databaseGetBlackList(db);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        block_user_id: 'userID',
+      })
+    );
   } catch (e) {
     console.error(e);
 

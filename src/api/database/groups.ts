@@ -58,7 +58,10 @@ export async function deleteGroup(groupID: string): Promise<string> {
   }
 }
 
-export async function updateGroup(localGroupStr: string): Promise<string> {
+export async function updateGroup(
+  groupID: string,
+  localGroupStr: string
+): Promise<string> {
   try {
     const db = await getInstance();
 
@@ -66,7 +69,7 @@ export async function updateGroup(localGroupStr: string): Promise<string> {
       convertObjectField(JSON.parse(localGroupStr), { groupName: 'name' })
     ) as LocalGroup;
 
-    databaseupdateGroup(db, localGroup);
+    databaseupdateGroup(db, groupID, localGroup);
 
     return formatResponse('');
   } catch (e) {
@@ -106,7 +109,11 @@ export async function getGroupInfoByGroupID(groupID: string): Promise<string> {
 
     const execResult = databaseGetGroupInfoByGroupID(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'groupName',
+      })[0]
+    );
   } catch (e) {
     console.error(e);
 
@@ -133,7 +140,9 @@ export async function getAllGroupInfoByGroupIDOrGroupName(
       isSearchGroupName
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], { name: 'groupName' })
+    );
   } catch (e) {
     console.error(e);
 
@@ -190,7 +199,7 @@ export async function getJoinedWorkingGroupIDList(): Promise<string> {
     const filterIDList = [] as string[];
     allJoinedGroupList.forEach(group => {
       if (group.groupType === 2) {
-        filterIDList.push(group.group_id as string);
+        filterIDList.push(group.groupID as string);
       }
     });
     return formatResponse(JSON.stringify(filterIDList));
