@@ -47,21 +47,7 @@ export function updateLoginUserByMap(
   userID: string,
   user: ClientUser
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        update local_users set 
-            'app_manger_level'=${user.app_manger_level},
-            'attached_info'='${user.attached_info}',
-            'birth'=${user.birth},
-            'create_time'=${user.create_time},
-            'email'='${user.email}',
-            'ex'='${user.ex}',
-            'face_url'='${user.face_url}',
-            'gender'=${user.gender},
-            'global_recv_msg_opt'=${user.global_recv_msg_opt},
-            'name'='${user.nickname}',
-            'phone_number'='${user.phone_number}' 
-        where 'user_id' = '${userID}';
-      `
-  );
+  const sql = squel.update().table('local_users').setFields(user).toString();
+
+  return db.exec(sql);
 }
