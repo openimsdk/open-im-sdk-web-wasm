@@ -1,4 +1,7 @@
 import { RequestFunc } from '../constant';
+import { GroupType } from './enum';
+
+// api
 
 type WsResponse = {
   event: RequestFunc;
@@ -38,4 +41,34 @@ type PicBaseInfo = {
   width: number;
   height: number;
   url: string;
+};
+
+type AtUsersInfoItem = {
+  atUserID: string;
+  groupNickname: string;
+};
+
+type GroupInitInfo = {
+  groupType: GroupType;
+  groupName: string;
+  introduction?: string;
+  notification?: string;
+  faceURL?: string;
+  ex?: string;
+};
+
+type CreateMember = {
+  userID: string;
+  roleLevel: number;
+};
+
+type RtcInvite = {
+  inviterUserID: string;
+  inviteeUserIDList: string[];
+  groupID: string;
+  roomID: string;
+  timeout: number;
+  mediaType: string;
+  sessionType: number;
+  platformID: number;
 };

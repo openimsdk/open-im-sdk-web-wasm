@@ -27,7 +27,11 @@ export async function getLoginUser(userID: string): Promise<string> {
       );
     }
 
-    return formatResponse(converSqlExecResult(execResult[0])[0]);
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'nickname',
+      })[0]
+    );
   } catch (e) {
     console.error(e);
 

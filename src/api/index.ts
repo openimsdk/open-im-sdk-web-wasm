@@ -1,6 +1,8 @@
 import { initBackend } from 'open-absurd-sql/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
+// @ts-ignore
+import IMWorker from './worker?worker';
 
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
@@ -10,16 +12,17 @@ function initWorker() {
     return;
   }
 
-  worker = new Worker(new URL('./worker.js', import.meta.url));
+  worker = new IMWorker();
+  //   worker = new Worker(new URL('./worker.js', import.meta.url));
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
-  initBackend(worker);
+  initBackend(worker!);
 
   rpc = new RPC({
     event: new RPCMessageEvent({
-      currentEndpoint: worker,
-      targetEndpoint: worker,
+      currentEndpoint: worker!,
+      targetEndpoint: worker!,
     }),
   });
 }
@@ -108,6 +111,56 @@ export function initDatabaseAPI(): void {
   );
   window.getMessageList = registeMethodOnWindow('getMessageList');
   window.getMessageListNoTime = registeMethodOnWindow('getMessageListNoTime');
+  window.messageIfExists = registeMethodOnWindow('messageIfExists');
+  window.isExistsInErrChatLogBySeq = registeMethodOnWindow(
+    'isExistsInErrChatLogBySeq'
+  );
+  window.messageIfExistsBySeq = registeMethodOnWindow('messageIfExistsBySeq');
+  window.getAbnormalMsgSeq = registeMethodOnWindow('getAbnormalMsgSeq');
+  window.getAbnormalMsgSeqList = registeMethodOnWindow('getAbnormalMsgSeqList');
+  window.batchInsertExceptionMsg = registeMethodOnWindow(
+    'batchInsertExceptionMsg'
+  );
+  window.searchMessageByKeyword = registeMethodOnWindow(
+    'searchMessageByKeyword'
+  );
+  window.searchMessageByContentType = registeMethodOnWindow(
+    'searchMessageByContentType'
+  );
+  window.searchMessageByContentTypeAndKeyword = registeMethodOnWindow(
+    'searchMessageByContentTypeAndKeyword'
+  );
+  window.updateMsgSenderNickname = registeMethodOnWindow(
+    'updateMsgSenderNickname'
+  );
+  window.updateMsgSenderFaceURL = registeMethodOnWindow(
+    'updateMsgSenderFaceURL'
+  );
+  window.updateMsgSenderFaceURLAndSenderNickname = registeMethodOnWindow(
+    'updateMsgSenderFaceURLAndSenderNickname'
+  );
+  window.getMsgSeqByClientMsgID = registeMethodOnWindow(
+    'getMsgSeqByClientMsgID'
+  );
+  window.getMsgSeqListByGroupID = registeMethodOnWindow(
+    'getMsgSeqListByGroupID'
+  );
+  window.getMsgSeqListByPeerUserID = registeMethodOnWindow(
+    'getMsgSeqListByPeerUserID'
+  );
+  window.getMsgSeqListBySelfUserID = registeMethodOnWindow(
+    'getMsgSeqListBySelfUserID'
+  );
+  window.deleteAllMessage = registeMethodOnWindow('deleteAllMessage');
+  window.getAllUnDeleteMessageSeqList = registeMethodOnWindow(
+    'getAllUnDeleteMessageSeqList'
+  );
+  window.updateSingleMessageHasRead = registeMethodOnWindow(
+    'updateSingleMessageHasRead'
+  );
+  window.updateGroupMessageHasRead = registeMethodOnWindow(
+    'updateGroupMessageHasRead'
+  );
 
   // conversation
   window.getAllConversationListDB = registeMethodOnWindow(
@@ -120,7 +173,7 @@ export function initDatabaseAPI(): void {
     'getHiddenConversationList'
   );
   window.getConversation = registeMethodOnWindow('getConversation');
-  window.getMultipleConversation = registeMethodOnWindow(
+  window.getMultipleConversationDB = registeMethodOnWindow(
     'getMultipleConversation'
   );
   window.updateColumnsConversation = registeMethodOnWindow(
@@ -139,8 +192,35 @@ export function initDatabaseAPI(): void {
     'batchInsertConversationList'
   );
   window.insertConversation = registeMethodOnWindow('insertConversation');
-  window.getTotalUnreadMsgCount = registeMethodOnWindow(
+  window.getTotalUnreadMsgCountDB = registeMethodOnWindow(
     'getTotalUnreadMsgCount'
+  );
+  window.getConversationByUserID = registeMethodOnWindow(
+    'getConversationByUserID'
+  );
+  window.getConversationListSplitDB = registeMethodOnWindow(
+    'getConversationListSplit'
+  );
+  window.deleteConversation = registeMethodOnWindow('deleteConversation');
+  window.batchUpdateConversationList = registeMethodOnWindow(
+    'batchUpdateConversationList'
+  );
+  window.conversationIfExists = registeMethodOnWindow('conversationIfExists');
+  window.resetConversation = registeMethodOnWindow('resetConversation');
+  window.resetAllConversation = registeMethodOnWindow('resetAllConversation');
+  window.clearConversation = registeMethodOnWindow('clearConversation');
+  window.clearAllConversation = registeMethodOnWindow('clearAllConversation');
+  window.setConversationDraft = registeMethodOnWindow('setConversationDraft');
+  window.removeConversationDraft = registeMethodOnWindow(
+    'removeConversationDraft'
+  );
+  window.unPinConversation = registeMethodOnWindow('unPinConversation');
+  // window.updateAllConversation = registeMethodOnWindow('updateAllConversation');
+  window.incrConversationUnreadCount = registeMethodOnWindow(
+    'incrConversationUnreadCount'
+  );
+  window.setMultipleConversationRecvMsgOpt = registeMethodOnWindow(
+    'setMultipleConversationRecvMsgOpt'
   );
 
   // users
@@ -224,6 +304,134 @@ export function initDatabaseAPI(): void {
       catchErrorHandle(error);
     }
   };
+
+  // black
+  window.getBlackListDB = registeMethodOnWindow('getBlackList');
+  window.getBlackListUserID = registeMethodOnWindow('getBlackListUserID');
+  window.getBlackInfoByBlockUserID = registeMethodOnWindow(
+    'getBlackInfoByBlockUserID'
+  );
+  window.getBlackInfoList = registeMethodOnWindow('getBlackInfoList');
+  window.insertBlack = registeMethodOnWindow('insertBlack');
+  window.deleteBlack = registeMethodOnWindow('deleteBlack');
+  window.updateBlack = registeMethodOnWindow('updateBlack');
+
+  // friendRequest
+  window.insertFriendRequest = registeMethodOnWindow('insertFriendRequest');
+  window.deleteFriendRequestBothUserID = registeMethodOnWindow(
+    'deleteFriendRequestBothUserID'
+  );
+  window.updateFriendRequest = registeMethodOnWindow('updateFriendRequest');
+  window.getRecvFriendApplication = registeMethodOnWindow(
+    'getRecvFriendApplication'
+  );
+  window.getSendFriendApplication = registeMethodOnWindow(
+    'getSendFriendApplication'
+  );
+  window.getFriendApplicationByBothID = registeMethodOnWindow(
+    'getFriendApplicationByBothID'
+  );
+
+  // friend
+  window.insertFriend = registeMethodOnWindow('insertFriend');
+  window.deleteFriendDB = registeMethodOnWindow('deleteFriend');
+  window.updateFriend = registeMethodOnWindow('updateFriend');
+  window.getAllFriendList = registeMethodOnWindow('getAllFriendList');
+  window.searchFriendList = registeMethodOnWindow('searchFriendList');
+  window.getFriendInfoByFriendUserID = registeMethodOnWindow(
+    'getFriendInfoByFriendUserID'
+  );
+  window.getFriendInfoList = registeMethodOnWindow('getFriendInfoList');
+
+  // groups
+  window.insertGroup = registeMethodOnWindow('insertGroup');
+  window.deleteGroup = registeMethodOnWindow('deleteGroup');
+  window.updateGroup = registeMethodOnWindow('updateGroup');
+  window.getJoinedGroupListDB = registeMethodOnWindow('getJoinedGroupList');
+  window.getGroupInfoByGroupID = registeMethodOnWindow('getGroupInfoByGroupID');
+  window.getAllGroupInfoByGroupIDOrGroupName = registeMethodOnWindow(
+    'getAllGroupInfoByGroupIDOrGroupName'
+  );
+  window.subtractMemberCount = registeMethodOnWindow('subtractMemberCount');
+  window.addMemberCount = registeMethodOnWindow('addMemberCount');
+  window.getJoinedWorkingGroupIDList = registeMethodOnWindow(
+    'getJoinedWorkingGroupIDList'
+  );
+  window.getJoinedWorkingGroupList = registeMethodOnWindow(
+    'getJoinedWorkingGroupList'
+  );
+
+  // groupRequest
+  window.insertGroupRequest = registeMethodOnWindow('insertGroupRequest');
+  window.deleteGroupRequest = registeMethodOnWindow('deleteGroupRequest');
+  window.updateGroupRequest = registeMethodOnWindow('updateGroupRequest');
+  window.getSendGroupApplication = registeMethodOnWindow(
+    'getSendGroupApplication'
+  );
+  window.insertAdminGroupRequest = registeMethodOnWindow(
+    'insertAdminGroupRequest'
+  );
+  window.deleteAdminGroupRequest = registeMethodOnWindow(
+    'deleteAdminGroupRequest'
+  );
+  window.updateAdminGroupRequest = registeMethodOnWindow(
+    'updateAdminGroupRequest'
+  );
+  window.getAdminGroupApplication = registeMethodOnWindow(
+    'getAdminGroupApplication'
+  );
+
+  // groupMember
+  window.getGroupMemberInfoByGroupIDUserID = registeMethodOnWindow(
+    'getGroupMemberInfoByGroupIDUserID'
+  );
+  window.getAllGroupMemberList = registeMethodOnWindow('getAllGroupMemberList');
+  window.getAllGroupMemberUserIDList = registeMethodOnWindow(
+    'getAllGroupMemberUserIDList'
+  );
+  window.getGroupMemberCount = registeMethodOnWindow('getGroupMemberCount');
+  window.getGroupSomeMemberInfo = registeMethodOnWindow(
+    'getGroupSomeMemberInfo'
+  );
+  window.getGroupAdminID = registeMethodOnWindow('getGroupAdminID');
+  window.getGroupMemberListByGroupID = registeMethodOnWindow(
+    'getGroupMemberListByGroupID'
+  );
+  window.getGroupMemberListSplit = registeMethodOnWindow(
+    'getGroupMemberListSplit'
+  );
+  window.getGroupMemberOwnerAndAdmin = registeMethodOnWindow(
+    'getGroupMemberOwnerAndAdmin'
+  );
+  window.getGroupMemberOwner = registeMethodOnWindow('getGroupMemberOwner');
+  window.getGroupMemberListSplitByJoinTimeFilter = registeMethodOnWindow(
+    'getGroupMemberListSplitByJoinTimeFilter'
+  );
+  window.getGroupOwnerAndAdminByGroupID = registeMethodOnWindow(
+    'getGroupOwnerAndAdminByGroupID'
+  );
+  window.getGroupMemberUIDListByGroupID = registeMethodOnWindow(
+    'getGroupMemberUIDListByGroupID'
+  );
+  window.insertGroupMember = registeMethodOnWindow('insertGroupMember');
+  window.batchInsertGroupMember = registeMethodOnWindow(
+    'batchInsertGroupMember'
+  );
+  window.deleteGroupMember = registeMethodOnWindow('deleteGroupMember');
+  window.deleteGroupAllMembers = registeMethodOnWindow('deleteGroupAllMembers');
+  window.updateGroupMember = registeMethodOnWindow('updateGroupMember');
+  window.updateGroupMemberField = registeMethodOnWindow(
+    'updateGroupMemberField'
+  );
+  window.searchGroupMembers = registeMethodOnWindow('searchGroupMembers');
+
+  // temp cache chat logs
+  window.batchInsertTempCacheMessageList = registeMethodOnWindow(
+    'batchInsertTempCacheMessageList'
+  );
+  window.InsertTempCacheMessage = registeMethodOnWindow(
+    'InsertTempCacheMessage'
+  );
 }
 
 export const workerPromise = rpc?.connect(5000);
