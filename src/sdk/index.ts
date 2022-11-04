@@ -368,9 +368,10 @@ class SDK extends Emitter {
       JSON.stringify(params.offlinePushInfo),
     ]);
   }
-  
-    async exportDB(operationID = uuidv4()) {
+
+  async exportDB(operationID = uuidv4()) {
     return await this._invoker('exportDB', window.exportDB, [operationID]);
+  }
 
   async getHistoryMessageListReverse(
     params: GetHistoryMsgParams,

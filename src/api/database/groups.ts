@@ -109,6 +109,14 @@ export async function getGroupInfoByGroupID(groupID: string): Promise<string> {
 
     const execResult = databaseGetGroupInfoByGroupID(db, groupID);
 
+    if (execResult.length === 0) {
+      return formatResponse(
+        '',
+        DatabaseErrorCode.ErrorNoRecord,
+        `no group with id ${groupID}`
+      );
+    }
+
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [], {
         name: 'groupName',
