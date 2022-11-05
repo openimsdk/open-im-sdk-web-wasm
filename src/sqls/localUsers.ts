@@ -47,7 +47,12 @@ export function updateLoginUserByMap(
   userID: string,
   user: ClientUser
 ): QueryExecResult[] {
-  const sql = squel.update().table('local_users').setFields(user).toString();
+  const sql = squel
+    .update()
+    .table('local_users')
+    .setFields(user)
+    .where(`user_id = '${userID}'`)
+    .toString();
 
   return db.exec(sql);
 }

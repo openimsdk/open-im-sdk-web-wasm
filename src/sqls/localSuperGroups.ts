@@ -61,7 +61,7 @@ export function updateSuperGroup(
     .update()
     .table('local_super_groups')
     .setFields(group)
-    .where(`'group_id' = '${groupID}'`)
+    .where(`group_id = '${groupID}'`)
     .toString();
 
   return db.exec(sql);
