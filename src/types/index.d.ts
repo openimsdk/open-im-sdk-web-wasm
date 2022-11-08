@@ -16,6 +16,7 @@ declare global {
     getNormalMsgSeq: DatabaseApi;
     updateMessageTimeAndStatus: DatabaseApi;
     updateMessage: DatabaseApi;
+    updateColumnsMessage: DatabaseApi;
     insertMessage: DatabaseApi;
     batchInsertMessageList: DatabaseApi;
     getMessageList: DatabaseApi;
@@ -40,6 +41,7 @@ declare global {
     getAllUnDeleteMessageSeqList: DatabaseApi;
     updateSingleMessageHasRead: DatabaseApi;
     updateGroupMessageHasRead: DatabaseApi;
+    updateMessageStatusBySourceID: DatabaseApi;
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;

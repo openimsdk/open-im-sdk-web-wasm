@@ -31,6 +31,7 @@ import {
   getAllUnDeleteMessageSeqList as databaseGetAllUnDeleteMessageSeqList,
   updateSingleMessageHasRead as databaseUpdateSingleMessageHasRead,
   updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
+  updateMessageStatusBySourceID as databaseUpdateMessageStatusBySourceID,
   setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
 } from '@/sqls';
 import {
@@ -159,6 +160,34 @@ export async function updateMessageTimeAndStatus(
 }
 
 export async function updateMessage(
+  clientMsgId: string,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(messageStr), { groupName: 'name' })
+    ) as ClientMessage;
+
+    const execResult = databaseUpdateMessage(db, clientMsgId, message);
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateMessage no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateColumnsMessage(
   clientMsgId: string,
   messageStr: string
 ): Promise<string> {
@@ -413,8 +442,8 @@ export async function batchInsertExceptionMsg(
 }
 
 export async function searchMessageByKeyword(
-  contentType: number[],
-  keywordList: string[],
+  contentTypeStr: string,
+  keywordListStr: string,
   keywordListMatchType: number,
   sourceID: string,
   startTime: number,
@@ -428,8 +457,8 @@ export async function searchMessageByKeyword(
 
     const execResult = databaseSearchMessageByKeyword(
       db,
-      contentType,
-      keywordList,
+      JSON.parse(contentTypeStr),
+      JSON.parse(keywordListStr),
       keywordListMatchType,
       sourceID,
       startTime,
@@ -439,7 +468,9 @@ export async function searchMessageByKeyword(
       count
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
   } catch (e) {
     console.error(e);
 
@@ -474,7 +505,9 @@ export async function searchMessageByContentType(
       count
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
   } catch (e) {
     console.error(e);
 
@@ -505,7 +538,9 @@ export async function searchMessageByContentTypeAndKeyword(
       endTime
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
   } catch (e) {
     console.error(e);
 
@@ -615,8 +650,9 @@ export async function getMsgSeqListByGroupID(groupID: string): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetMsgSeqListByGroupID(db, groupID);
+    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(seqList.map(item => item.seq));
   } catch (e) {
     console.error(e);
 
@@ -635,8 +671,9 @@ export async function getMsgSeqListByPeerUserID(
     const db = await getInstance();
 
     const execResult = databaseGetMsgSeqListByPeerUserID(db, userID);
+    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(seqList.map(item => item.seq));
   } catch (e) {
     console.error(e);
 
@@ -656,7 +693,9 @@ export async function getMsgSeqListBySelfUserID(
 
     const execResult = databaseGetMsgSeqListBySelfUserID(db, userID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
+
+    return formatResponse(seqList.map(item => item.seq));
   } catch (e) {
     console.error(e);
 
@@ -691,8 +730,9 @@ export async function getAllUnDeleteMessageSeqList(): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetAllUnDeleteMessageSeqList(db);
+    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(seqList.map(item => item.seq));
   } catch (e) {
     console.error(e);
 
@@ -716,6 +756,11 @@ export async function updateSingleMessageHasRead(
       sendID,
       JSON.parse(clientMsgIDListStr)
     );
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateSingleMessageHasRead no record updated';
+    }
 
     return formatResponse('');
   } catch (e) {
@@ -741,6 +786,44 @@ export async function updateGroupMessageHasRead(
       JSON.parse(clientMsgIDListStr),
       sessionType
     );
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateGroupMessageHasRead no record updated';
+    }
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateMessageStatusBySourceID(
+  sourceID: string,
+  status: number,
+  sessionType: number,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseUpdateMessageStatusBySourceID(
+      db,
+      sourceID,
+      status,
+      sessionType,
+      loginUserID
+    );
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateMessageStatusBySourceID no record updated';
+    }
 
     return formatResponse('');
   } catch (e) {

@@ -195,16 +195,16 @@ class SDK extends Emitter {
       [operationID, params.sessionType, params.sourceID]
     );
   }
-  async getAdvancedHistoryMessageList(
+  getAdvancedHistoryMessageList = async (
     params: GetAdvancedHistoryMsgParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return await this._invoker(
       'getAdvancedHistoryMessageList',
       window.getAdvancedHistoryMessageList,
       [operationID, JSON.stringify(params)]
     );
-  }
+  };
   async getHistoryMessageList(
     params: GetHistoryMsgParams,
     operationID = uuidv4()
@@ -403,9 +403,15 @@ class SDK extends Emitter {
   }
   /* ----------------------------------------------新增-------------------------------------------------------- */
   async getLoginStatus(operationID = uuidv4()) {
-    return await this._invoker('getLoginStatus', window.getLoginStatus, [
-      operationID,
-    ]);
+    return await this._invoker(
+      'getLoginStatus',
+      window.getLoginStatus,
+      [operationID],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
   }
 
   // async iLogin(data: LoginParams, operationID = uuidv4()) {

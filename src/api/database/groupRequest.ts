@@ -25,7 +25,12 @@ export async function insertGroupRequest(
     const db = await getInstance();
 
     const localGroupRequest = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupRequestStr))
+      convertObjectField(JSON.parse(localGroupRequestStr), {
+        groupFaceURL: 'face_url',
+        userFaceURL: 'user_face_url',
+        handledMsg: 'handle_msg',
+        handledTime: 'handle_time',
+      })
     ) as LocalGroupRequest;
 
     databaseInsertGroupRequest(db, localGroupRequest);
@@ -69,7 +74,12 @@ export async function updateGroupRequest(
   try {
     const db = await getInstance();
     const localGroupRequest = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localGroupRequestStr))
+      convertObjectField(JSON.parse(localGroupRequestStr), {
+        groupFaceURL: 'face_url',
+        userFaceURL: 'user_face_url',
+        handledMsg: 'handle_msg',
+        handledTime: 'handle_time',
+      })
     ) as LocalGroupRequest;
     databaseUpdateGroupRequest(db, localGroupRequest);
 
@@ -91,7 +101,14 @@ export async function getSendGroupApplication(): Promise<string> {
 
     const execResult = databaseGetSendGroupApplication(db);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        face_url: 'groupFaceURL',
+        user_face_url: 'userFaceURL',
+        handle_msg: 'handledMsg',
+        handle_time: 'handledTime',
+      })
+    );
   } catch (e) {
     console.error(e);
 

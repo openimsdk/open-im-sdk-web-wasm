@@ -4,6 +4,9 @@ import initSqlJs, { Database, SqlJsStatic } from '@jlongster/sql.js';
 import { SQLiteFS } from 'open-absurd-sql';
 import IndexedDBBackend from 'open-absurd-sql/dist/indexeddb-backend';
 
+(self as any).$RefreshReg$ = () => {};
+(self as any).$RefreshSig$ = () => () => {};
+
 let instance: Promise<Database> | undefined;
 let SQL: SqlJsStatic | undefined;
 

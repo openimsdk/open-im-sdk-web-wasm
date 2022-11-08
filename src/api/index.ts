@@ -2,7 +2,8 @@ import { initBackend } from 'open-absurd-sql/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
 // @ts-ignore
-import IMWorker from './worker?worker';
+// import IMWorker from './worker?worker';
+import IMWorker from 'worker-loader!./im.worker.js';
 
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
@@ -13,7 +14,7 @@ function initWorker() {
   }
 
   worker = new IMWorker();
-  //   worker = new Worker(new URL('./worker.js', import.meta.url));
+  // worker = new Worker(new URL('./worker.js'));
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
@@ -105,6 +106,7 @@ export function initDatabaseAPI(): void {
     'updateMessageTimeAndStatus'
   );
   window.updateMessage = registeMethodOnWindow('updateMessage');
+  window.updateColumnsMessage = registeMethodOnWindow('updateColumnsMessage');
   window.insertMessage = registeMethodOnWindow('insertMessage');
   window.batchInsertMessageList = registeMethodOnWindow(
     'batchInsertMessageList'
@@ -160,6 +162,9 @@ export function initDatabaseAPI(): void {
   );
   window.updateGroupMessageHasRead = registeMethodOnWindow(
     'updateGroupMessageHasRead'
+  );
+  window.updateMessageStatusBySourceID = registeMethodOnWindow(
+    'updateMessageStatusBySourceID'
   );
 
   // conversation

@@ -254,7 +254,7 @@ export async function getGroupMemberOwner(groupID: string): Promise<string> {
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [], {
         user_group_face_url: 'faceURL',
-      })
+      })[0]
     );
   } catch (e) {
     console.error(e);
@@ -335,8 +335,9 @@ export async function getGroupMemberUIDListByGroupID(
     const db = await getInstance();
 
     const execResult = databaseGetGroupMemberUIDListByGroupID(db, groupID);
+    const userIDList = converSqlExecResult(execResult[0], 'CamelCase');
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(userIDList.map(item => item.userID));
   } catch (e) {
     console.error(e);
 

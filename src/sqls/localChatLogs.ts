@@ -215,18 +215,34 @@ export function searchMessageByKeyword(
   offset: number,
   count: number
 ): QueryExecResult[] {
-  // const values = msgIDList.map(v => `'${v}'`).join(',');
   const finalEndTime = endTime ? endTime : new Date().getTime();
+  const condition =
+    sessionType !== 2
+      ? `(send_id=="${sourceID}" OR recv_id=="${sourceID}")`
+      : `recv_id=="${sourceID}"`;
+  let subCondition = '';
+  const connectStr = keywordListMatchType === 0 ? 'or ' : 'and ';
+  keywordList.forEach((keyword, index) => {
+    if (index == 0) {
+      subCondition += 'And (';
+    }
+    if (index + 1 >= keywordList.length) {
+      subCondition += 'content like ' + "'%" + keywordList[index] + "%') ";
+    } else {
+      subCondition +=
+        'content like ' + "'%" + keywordList[index] + "%' " + connectStr;
+    }
+  });
   return db.exec(
     `  
     SELECT * FROM local_chat_logs 
           WHERE session_type==${sessionType}
-          And (send_id=="${sourceID}" OR recv_id=="${sourceID}") 
+          And ${condition}
           And send_time  between ${startTime} and ${finalEndTime} 
           AND status <=3  
           And content_type IN (101,106) 
-          And (content like '%${keywordList[0]}%')  
-    ORDER BY send_time DESC LIMIT ${count}
+          ${subCondition}
+    ORDER BY send_time DESC LIMIT ${count} OFFSET ${offset};
     `
   );
 }
@@ -243,15 +259,19 @@ export function searchMessageByContentType(
 ): QueryExecResult[] {
   const values = contentType.map(v => `${v}`).join(',');
   const finalEndTime = endTime ? endTime : new Date().getTime();
+  const condition =
+    sessionType !== 2
+      ? `(send_id=="${sourceID}" OR recv_id=="${sourceID}")`
+      : `recv_id=="${sourceID}"`;
   return db.exec(
     `  
     SELECT * FROM local_chat_logs 
           WHERE session_type==${sessionType}
-          And (send_id=="${sourceID}" OR recv_id=="${sourceID}") 
+          And ${condition}
           And send_time between ${startTime} and ${finalEndTime} 
           AND status <=3 
           And content_type IN (${values}) 
-    ORDER BY send_time DESC LIMIT ${count}
+    ORDER BY send_time DESC LIMIT ${count} OFFSET ${offset};
     `
   );
 }
@@ -279,7 +299,6 @@ export function searchMessageByContentTypeAndKeyword(
         'content like ' + "'%" + keywordList[index] + "%' " + connectStr;
     }
   });
-
   return db.exec(
     `  
     SELECT * FROM local_chat_logs 
@@ -439,6 +458,27 @@ export function updateGroupMessageHasRead(
         where session_type=${sessionType}
             and client_msg_id in (${values})
 
+    `
+  );
+}
+
+export function updateMessageStatusBySourceID(
+  db: Database,
+  sourceID: string,
+  status: number,
+  sessionType: number,
+  loginUserID: string
+): QueryExecResult[] {
+  let condition = `(send_id= "${sourceID}" or recv_id="${sourceID}")`;
+  if (sessionType === 1 && sourceID === loginUserID) {
+    condition = `send_id= "${sourceID}" AND recv_id="${sourceID}"`;
+  }
+  return db.exec(
+    `
+        update local_chat_logs
+        set status=${status}
+        where session_type=${sessionType}
+        AND ${condition}
     `
   );
 }
