@@ -66,7 +66,10 @@ export async function updateFriend(localFriendStr: string): Promise<string> {
   try {
     const db = await getInstance();
     const localFriend = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(localFriendStr))
+      convertObjectField(JSON.parse(localFriendStr), {
+        userID: 'friend_user_id',
+        nickname: 'name',
+      })
     ) as LocalFriend;
 
     databaseupdateFriend(db, localFriend);

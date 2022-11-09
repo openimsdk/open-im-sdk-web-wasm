@@ -165,9 +165,9 @@ export function superGroupUpdateMessageTimeAndStatus(
         update 
             local_sg_chat_logs_${groupID}
         set
-            'server_msg_id' = '${serverMsgID}',
-            'status' = ${status},
-            'send_time' = ${sendTime}
+            server_msg_id = '${serverMsgID}',
+            status = ${status},
+            send_time = ${sendTime}
         where
             client_msg_id = '${clientMsgID}' and seq = 0;
     `
@@ -216,6 +216,207 @@ export function superGroupGetMessageList(
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
+    `
+  );
+}
+
+export function superGroupDeleteAllMessage(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  return db.exec(
+    `
+    DELETE
+      FROM local_sg_chat_logs_${groupID}
+    `
+  );
+}
+
+export function superGroupSearchMessageByKeyword(
+  db: Database,
+  contentType: number[],
+  keywordList: string[],
+  keywordListMatchType: number,
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): QueryExecResult[] {
+  _initSuperGroupTable(db, sourceID);
+
+  const finalEndTime = endTime ? endTime : new Date().getTime();
+  let subCondition = '';
+  const values = contentType.map(v => `${v}`).join(',');
+  const connectStr = keywordListMatchType === 0 ? 'or ' : 'and ';
+  keywordList.forEach((keyword, index) => {
+    if (index == 0) {
+      subCondition += 'And (';
+    }
+    if (index + 1 >= keywordList.length) {
+      subCondition += 'content like ' + "'%" + keywordList[index] + "%') ";
+    } else {
+      subCondition +=
+        'content like ' + "'%" + keywordList[index] + "%' " + connectStr;
+    }
+  });
+  return db.exec(
+    `  
+    SELECT * FROM local_sg_chat_logs_${sourceID} 
+          WHERE session_type==${sessionType}
+          And recv_id=="${sourceID}"
+          And send_time  between ${startTime} and ${finalEndTime} 
+          AND status <=3  
+          And content_type IN (${values}) 
+          ${subCondition}
+    ORDER BY send_time DESC LIMIT ${count} OFFSET ${offset};
+    `
+  );
+}
+
+export function superGroupSearchMessageByContentType(
+  db: Database,
+  contentType: number[],
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): QueryExecResult[] {
+  _initSuperGroupTable(db, sourceID);
+
+  const values = contentType.map(v => `${v}`).join(',');
+  const finalEndTime = endTime ? endTime : new Date().getTime();
+  return db.exec(
+    `  
+    SELECT * FROM local_sg_chat_logs_${sourceID} 
+          WHERE session_type==${sessionType}
+          And recv_id=="${sourceID}"
+          And send_time between ${startTime} and ${finalEndTime} 
+          AND status <=3 
+          And content_type IN (${values}) 
+    ORDER BY send_time DESC LIMIT ${count} OFFSET ${offset};
+    `
+  );
+}
+
+export function superGroupSearchMessageByContentTypeAndKeyword(
+  db: Database,
+  contentType: number[],
+  keywordList: string[],
+  keywordListMatchType: number,
+  startTime: number,
+  endTime: number,
+  groupID: string
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  const values = contentType.map(v => `${v}`).join(',');
+  const finalEndTime = endTime ? endTime : new Date().getTime();
+  let subCondition = '';
+  const connectStr = keywordListMatchType === 0 ? 'or ' : 'and ';
+  keywordList.forEach((keyword, index) => {
+    if (index == 0) {
+      subCondition += 'And (';
+    }
+    if (index + 1 >= keywordList.length) {
+      subCondition += 'content like ' + "'%" + keywordList[index] + "%') ";
+    } else {
+      subCondition +=
+        'content like ' + "'%" + keywordList[index] + "%' " + connectStr;
+    }
+  });
+  return db.exec(
+    `  
+    SELECT * FROM SELECT * FROM local_sg_chat_logs_${groupID} 
+          WHERE send_time between ${startTime} and ${finalEndTime}
+          AND status <=3  
+          And content_type IN (${values})
+          ${subCondition}
+    ORDER BY send_time DESC
+    `
+  );
+}
+
+export function superGroupUpdateMessageStatusBySourceID(
+  db: Database,
+  sourceID: string,
+  status: string,
+  sessionType: number
+): QueryExecResult[] {
+  _initSuperGroupTable(db, sourceID);
+
+  return db.exec(
+    `
+    UPDATE local_sg_chat_logs_${sourceID}
+      SET status=${status}
+      WHERE (send_id = "${sourceID}" or recv_id = "${sourceID}")
+        AND session_type = ${sessionType}
+    `
+  );
+}
+
+export function superGroupGetSendingMessageList(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  return db.exec(
+    `
+    SELECT *
+      FROM local_sg_chat_logs_${groupID}
+      WHERE status = 1
+    `
+  );
+}
+
+export function superGroupUpdateGroupMessageHasRead(
+  db: Database,
+  msgIDList: string[],
+  groupID: string
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  const values = msgIDList.map(v => `'${v}'`).join(',');
+  return db.exec(
+    `
+    UPDATE local_sg_chat_logs_${groupID}
+    SET is_read=1
+    WHERE client_msg_id in (${values})  
+    `
+  );
+}
+
+// export function superGroupGetNormalMsgSeq(
+//   db: Database,
+// ): QueryExecResult[] {
+
+//   return db.exec(
+//     `
+//     SELECT IFNULL(max(seq), 0)
+//       FROM local_chat_logs
+//     `
+//   );
+// }
+
+export function superGroupGetMsgSeqByClientMsgID(
+  db: Database,
+  clientMsgID: string,
+  groupID: string
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  return db.exec(
+    `
+    SELECT seq
+      FROM local_sg_chat_logs_${groupID}
+      WHERE client_msg_id = "${clientMsgID}"
+      LIMIT 1
     `
   );
 }

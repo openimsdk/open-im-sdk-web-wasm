@@ -1032,7 +1032,7 @@ class SDK extends Emitter {
       operationID,
       data.groupID,
       data.reqMsg,
-      JSON.stringify(data.joinSource),
+      data.joinSource,
     ]);
   }
   async searchGroups(data: SearchGroupParams, operationID = uuidv4()) {

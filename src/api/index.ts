@@ -284,6 +284,33 @@ export function initDatabaseAPI(): void {
   window.superGroupGetMessageList = registeMethodOnWindow(
     'superGroupGetMessageList'
   );
+  window.superGroupUpdateColumnsMessage = registeMethodOnWindow(
+    'superGroupUpdateColumnsMessage'
+  );
+  window.superGroupDeleteAllMessage = registeMethodOnWindow(
+    'superGroupDeleteAllMessage'
+  );
+  window.superGroupSearchMessageByKeyword = registeMethodOnWindow(
+    'superGroupSearchMessageByKeyword'
+  );
+  window.superGroupSearchMessageByContentType = registeMethodOnWindow(
+    'superGroupSearchMessageByContentType'
+  );
+  window.superGroupSearchMessageByContentTypeAndKeyword = registeMethodOnWindow(
+    'superGroupSearchMessageByContentTypeAndKeyword'
+  );
+  window.superGroupUpdateMessageStatusBySourceID = registeMethodOnWindow(
+    'superGroupUpdateMessageStatusBySourceID'
+  );
+  window.superGroupGetSendingMessageList = registeMethodOnWindow(
+    'superGroupGetSendingMessageList'
+  );
+  window.superGroupUpdateGroupMessageHasRead = registeMethodOnWindow(
+    'superGroupUpdateGroupMessageHasRead'
+  );
+  window.superGroupGetMsgSeqByClientMsgID = registeMethodOnWindow(
+    'superGroupGetMsgSeqByClientMsgID'
+  );
 
   // debug
   window.exec = registeMethodOnWindow('exec');

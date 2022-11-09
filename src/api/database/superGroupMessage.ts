@@ -11,6 +11,14 @@ import {
   superGroupBatchInsertMessageList as databaseSuperGroupBatchInsertMessageList,
   superGroupGetMessageListNoTime as databaseSuperGroupGetMessageListNoTime,
   superGroupGetMessageList as databaseSuperGroupGetMessageList,
+  superGroupDeleteAllMessage as databaseSuperGroupDeleteAllMessage,
+  superGroupSearchMessageByKeyword as databaseSuperGroupSearchMessageByKeyword,
+  superGroupSearchMessageByContentType as databaseSuperGroupSearchMessageByContentType,
+  superGroupSearchMessageByContentTypeAndKeyword as databaseSuperGroupSearchMessageByContentTypeAndKeyword,
+  superGroupUpdateMessageStatusBySourceID as databaseSuperGroupUpdateMessageStatusBySourceID,
+  superGroupGetSendingMessageList as databaseSuperGroupGetSendingMessageList,
+  superGroupUpdateGroupMessageHasRead as databaseSuperGroupUpdateGroupMessageHasRead,
+  superGroupGetMsgSeqByClientMsgID as databaseSuperGroupGetMsgSeqByClientMsgID,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -135,6 +143,11 @@ export async function superGroupUpdateMessageTimeAndStatus(
       status
     );
 
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateMessageTimeAndStatus no record updated';
+    }
+
     return formatResponse(execResult);
   } catch (e) {
     console.error(e);
@@ -164,6 +177,46 @@ export async function superGroupUpdateMessage(
       clientMsgID,
       message
     );
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateMessage no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupUpdateColumnsMessage(
+  clientMsgID: string,
+  groupID: string,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      JSON.parse(messageStr) as ClientSuperGroupMessage
+    );
+
+    const execResult = databaseSuperGroupUpdateMessage(
+      db,
+      groupID,
+      clientMsgID,
+      message
+    );
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateColumnsMessage no record updated';
+    }
 
     return formatResponse(execResult);
   } catch (e) {
@@ -282,6 +335,242 @@ export async function superGroupGetMessageList(
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
     );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupDeleteAllMessage(
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupDeleteAllMessage(db, groupID);
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupSearchMessageByKeyword(
+  contentTypeStr: string,
+  keywordListStr: string,
+  keywordListMatchType: number,
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupSearchMessageByKeyword(
+      db,
+      JSON.parse(contentTypeStr),
+      JSON.parse(keywordListStr),
+      keywordListMatchType,
+      sourceID,
+      startTime,
+      endTime,
+      sessionType,
+      offset,
+      count
+    );
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupSearchMessageByContentType(
+  contentTypeStr: string,
+  sourceID: string,
+  startTime: number,
+  endTime: number,
+  sessionType: number,
+  offset: number,
+  count: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupSearchMessageByContentType(
+      db,
+      JSON.parse(contentTypeStr),
+      sourceID,
+      startTime,
+      endTime,
+      sessionType,
+      offset,
+      count
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupSearchMessageByContentTypeAndKeyword(
+  contentTypeStr: string,
+  keywordListStr: string,
+  keywordListMatchType: number,
+  startTime: number,
+  endTime: number,
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupSearchMessageByContentTypeAndKeyword(
+      db,
+      JSON.parse(contentTypeStr),
+      JSON.parse(keywordListStr),
+      keywordListMatchType,
+      startTime,
+      endTime,
+      groupID
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupUpdateMessageStatusBySourceID(
+  sourceID: string,
+  status: string,
+  sessionType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupUpdateMessageStatusBySourceID(
+      db,
+      sourceID,
+      status,
+      sessionType
+    );
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateMessageStatusBySourceID no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupGetSendingMessageList(
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupGetSendingMessageList(db, groupID);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupUpdateGroupMessageHasRead(
+  msgIDListStr: string,
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupUpdateGroupMessageHasRead(
+      db,
+      JSON.parse(msgIDListStr),
+      groupID
+    );
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateGroupMessageHasRead no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupGetMsgSeqByClientMsgID(
+  clientMsgID: string,
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupGetMsgSeqByClientMsgID(
+      db,
+      clientMsgID,
+      groupID
+    );
+
+    return formatResponse(execResult[0]?.values[0]?.[0]);
   } catch (e) {
     console.error(e);
 

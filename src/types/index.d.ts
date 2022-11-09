@@ -93,6 +93,15 @@ declare global {
     superGroupBatchInsertMessageList: DatabaseApi;
     superGroupGetMessageListNoTime: DatabaseApi;
     superGroupGetMessageList: DatabaseApi;
+    superGroupUpdateColumnsMessage: DatabaseApi;
+    superGroupDeleteAllMessage: DatabaseApi;
+    superGroupSearchMessageByKeyword: DatabaseApi;
+    superGroupSearchMessageByContentType: DatabaseApi;
+    superGroupSearchMessageByContentTypeAndKeyword: DatabaseApi;
+    superGroupUpdateMessageStatusBySourceID: DatabaseApi;
+    superGroupGetSendingMessageList: DatabaseApi;
+    superGroupUpdateGroupMessageHasRead: DatabaseApi;
+    superGroupGetMsgSeqByClientMsgID: DatabaseApi;
     getRowsModified: DatabaseApi;
 
     // black

@@ -221,6 +221,7 @@ export function searchMessageByKeyword(
       ? `(send_id=="${sourceID}" OR recv_id=="${sourceID}")`
       : `recv_id=="${sourceID}"`;
   let subCondition = '';
+  const values = contentType.map(v => `${v}`).join(',');
   const connectStr = keywordListMatchType === 0 ? 'or ' : 'and ';
   keywordList.forEach((keyword, index) => {
     if (index == 0) {
@@ -240,7 +241,7 @@ export function searchMessageByKeyword(
           And ${condition}
           And send_time  between ${startTime} and ${finalEndTime} 
           AND status <=3  
-          And content_type IN (101,106) 
+          And content_type IN (${values}) 
           ${subCondition}
     ORDER BY send_time DESC LIMIT ${count} OFFSET ${offset};
     `

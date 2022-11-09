@@ -90,6 +90,16 @@ import {
   superGroupBatchInsertMessageList,
   superGroupGetMessageListNoTime,
   superGroupGetMessageList,
+  superGroupDeleteAllMessage,
+  superGroupGetMsgSeqByClientMsgID,
+  superGroupGetSendingMessageList,
+  superGroupSearchMessageByContentType,
+  superGroupSearchMessageByKeyword,
+  superGroupSearchMessageByContentTypeAndKeyword,
+  superGroupUpdateGroupMessageHasRead,
+  superGroupUpdateMessageStatusBySourceID,
+  superGroupUpdateColumnsMessage,
+
   // black
   getBlackList,
   getBlackListUserID,
@@ -298,6 +308,39 @@ rpc.registerMethod(
   superGroupBatchInsertMessageList
 );
 rpc.registerMethod('superGroupGetMessageList', superGroupGetMessageList);
+rpc.registerMethod(
+  'superGroupUpdateColumnsMessage',
+  superGroupUpdateColumnsMessage
+);
+rpc.registerMethod('superGroupDeleteAllMessage', superGroupDeleteAllMessage);
+rpc.registerMethod(
+  'superGroupSearchMessageByKeyword',
+  superGroupSearchMessageByKeyword
+);
+rpc.registerMethod(
+  'superGroupSearchMessageByContentTypeAndKeyword',
+  superGroupSearchMessageByContentTypeAndKeyword
+);
+rpc.registerMethod(
+  'superGroupSearchMessageByContentType',
+  superGroupSearchMessageByContentType
+);
+rpc.registerMethod(
+  'superGroupUpdateMessageStatusBySourceID',
+  superGroupUpdateMessageStatusBySourceID
+);
+rpc.registerMethod(
+  'superGroupGetSendingMessageList',
+  superGroupGetSendingMessageList
+);
+rpc.registerMethod(
+  'superGroupUpdateGroupMessageHasRead',
+  superGroupUpdateGroupMessageHasRead
+);
+rpc.registerMethod(
+  'superGroupGetMsgSeqByClientMsgID',
+  superGroupGetMsgSeqByClientMsgID
+);
 
 // black
 rpc.registerMethod('getBlackList', getBlackList);
