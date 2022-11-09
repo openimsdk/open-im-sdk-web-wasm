@@ -633,7 +633,7 @@ export async function getMsgSeqByClientMsgID(
 
     const execResult = databaseGetMsgSeqByClientMsgID(db, clientMsgID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(execResult[0]?.values[0]?.[0]);
   } catch (e) {
     console.error(e);
 

@@ -123,7 +123,12 @@ export async function searchFriendList(
       isSearchRemark
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'nickname',
+        friend_user_id: 'userID',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -148,7 +153,12 @@ export async function getFriendInfoByFriendUserID(
       loginUserID
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'nickname',
+        friend_user_id: 'userID',
+      })
+    );
   } catch (e) {
     console.error(e);
 
@@ -171,7 +181,12 @@ export async function getFriendInfoList(
       JSON.parse(friendUserIDListStr)
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'nickname',
+        friend_user_id: 'userID',
+      })
+    );
   } catch (e) {
     console.error(e);
 
