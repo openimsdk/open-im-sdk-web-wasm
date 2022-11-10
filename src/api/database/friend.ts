@@ -160,7 +160,7 @@ export async function getFriendInfoByFriendUserID(
       converSqlExecResult(execResult[0], 'CamelCase', [], {
         name: 'nickname',
         friend_user_id: 'userID',
-      })
+      })[0]
     );
   } catch (e) {
     console.error(e);

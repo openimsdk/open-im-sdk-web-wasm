@@ -72,7 +72,9 @@ export async function superGroupGetMultipleMessage(
       messageIds
     );
 
-    return formatResponse(converSqlExecResult(execResult[0]));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
   } catch (e) {
     console.error(e);
 
@@ -516,7 +518,9 @@ export async function superGroupGetSendingMessageList(
 
     const execResult = databaseSuperGroupGetSendingMessageList(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
   } catch (e) {
     console.error(e);
 

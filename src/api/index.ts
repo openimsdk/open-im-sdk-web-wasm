@@ -56,8 +56,8 @@ function catchErrorHandle(error: unknown) {
   throw error;
 }
 
-function registeMethodOnWindow(name: string) {
-  console.info(`=> (database api) registe ${name}`);
+function registeMethodOnWindow(name: string, realName?: string) {
+  console.info(`=> (database api) registe ${realName ?? name}`);
 
   return async (...args: unknown[]) => {
     if (!rpc || !worker) {
@@ -70,13 +70,13 @@ function registeMethodOnWindow(name: string) {
 
     try {
       console.info(
-        `=> (invoked by go wasm) run ${name} method with args ${JSON.stringify(
-          args
-        )}`
+        `=> (invoked by go wasm) run ${
+          realName ?? name
+        } method with args ${JSON.stringify(args)}`
       );
       const response = await rpc.invoke(name, ...args, { timeout: 5000000 });
       console.info(
-        `=> (invoked by go wasm) run ${name} method with response `,
+        `=> (invoked by go wasm) run ${realName ?? name} method with response `,
         JSON.stringify(response)
       );
 
@@ -185,10 +185,12 @@ export function initDatabaseAPI(): void {
     'updateColumnsConversation'
   );
   window.updateConversation = registeMethodOnWindow(
-    'updateColumnsConversation'
+    'updateColumnsConversation',
+    'updateConversation'
   );
   window.updateConversationForSync = registeMethodOnWindow(
-    'updateColumnsConversation'
+    'updateColumnsConversation',
+    'updateConversationForSync'
   );
   window.decrConversationUnreadCount = registeMethodOnWindow(
     'decrConversationUnreadCount'

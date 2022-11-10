@@ -1114,14 +1114,14 @@ class SDK extends Emitter {
   async signalingInvite(data: RtcInvite, operationID = uuidv4()) {
     return await this._invoker('signalingInvite ', window.signalingInvite, [
       operationID,
-      JSON.stringify(data),
+      JSON.stringify({ invitation: data }),
     ]);
   }
   async signalingInviteInGroup(data: RtcInvite, operationID = uuidv4()) {
     return await this._invoker(
       'signalingInviteInGroup ',
       window.signalingInviteInGroup,
-      [operationID, JSON.stringify(data)]
+      [operationID, JSON.stringify({ invitation: data })]
     );
   }
   async signalingAccept(data: RtcActionParams, operationID = uuidv4()) {

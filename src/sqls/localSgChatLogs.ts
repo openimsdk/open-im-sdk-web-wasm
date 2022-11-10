@@ -97,7 +97,7 @@ export function superGroupUpdateMessage(
     .update()
     .table(`local_sg_chat_logs_${groupID}`)
     .setFields(message)
-    .where(`'client_msg_id' = '${clientMsgID}'`)
+    .where(`client_msg_id = '${clientMsgID}'`)
     .toString();
 
   return db.exec(sql);

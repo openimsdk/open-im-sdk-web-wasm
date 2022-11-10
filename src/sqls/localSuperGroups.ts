@@ -61,7 +61,7 @@ export function updateSuperGroup(
     .update()
     .table('local_super_groups')
     .setFields(group)
-    .where(`'group_id' = '${groupID}'`)
+    .where(`group_id = '${groupID}'`)
     .toString();
 
   return db.exec(sql);
@@ -73,7 +73,7 @@ export function deleteSuperGroup(
 ): QueryExecResult[] {
   return db.exec(
     `
-        delete from local_super_groups where local_groups.group_id = '${groupID}';
+        delete from local_super_groups where group_id = '${groupID}';
     `
   );
 }
