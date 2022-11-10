@@ -172,7 +172,7 @@ declare global {
     deleteGroupAllMembers: DatabaseApi;
     updateGroupMember: DatabaseApi;
     updateGroupMemberField: DatabaseApi;
-    searchGroupMembers: DatabaseApi;
+    searchGroupMembersDB: DatabaseApi;
 
     // temp chche logs
     batchInsertTempCacheMessageList: DatabaseApi;

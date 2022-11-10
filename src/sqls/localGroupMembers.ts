@@ -382,10 +382,5 @@ export function searchGroupMembers(
         `;
     }
   }
-  return db.exec(
-    `
-      SELECT * FROM local_group_members 
-      WHERE group_id="${groupID}"
-        `
-  );
+  return db.exec(condition);
 }

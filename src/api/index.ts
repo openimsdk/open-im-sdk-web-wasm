@@ -457,7 +457,10 @@ export function initDatabaseAPI(): void {
   window.updateGroupMemberField = registeMethodOnWindow(
     'updateGroupMemberField'
   );
-  window.searchGroupMembers = registeMethodOnWindow('searchGroupMembers');
+  window.searchGroupMembersDB = registeMethodOnWindow(
+    'searchGroupMembers',
+    'searchGroupMembersDB'
+  );
 
   // temp cache chat logs
   window.batchInsertTempCacheMessageList = registeMethodOnWindow(
