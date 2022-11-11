@@ -320,7 +320,7 @@ export function unPinConversation(
 export function getTotalUnreadMsgCount(db: Database): QueryExecResult[] {
   return db.exec(
     `
-        select sum(unread_count) from local_conversations;
+        select sum(unread_count) from local_conversations where recv_msg_opt < 2;
     `
   );
 }

@@ -156,6 +156,14 @@ export async function getFriendInfoByFriendUserID(
       loginUserID
     );
 
+    if (execResult.length === 0) {
+      return formatResponse(
+        '',
+        DatabaseErrorCode.ErrorNoRecord,
+        `no friend with id ${friendUserID}`
+      );
+    }
+
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [], {
         name: 'nickname',

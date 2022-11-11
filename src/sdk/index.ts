@@ -351,21 +351,35 @@ class SDK extends Emitter {
     );
   }
   async sendMessage(params: SendMsgParams, operationID = uuidv4()) {
+    const offlinePushInfo = params.offlinePushInfo ?? {
+      title: '你有一条新消息',
+      desc: '',
+      ex: '',
+      iOSPushSound: '+1',
+      iOSBadgeCount: true,
+    };
     return await this._invoker('sendMessage', window.sendMessage, [
       operationID,
       params.message,
       params.recvID,
       params.groupID,
-      JSON.stringify(params.offlinePushInfo),
+      JSON.stringify(offlinePushInfo),
     ]);
   }
   async sendMessageNotOss(params: SendMsgParams, operationID = uuidv4()) {
+    const offlinePushInfo = params.offlinePushInfo ?? {
+      title: '你有一条新消息',
+      desc: '',
+      ex: '',
+      iOSPushSound: '+1',
+      iOSBadgeCount: true,
+    };
     return await this._invoker('sendMessageNotOss', window.sendMessageNotOss, [
       operationID,
       params.message,
       params.recvID,
       params.groupID,
-      JSON.stringify(params.offlinePushInfo),
+      JSON.stringify(offlinePushInfo),
     ]);
   }
 
