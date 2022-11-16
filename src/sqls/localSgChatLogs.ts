@@ -6,12 +6,12 @@ export type ClientSuperGroupMessage = { [key: string]: any };
 const GroupTableMap: Record<string, boolean> = {};
 
 function _initSuperGroupTable(db: Database, groupID: string) {
-  if (GroupTableMap[groupID]) {
-    return;
-  }
+  // if (GroupTableMap[groupID]) {
+  //   return;
+  // }
 
   localSgChatLogs(db, groupID);
-  GroupTableMap[groupID] = true;
+  // GroupTableMap[groupID] = true;
 }
 
 export function localSgChatLogs(

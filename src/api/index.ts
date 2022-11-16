@@ -1,9 +1,13 @@
 import { initBackend } from 'open-absurd-sql/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
-// @ts-ignore
+
+//  for vite
 // import IMWorker from './worker?worker';
-import IMWorker from 'worker-loader!./im.worker.js';
+
+//  @ts-ignore
+//  for webpack4
+import IMWorker from 'worker-loader!./worker.js';
 
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
@@ -14,7 +18,10 @@ function initWorker() {
   }
 
   worker = new IMWorker();
-  // worker = new Worker(new URL('./worker.js'));
+
+  // for webpack5
+  // worker = new Worker(new URL('./worker.js',import.meta.url));
+
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
@@ -57,7 +64,7 @@ function catchErrorHandle(error: unknown) {
 }
 
 function registeMethodOnWindow(name: string, realName?: string) {
-  console.info(`=> (database api) registe ${realName ?? name}`);
+  // console.info(`=> (database api) registe ${realName ?? name}`);
 
   return async (...args: unknown[]) => {
     if (!rpc || !worker) {
@@ -69,16 +76,16 @@ function registeMethodOnWindow(name: string, realName?: string) {
     }
 
     try {
-      console.info(
-        `=> (invoked by go wasm) run ${
-          realName ?? name
-        } method with args ${JSON.stringify(args)}`
-      );
+      // console.info(
+      //   `=> (invoked by go wasm) run ${
+      //     realName ?? name
+      //   } method with args ${JSON.stringify(args)}`
+      // );
       const response = await rpc.invoke(name, ...args, { timeout: 5000000 });
-      console.info(
-        `=> (invoked by go wasm) run ${realName ?? name} method with response `,
-        JSON.stringify(response)
-      );
+      // console.info(
+      //   `=> (invoked by go wasm) run ${realName ?? name} method with response `,
+      //   JSON.stringify(response)
+      // );
 
       return JSON.stringify(response);
     } catch (error: unknown) {

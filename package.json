@@ -1,6 +1,6 @@
 {
-  "name": "open-im-sdk-web-wasm",
-  "version": "0.0.52",
+  "name": "open-im-sdk-wasm-webpack4",
+  "version": "0.0.2",
   "description": "open im sdk for web",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -25,9 +25,9 @@
   },
   "license": "MIT",
   "author": {
-    "name": "Timmy Sun",
-    "email": "1105151861@qq.com",
-    "url": "https://github.com/Sunqinying"
+    "name": "blooming",
+    "email": "blooming2477@gmail.com",
+    "url": "https://github.com/Bloomingg"
   },
   "engines": {
     "node": ">=12.0"

@@ -203,16 +203,6 @@ type RtcActionParams = {
   opUserID: string;
   invitation: RtcInvite;
 };
-type RtcInvite = {
-  inviterUserID: string;
-  inviteeUserIDList: string[];
-  groupID: string;
-  roomID: string;
-  timeout: number;
-  mediaType: string;
-  sessionType: number;
-  platformID: number;
-};
 
 type setPrvParams = {
   conversationID: string;
