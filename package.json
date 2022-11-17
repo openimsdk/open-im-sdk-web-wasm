@@ -1,5 +1,5 @@
 {
-  "name": "open-im-sdk-wasm-webpack4",
+  "name": "open-im-sdk-wasm",
   "version": "0.0.2",
   "description": "open im sdk for web",
   "main": "./lib/index.js",

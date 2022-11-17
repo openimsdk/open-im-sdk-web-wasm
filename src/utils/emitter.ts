@@ -1,4 +1,4 @@
-import { WSEvent } from '../types';
+import { WSEvent } from '@/types/entity';
 import { CbEvents } from '../constant';
 
 interface Events {

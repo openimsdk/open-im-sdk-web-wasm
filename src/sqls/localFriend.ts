@@ -103,12 +103,12 @@ export function searchFriendList(
   }
   if (isSearchNickname) {
     totalConditionStr = totalConditionStr
-      ? totalConditionStr + 'or' + nicknameCondition
+      ? totalConditionStr + ' or ' + nicknameCondition
       : nicknameCondition;
   }
   if (isSearchRemark) {
     totalConditionStr = totalConditionStr
-      ? totalConditionStr + 'or' + remarkCondition
+      ? totalConditionStr + ' or ' + remarkCondition
       : remarkCondition;
   }
   return db.exec(

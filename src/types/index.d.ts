@@ -260,6 +260,15 @@ declare global {
       message: string,
       recvID: string,
       groupID: string,
+      offlinePushInfoStr: string,
+      fileArrayBuffer?: ArrayBuffer,
+      snpFileArrayBuffer?: ArrayBuffer
+    ) => Promise<string>;
+    sendMessageByBuffer: (
+      operationID: string,
+      message: string,
+      recvID: string,
+      groupID: string,
       offlinePushInfoStr: string
     ) => Promise<string>;
     getHistoryMessageListReverse: (
@@ -730,19 +739,4 @@ declare global {
     importObject: WebAssembly.Imports;
     run: (instance: WebAssembly.Instance) => Promise<void>;
   }
-}
-
-export type WSEvent = {
-  event: CbEvents;
-  data: unknown;
-  errCode: number;
-  errMsg: string;
-  operationID: string;
-};
-
-export enum SessionType {
-  SINGLECVE = 1,
-  GROUPCVE = 2,
-  SUPERGROUP = 3,
-  NOTIFICATION = 4,
 }

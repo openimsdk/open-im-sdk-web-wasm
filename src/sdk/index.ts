@@ -1,7 +1,6 @@
 import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
-import { WSEvent } from '../types';
 import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
 
 import {
@@ -48,7 +47,6 @@ import {
   SearchFriendParams,
   SearchGroupMemberParams,
   SearchGroupParams,
-  SearchInOrzParams,
   SearchLocalParams,
   SendMsgParams,
   SetDraftParams,
@@ -65,8 +63,8 @@ import {
   VideoMsgParams,
 } from '../types/params';
 
-import { IMConfig, RtcInvite, WsResponse } from '../types/entity';
-
+import { IMConfig, RtcInvite, WSEvent, WsResponse } from '../types/entity';
+import { OptType } from '@/types/enum';
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<any>;
   private goExitPromise: Promise<void> | undefined;
@@ -98,7 +96,7 @@ class SDK extends Emitter {
     func: (...args: any[]) => Promise<any>,
     args: any[],
     processor?: (data: string) => string
-  ) {
+  ): Promise<WsResponse> {
     return new Promise(async (resolve, reject) => {
       // console.info(
       //   `SDK => [OperationID:${
@@ -126,7 +124,7 @@ class SDK extends Emitter {
           data = processor(data);
         }
         response.data = data;
-        resolve(response);
+        resolve(response as WsResponse);
       } catch (error) {
         // console.info(
         //   `SDK => [OperationID:${
@@ -211,13 +209,16 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(params)]
     );
   };
-  getHistoryMessageList(params: GetHistoryMsgParams, operationID = uuidv4()) {
+  getHistoryMessageList = (
+    params: GetHistoryMsgParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'getHistoryMessageList',
       window.getHistoryMessageList,
       [operationID, JSON.stringify(params)]
     );
-  }
+  };
   getGroupsInfo(params: string[], operationID = uuidv4()) {
     return this._invoker('getGroupsInfo', window.getGroupsInfo, [
       operationID,
@@ -373,6 +374,24 @@ class SDK extends Emitter {
       params.recvID,
       params.groupID,
       JSON.stringify(offlinePushInfo),
+    ]);
+  }
+  sendMessageByBuffer(params: SendMsgParams, operationID = uuidv4()) {
+    const offlinePushInfo = params.offlinePushInfo ?? {
+      title: '你有一条新消息',
+      desc: '',
+      ex: '',
+      iOSPushSound: '+1',
+      iOSBadgeCount: true,
+    };
+    return this._invoker('sendMessageByBuffer', window.sendMessageByBuffer, [
+      operationID,
+      params.message,
+      params.recvID,
+      params.groupID,
+      JSON.stringify(offlinePushInfo),
+      params.fileArrayBuffer,
+      params.snpFileArrayBuffer,
     ]);
   }
 
@@ -1142,7 +1161,7 @@ class SDK extends Emitter {
       departmentID,
     ]);
   }
-  searchOrganization(data: SearchInOrzParams, operationID = uuidv4()) {
+  searchOrganization(data: any, operationID = uuidv4()) {
     return this._invoker('searchOrganization ', window.searchOrganization, [
       operationID,
       JSON.stringify(data.input),
