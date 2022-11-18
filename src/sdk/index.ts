@@ -322,6 +322,28 @@ class SDK extends Emitter {
       JSON.stringify(params.offlinePushInfo),
     ]);
   }
+  async getHistoryMessageListReverse(
+    params: GetHistoryMsgParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getHistoryMessageListReverse',
+      window.getHistoryMessageListReverse,
+      [operationID, JSON.stringify(params)]
+    );
+  }
+  async newRevokeMessage(data: string, operationID = uuidv4()) {
+    return await this._invoker('newRevokeMessage ', window.newRevokeMessage, [
+      operationID,
+      data,
+    ]);
+  }
+  async revokeMessage(params: string, operationID = uuidv4()) {
+    return await this._invoker('revokeMessage', window.revokeMessage, [
+      operationID,
+      params,
+    ]);
+  }
   async exportDB(operationID = uuidv4()) {
     return await this._invoker('exportDB', window.exportDB, [operationID]);
   }

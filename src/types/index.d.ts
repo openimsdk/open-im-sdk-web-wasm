@@ -143,6 +143,13 @@ declare global {
       groupID: string,
       offlinePushInfoStr: string
     ) => Promise<string>;
+    getHistoryMessageListReverse: (
+      operationID: string,
+      getMessageOptions: string
+    ) => Promise<string>;
+    revokeMessage: (operationID: string, params: string) => Promise<string>;
+
+    newRevokeMessage: (operationID: string, message: string) => Promise<string>;
 
     // debug
     exec: (sql: string) => Promise<any>;
