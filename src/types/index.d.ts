@@ -53,6 +53,7 @@ declare global {
     getSuperGroupNormalMsgSeq: DatabaseApi;
     superGroupUpdateMessageTimeAndStatus: DatabaseApi;
     superGroupUpdateMessage: DatabaseApi;
+    superGroupUpdateColumnsMessage: DatabaseApi;
     superGroupInsertMessage: DatabaseApi;
     superGroupBatchInsertMessageList: DatabaseApi;
     superGroupGetMessageListNoTime: DatabaseApi;

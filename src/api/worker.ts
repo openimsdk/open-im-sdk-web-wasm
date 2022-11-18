@@ -54,6 +54,7 @@ import {
   superGroupBatchInsertMessageList,
   superGroupGetMessageListNoTime,
   superGroupGetMessageList,
+  superGroupUpdateColumnsMessage,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -137,6 +138,10 @@ rpc.registerMethod(
   superGroupBatchInsertMessageList
 );
 rpc.registerMethod('superGroupGetMessageList', superGroupGetMessageList);
+rpc.registerMethod(
+  'superGroupUpdateColumnsMessage',
+  superGroupUpdateColumnsMessage
+);
 
 rpc.registerMethod('exec', async (sql: string) => {
   const db = await getInstance();

@@ -190,6 +190,9 @@ export function initDatabaseAPI(): void {
   window.superGroupInsertMessage = registeMethodOnWindow(
     'superGroupInsertMessage'
   );
+  window.superGroupUpdateColumnsMessage = registeMethodOnWindow(
+    'superGroupUpdateColumnsMessage'
+  );
   window.superGroupBatchInsertMessageList = registeMethodOnWindow(
     'superGroupBatchInsertMessageList'
   );

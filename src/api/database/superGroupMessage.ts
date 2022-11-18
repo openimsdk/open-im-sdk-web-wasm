@@ -292,3 +292,38 @@ export async function superGroupGetMessageList(
     );
   }
 }
+
+export async function superGroupUpdateColumnsMessage(
+  clientMsgID: string,
+  groupID: string,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      JSON.parse(messageStr) as ClientSuperGroupMessage
+    );
+
+    const execResult = databaseSuperGroupUpdateMessage(
+      db,
+      groupID,
+      clientMsgID,
+      message
+    );
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateColumnsMessage no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
