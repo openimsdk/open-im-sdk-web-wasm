@@ -96,6 +96,7 @@ rpc.registerMethod('updateColumnsConversation', updateColumnsConversation);
 rpc.registerMethod('decrConversationUnreadCount', decrConversationUnreadCount);
 rpc.registerMethod('batchInsertConversationList', batchInsertConversationList);
 rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
+rpc.registerMethod('GetTotalUnreadMsgCountDB', getTotalUnreadMsgCount);
 rpc.registerMethod('insertConversation', insertConversation);
 
 rpc.registerMethod('getLoginUser', getLoginUser);
