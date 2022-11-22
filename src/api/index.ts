@@ -102,6 +102,7 @@ export function initDatabaseAPI(): void {
     'updateMessageTimeAndStatus'
   );
   window.updateMessage = registeMethodOnWindow('updateMessage');
+  window.updateColumnsMessage = registeMethodOnWindow('updateColumnsMessage');
   window.insertMessage = registeMethodOnWindow('insertMessage');
   window.batchInsertMessageList = registeMethodOnWindow(
     'batchInsertMessageList'

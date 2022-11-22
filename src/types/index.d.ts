@@ -16,6 +16,7 @@ declare global {
     getNormalMsgSeq: DatabaseApi;
     updateMessageTimeAndStatus: DatabaseApi;
     updateMessage: DatabaseApi;
+    updateColumnsMessage: DatabaseApi;
     insertMessage: DatabaseApi;
     batchInsertMessageList: DatabaseApi;
     getMessageList: DatabaseApi;

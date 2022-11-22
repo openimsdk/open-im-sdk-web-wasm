@@ -9,6 +9,7 @@ import {
   getNormalMsgSeq,
   updateMessageTimeAndStatus,
   updateMessage,
+  updateColumnsMessage,
   insertMessage,
   batchInsertMessageList,
   getMessageList,
@@ -76,6 +77,7 @@ rpc.registerMethod('getSendingMessageList', getSendingMessageList);
 rpc.registerMethod('getNormalMsgSeq', getNormalMsgSeq);
 rpc.registerMethod('updateMessageTimeAndStatus', updateMessageTimeAndStatus);
 rpc.registerMethod('updateMessage', updateMessage);
+rpc.registerMethod('updateColumnsMessage', updateColumnsMessage);
 rpc.registerMethod('insertMessage', insertMessage);
 rpc.registerMethod('batchInsertMessageList', batchInsertMessageList);
 rpc.registerMethod(
