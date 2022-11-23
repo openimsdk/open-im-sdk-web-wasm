@@ -21,6 +21,7 @@ export function localConversations(db: Database): QueryExecResult[] {
             'draft_text' text,
             'draft_text_time' integer,
             'is_pinned' numeric,
+            'burn_duration' integer,
             'is_private_chat' numeric,
             'is_not_in_group' numeric,
             'update_unread_count_time' integer,

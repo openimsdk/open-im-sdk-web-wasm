@@ -281,6 +281,11 @@ declare global {
       conversationID: string,
       isPrivate: boolean
     ) => Promise<string>;
+    setOneConversationBurnDuration: (
+      operationID: string,
+      conversationID: string,
+      burnDuration: number
+    ) => Promise<string>;
     getLoginStatus: (operationID: string) => Promise<string>;
     iLogin: (
       operationID: string,

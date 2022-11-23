@@ -214,6 +214,11 @@ export type setPrvParams = {
   isPrivate: boolean;
 };
 
+export type setBurnDurationParams = {
+  conversationID: string;
+  burnDuration: number;
+};
+
 export type LoginParams = {
   userID: string;
   token: string;

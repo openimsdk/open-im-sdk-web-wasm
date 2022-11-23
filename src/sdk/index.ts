@@ -49,6 +49,7 @@ import {
   SearchGroupParams,
   SearchLocalParams,
   SendMsgParams,
+  setBurnDurationParams,
   SetDraftParams,
   SetGroupRoleParams,
   SetGroupVerificationParams,
@@ -104,9 +105,11 @@ class SDK extends Emitter {
       //   }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`
       // );
 
-      let response: { data?: any; operationID: string } = {
+      let response = {
         operationID: args[0],
-      };
+        event: (functionName.slice(0, 1).toUpperCase() +
+          functionName.slice(1).toLowerCase()) as any,
+      } as WsResponse;
       try {
         if (!getGO() || getGO().exited || this.goExisted) {
           throw 'wasm exist already, fail to run';
@@ -422,6 +425,17 @@ class SDK extends Emitter {
       'setOneConversationPrivateChat',
       window.setOneConversationPrivateChat,
       [operationID, params.conversationID, params.isPrivate]
+    );
+  }
+
+  setOneConversationBurnDuration(
+    params: setBurnDurationParams,
+    operationID = uuidv4()
+  ) {
+    return this._invoker(
+      'setOneConversationBurnDuration',
+      window.setOneConversationBurnDuration,
+      [operationID, params.conversationID, params.burnDuration]
     );
   }
   /* ----------------------------------------------新增-------------------------------------------------------- */

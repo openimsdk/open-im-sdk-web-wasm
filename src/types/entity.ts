@@ -145,6 +145,7 @@ export type PublicUserItem = {
 
 export type FullUserItem = {
   birth: number;
+  birthTime: string;
   createTime: number;
   email: string;
   ex: string;
@@ -348,8 +349,11 @@ export type PictureElem = {
 export type AttachedInfoElem = {
   groupHasReadInfo: GroupHasReadInfo;
   isPrivateChat: boolean;
+  isEncryption: boolean;
+  burnDuration: number;
   hasReadTime: number;
   notSenderNotificationPush: boolean;
+  messageEntityList: MessageEntity[];
 };
 
 export type GroupHasReadInfo = {
@@ -393,4 +397,17 @@ export type VideoElem = {
   snapshotUrl: string;
   snapshotWidth: number;
   snapshotHeight: number;
+};
+
+export type AdvancedRevokeContent = {
+  clientMsgID: string;
+  revokeTime: number;
+  revokerID: string;
+  revokerNickname: string;
+  revokerRole: number;
+  seq: number;
+  sessionType: SessionType;
+  sourceMessageSendID: string;
+  sourceMessageSendTime: number;
+  sourceMessageSenderNickname: string;
 };
