@@ -63,7 +63,8 @@ class SDK extends Emitter {
       `%cSDK =>%c [OperationID:${
         args[0]
       }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`,
-      'font-size:14px; background:#7CAEFF;'
+      'font-size:14px; background:#7CAEFF;',
+      ''
     );
 
     if (!getGO() || getGO().exited || this.goExisted) {
@@ -78,7 +79,8 @@ class SDK extends Emitter {
             }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
               data
             )}`,
-            'font-size:14px; background:#FFDC19;'
+            'font-size:14px; background:#FFDC19;',
+            ''
           );
           data = processor(data);
         }
@@ -89,8 +91,9 @@ class SDK extends Emitter {
             args[0]
           }] (invoked by js) run ${functionName} with response ${JSON.stringify(
             response
-          )}`,
-          'font-size:14px; background:#82C115;'
+          )}%c`,
+          'font-size:14px; background:#82C115;',
+          ''
         );
 
         return response;
