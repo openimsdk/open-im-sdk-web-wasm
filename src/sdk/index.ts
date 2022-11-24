@@ -58,6 +58,8 @@ class SDK extends Emitter {
       operationID: args[0],
       event: (functionName.slice(0, 1).toUpperCase() +
         functionName.slice(1).toLowerCase()) as any,
+      errCode: 0,
+      errMsg: '',
     } as WsResponse;
     console.info(
       `%cSDK =>%c [OperationID:${
