@@ -9,6 +9,7 @@ import {
   getNormalMsgSeq,
   updateMessageTimeAndStatus,
   updateMessage,
+  updateColumnsMessage,
   insertMessage,
   batchInsertMessageList,
   getMessageList,
@@ -54,6 +55,7 @@ import {
   superGroupBatchInsertMessageList,
   superGroupGetMessageListNoTime,
   superGroupGetMessageList,
+  superGroupUpdateColumnsMessage,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -75,6 +77,7 @@ rpc.registerMethod('getSendingMessageList', getSendingMessageList);
 rpc.registerMethod('getNormalMsgSeq', getNormalMsgSeq);
 rpc.registerMethod('updateMessageTimeAndStatus', updateMessageTimeAndStatus);
 rpc.registerMethod('updateMessage', updateMessage);
+rpc.registerMethod('updateColumnsMessage', updateColumnsMessage);
 rpc.registerMethod('insertMessage', insertMessage);
 rpc.registerMethod('batchInsertMessageList', batchInsertMessageList);
 rpc.registerMethod(
@@ -138,6 +141,10 @@ rpc.registerMethod(
   superGroupBatchInsertMessageList
 );
 rpc.registerMethod('superGroupGetMessageList', superGroupGetMessageList);
+rpc.registerMethod(
+  'superGroupUpdateColumnsMessage',
+  superGroupUpdateColumnsMessage
+);
 
 rpc.registerMethod('exec', async (sql: string) => {
   const db = await getInstance();

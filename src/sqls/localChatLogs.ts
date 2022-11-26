@@ -1,6 +1,5 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
-import { SessionType } from '@/types';
 
 export type ClientMessage = { [key: string]: any };
 

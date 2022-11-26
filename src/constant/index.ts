@@ -52,6 +52,8 @@ export enum CbEvents {
   ONINVITEEACCEPTEDBYOTHERDEVICE = 'OnInviteeAcceptedByOtherDevice',
   ONINVITEEREJECTEDBYOTHERDEVICE = 'OnInviteeRejectedByOtherDevice',
   ONORGANIZATIONUPDATED = 'OnOrganizationUpdated',
+  ONRECVNEWMESSAGEFROMOTHERWEB = 'OnRecvNewMessageFromOtherWeb',
+  ONNEWRECVMESSAGEREVOKED = 'OnNewRecvMessageRevoked',
 }
 
 export enum RequestFunc {

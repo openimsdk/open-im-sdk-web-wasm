@@ -102,6 +102,7 @@ export function initDatabaseAPI(): void {
     'updateMessageTimeAndStatus'
   );
   window.updateMessage = registeMethodOnWindow('updateMessage');
+  window.updateColumnsMessage = registeMethodOnWindow('updateColumnsMessage');
   window.insertMessage = registeMethodOnWindow('insertMessage');
   window.batchInsertMessageList = registeMethodOnWindow(
     'batchInsertMessageList'
@@ -189,6 +190,9 @@ export function initDatabaseAPI(): void {
   );
   window.superGroupInsertMessage = registeMethodOnWindow(
     'superGroupInsertMessage'
+  );
+  window.superGroupUpdateColumnsMessage = registeMethodOnWindow(
+    'superGroupUpdateColumnsMessage'
   );
   window.superGroupBatchInsertMessageList = registeMethodOnWindow(
     'superGroupBatchInsertMessageList'

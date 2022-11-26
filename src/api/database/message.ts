@@ -165,6 +165,34 @@ export async function updateMessage(
   }
 }
 
+export async function updateColumnsMessage(
+  clientMsgId: string,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(messageStr), { groupName: 'name' })
+    ) as ClientMessage;
+
+    const execResult = databaseUpdateMessage(db, clientMsgId, message);
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateMessage no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
 export async function insertMessage(messageStr: string): Promise<string> {
   try {
     const db = await getInstance();
