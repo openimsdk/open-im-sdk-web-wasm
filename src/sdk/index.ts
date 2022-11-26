@@ -53,51 +53,72 @@ class SDK extends Emitter {
     func: (...args: any[]) => Promise<any>,
     args: any[],
     processor?: (data: string) => string
-  ) {
+  ): Promise<WsResponse> {
+    let response = {
+      operationID: args[0],
+      event: (functionName.slice(0, 1).toUpperCase() +
+        functionName.slice(1).toLowerCase()) as any,
+      errCode: 0,
+      errMsg: '',
+    } as WsResponse;
     console.info(
-      `SDK => [OperationID:${
+      `%cSDK =>%c [OperationID:${
         args[0]
-      }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`
+      }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`,
+      'font-size:14px; background:#7CAEFF;',
+      ''
     );
 
-    let response: { data?: any } = {};
-    try {
-      if (!getGO() || getGO().exited || this.goExisted) {
-        throw 'wasm exist already, fail to run';
-      }
+    if (!getGO() || getGO().exited || this.goExisted) {
+      throw 'wasm exist already, fail to run';
+    }
+    return func(...args)
+      .then((data: any) => {
+        if (processor) {
+          console.info(
+            `%cSDK =>%c [OperationID:${
+              args[0]
+            }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
+              data
+            )}`,
+            'font-size:14px; background:#FFDC19;',
+            ''
+          );
+          data = processor(data);
+        }
+        response.data = data;
 
-      let data = await func(...args);
-      if (processor) {
+        console.info(
+          `%cSDK =>%c [OperationID:${
+            args[0]
+          }] (invoked by js) run ${functionName} with response ${JSON.stringify(
+            response
+          )}%c`,
+          'font-size:14px; background:#82C115;',
+          ''
+        );
+
+        return response;
+      })
+      .catch(error => {
+        response = {
+          ...response,
+          ...(error as WsResponse),
+        };
+
         console.info(
           `SDK => [OperationID:${
             args[0]
-          }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
-            data
-          )}`
+          }] (invoked by js) run ${functionName} with error ${JSON.stringify(
+            error
+          )}`,
+          'font-size:14px; background:#EE4245;'
         );
-        data = processor(data);
-      }
-      response = { data };
-    } catch (error) {
-      console.info(
-        `SDK => [OperationID:${
-          args[0]
-        }] (invoked by js) run ${functionName} with error ${JSON.stringify(
-          error
-        )}`
-      );
-    }
 
-    console.info(
-      `SDK => [OperationID:${
-        args[0]
-      }] (invoked by js) run ${functionName} with response ${JSON.stringify(
-        response
-      )}`
-    );
-
-    return response as WsResponse;
+        return response;
+      });
   }
+
   async login(params: LoginParam, operationID = uuidv4()) {
     console.info(
       `SDK => (invoked by js) run login with args ${JSON.stringify({
