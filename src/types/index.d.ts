@@ -34,7 +34,9 @@ declare global {
     batchInsertConversationList: DatabaseApi;
     insertConversation: DatabaseApi;
     getTotalUnreadMsgCountDB: DatabaseApi;
-    getTotalUnreadMsgCount: (operationID: string) => Promise<string>;
+    getTotalUnreadMsgCount: (
+      operationID: string
+    ) => Promise<string | undefined>;
     // users
     getLoginUser: DatabaseApi;
     insertLoginUser: DatabaseApi;
