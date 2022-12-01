@@ -141,7 +141,7 @@ export function initDatabaseAPI(): void {
   );
   window.insertConversation = registeMethodOnWindow('insertConversation');
   window.getTotalUnreadMsgCountDB = registeMethodOnWindow(
-    'getTotalUnreadMsgCount'
+    'getTotalUnreadMsgCountDB'
   );
   window.getTotalUnreadMsgCount = registeMethodOnWindow(
     'getTotalUnreadMsgCount'
