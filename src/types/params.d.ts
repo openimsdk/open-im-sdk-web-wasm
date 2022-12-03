@@ -7,6 +7,7 @@ type LoginParam = {
   apiAddress: string;
   wsAddress: string;
   logLevel?: number;
+  isCompression?: boolean;
 };
 
 type GetOneConversationParams = {

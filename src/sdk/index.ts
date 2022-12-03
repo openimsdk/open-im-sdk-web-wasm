@@ -145,6 +145,7 @@ class SDK extends Emitter {
       api_addr: params.apiAddress,
       ws_addr: params.wsAddress,
       log_level: params.logLevel || 6,
+      is_compression: params.isCompression ?? true,
     };
     window.initSDK(operationID, JSON.stringify(config));
 
