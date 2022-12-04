@@ -21,6 +21,7 @@ declare global {
     batchInsertMessageList: DatabaseApi;
     getMessageList: DatabaseApi;
     getMessageListNoTime: DatabaseApi;
+    searchAllMessageByContentType: DatabaseApi;
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;

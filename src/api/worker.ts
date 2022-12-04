@@ -14,6 +14,7 @@ import {
   batchInsertMessageList,
   getMessageList,
   getMessageListNoTime,
+  searchAllMessageByContentType,
 
   // conversation
   getAllConversationList,
@@ -86,6 +87,10 @@ rpc.registerMethod(
 );
 rpc.registerMethod('getMessageList', getMessageList);
 rpc.registerMethod('getMessageListNoTime', getMessageListNoTime);
+rpc.registerMethod(
+  'searchAllMessageByContentType',
+  searchAllMessageByContentType
+);
 
 rpc.registerMethod('getAllConversationList', getAllConversationList);
 rpc.registerMethod(

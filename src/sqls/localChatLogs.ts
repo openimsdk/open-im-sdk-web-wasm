@@ -173,3 +173,7 @@ export function getMessageListNoTime(
           `
   );
 }
+
+export function searchAllMessageByContentType(db: Database) {
+  return db.exec('SELECT * FROM `local_chat_logs` WHERE content_type = 114');
+}

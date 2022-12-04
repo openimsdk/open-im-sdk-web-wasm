@@ -11,6 +11,7 @@ import {
   batchInsertMessageList as databaseBatchInsertMessageList,
   getMessageList as databaseGetMesageList,
   getMessageListNoTime as databaseGetMessageListNoTime,
+  searchAllMessageByContentType as databaseSearchAllMessageByContentType,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -291,6 +292,24 @@ export async function getMessageList(
       loginUserID
     );
 
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function searchAllMessageByContentType(): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseSearchAllMessageByContentType(db);
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
     );

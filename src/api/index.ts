@@ -109,6 +109,9 @@ export function initDatabaseAPI(): void {
   );
   window.getMessageList = registeMethodOnWindow('getMessageList');
   window.getMessageListNoTime = registeMethodOnWindow('getMessageListNoTime');
+  window.searchAllMessageByContentType = registeMethodOnWindow(
+    'searchAllMessageByContentType'
+  );
 
   // conversation
   window.getAllConversationListDB = registeMethodOnWindow(
