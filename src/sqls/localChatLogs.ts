@@ -137,11 +137,7 @@ export function getMessageList(
         and send_time ${isReverse ? '>' : '<'} ${startTime}
         and session_type = ${sessionType}
     order by send_time ${isReverse ? 'asc' : 'desc'}
-    limit ${count};    
-        limit ${count};    
-    limit ${count};    
-        limit ${count};    
-    limit ${count};    
+    limit ${count};
 `;
   return db.exec(sql);
 }
