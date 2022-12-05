@@ -232,7 +232,7 @@ export function superGroupSearchAllMessageByContentType(
     `
         SELECT * FROM local_sg_chat_logs_${groupID}
         WHERE
-            content_type = ${contentType}
+            content_type = ${contentType};
     `
   );
 }
