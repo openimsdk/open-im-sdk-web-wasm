@@ -172,11 +172,12 @@ export async function updateColumnsMessage(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const message = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(messageStr), { groupName: 'name' })
-    ) as ClientMessage;
 
-    const execResult = databaseUpdateMessage(db, clientMsgId, message);
+    const execResult = databaseUpdateMessage(
+      db,
+      clientMsgId,
+      JSON.parse(messageStr) as ClientMessage
+    );
     const modifed = db.getRowsModified();
     if (modifed === 0) {
       throw 'updateMessage no record updated';

@@ -1,6 +1,6 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
-import { MessageType } from '@/constant';
+import { MessageStatus, MessageType } from '@/constant';
 
 export type ClientSuperGroupMessage = { [key: string]: any };
 
@@ -189,7 +189,7 @@ export function superGroupGetMessageListNoTime(
         select * from local_sg_chat_logs_${groupID}
         where
             recv_id = "${groupID}"
-            and status <= 3
+            and status <= ${MessageStatus.Failed}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
@@ -212,7 +212,7 @@ export function superGroupGetMessageList(
         select * from local_sg_chat_logs_${groupID}
         where
             recv_id = "${groupID}"
-            and status <= 3
+            and status <= ${MessageStatus.Failed}
             and send_time <= ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
