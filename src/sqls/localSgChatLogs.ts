@@ -1,5 +1,6 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { MessageType } from '@/constant';
 
 export type ClientSuperGroupMessage = { [key: string]: any };
 
@@ -216,6 +217,22 @@ export function superGroupGetMessageList(
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
+    `
+  );
+}
+
+export function superGroupSearchAllMessageByContentType(
+  db: Database,
+  groupID: string,
+  contentType: MessageType
+) {
+  _initSuperGroupTable(db, groupID);
+
+  return db.exec(
+    `
+        SELECT * FROM local_sg_chat_logs_${groupID}
+        WHERE
+            content_type = ${contentType}
     `
   );
 }

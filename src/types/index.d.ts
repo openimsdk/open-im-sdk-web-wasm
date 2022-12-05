@@ -64,6 +64,7 @@ declare global {
     superGroupGetMessageListNoTime: DatabaseApi;
     superGroupGetMessageList: DatabaseApi;
     getRowsModified: DatabaseApi;
+    superGroupSearchAllMessageByContentType: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;

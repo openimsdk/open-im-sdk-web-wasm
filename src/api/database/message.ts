@@ -1,4 +1,4 @@
-import { DatabaseErrorCode } from '@/constant';
+import { DatabaseErrorCode, MessageType } from '@/constant';
 import {
   ClientMessage,
   getMessage as databaseGetMessage,
@@ -306,10 +306,12 @@ export async function getMessageList(
   }
 }
 
-export async function searchAllMessageByContentType(): Promise<string> {
+export async function searchAllMessageByContentType(
+  contentType: MessageType
+): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseSearchAllMessageByContentType(db);
+    const execResult = databaseSearchAllMessageByContentType(db, contentType);
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
     );

@@ -1,5 +1,6 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { MessageStatus, MessageType } from '@/constant';
 
 export type ClientMessage = { [key: string]: any };
 
@@ -143,7 +144,7 @@ export function getMessageList(
         select * from local_chat_logs
         where
             ${condition}
-            and status <= 3
+            and status <= ${MessageStatus.Failed}
             and send_time ${isReverse ? '>' : '<'} ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
@@ -174,6 +175,15 @@ export function getMessageListNoTime(
   );
 }
 
-export function searchAllMessageByContentType(db: Database) {
-  return db.exec('SELECT * FROM `local_chat_logs` WHERE content_type = 114');
+export function searchAllMessageByContentType(
+  db: Database,
+  contentType: MessageType
+) {
+  return db.exec(
+    `
+      select * from local_chat_logs
+        where
+            content_type = ${contentType}
+    `
+  );
 }

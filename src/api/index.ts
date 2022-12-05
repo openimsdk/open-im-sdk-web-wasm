@@ -209,6 +209,9 @@ export function initDatabaseAPI(): void {
   window.superGroupGetMessageList = registeMethodOnWindow(
     'superGroupGetMessageList'
   );
+  window.superGroupSearchAllMessageByContentType = registeMethodOnWindow(
+    'superGroupSearchAllMessageByContentType'
+  );
 
   // debug
   window.exec = registeMethodOnWindow('exec');

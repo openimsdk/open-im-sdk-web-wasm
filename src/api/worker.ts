@@ -57,6 +57,7 @@ import {
   superGroupGetMessageListNoTime,
   superGroupGetMessageList,
   superGroupUpdateColumnsMessage,
+  superGroupSearchAllMessageByContentType,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -149,6 +150,10 @@ rpc.registerMethod('superGroupGetMessageList', superGroupGetMessageList);
 rpc.registerMethod(
   'superGroupUpdateColumnsMessage',
   superGroupUpdateColumnsMessage
+);
+rpc.registerMethod(
+  'superGroupSearchAllMessageByContentType',
+  superGroupSearchAllMessageByContentType
 );
 
 rpc.registerMethod('exec', async (sql: string) => {
