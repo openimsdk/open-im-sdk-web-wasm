@@ -1,11 +1,11 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { MessageStatus, MessageType } from '@/constant';
 
 export type ClientMessage = { [key: string]: any };
 
 export function localChatLogs(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
+  return db.exec(`
       create table if not exists 'local_chat_logs' (
         'client_msg_id' char(64),
         'server_msg_id' char(64),
@@ -26,16 +26,13 @@ export function localChatLogs(db: Database): QueryExecResult[] {
         'attached_info' varchar(1024),
         'ex' varchar(1024),
         primary key ('client_msg_id'))
-    `
-  );
+    `);
 }
 
 export function getMessage(db: Database, messageId: string): QueryExecResult[] {
-  return db.exec(
-    `
+  return db.exec(`
       select * from 'local_chat_logs' where client_msg_id='${messageId}'
-    `
-  );
+    `);
 }
 
 export function getMultipleMessage(
@@ -44,27 +41,21 @@ export function getMultipleMessage(
 ): QueryExecResult[] {
   const values = msgIDList.map(v => `'${v}'`).join(',');
 
-  return db.exec(
-    `
+  return db.exec(`
       select * from local_sg_chat_logs where client_msg_id in (${values}) order by send_time desc;
-    `
-  );
+    `);
 }
 
 export function getSendingMessageList(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
+  return db.exec(`
       select * from local_chat_logs where status = 1;
-    `
-  );
+    `);
 }
 
 export function getNormalMsgSeq(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
+  return db.exec(`
       select ifnull(max(seq),0) from local_chat_logs;
-    `
-  );
+    `);
 }
 
 export function updateMessageTimeAndStatus(
@@ -109,7 +100,6 @@ export function insertMessage(
     .into('local_chat_logs')
     .setFields(message)
     .toString();
-
   return db.exec(sql);
 }
 
@@ -139,16 +129,17 @@ export function getMessageList(
   const condition = isSelf
     ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
     : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
-  return db.exec(`
-        select * from local_chat_logs
-        where
-            ${condition}
-            and status <= 3
-            and send_time ${isReverse ? '>' : '<'} ${startTime}
-            and session_type = ${sessionType}
-        order by send_time ${isReverse ? 'asc' : 'desc'}
-        limit ${count};    
-    `);
+  const sql = `
+  select * from local_chat_logs
+    where
+        ${condition}
+        and status <= ${MessageStatus.Failed}
+        and send_time ${isReverse ? '>' : '<'} ${startTime}
+        and session_type = ${sessionType}
+    order by send_time ${isReverse ? 'asc' : 'desc'}
+    limit ${count};
+`;
+  return db.exec(sql);
 }
 
 export function getMessageListNoTime(
@@ -160,18 +151,29 @@ export function getMessageListNoTime(
   loginUserID: string
 ): QueryExecResult[] {
   const isSelf = loginUserID === sourceID;
-  return db.exec(
-    `
-        select * from local_chat_logs
-          where
-              recv_id = "${sourceID}"
-              ${isSelf ? 'and' : 'or'} send_id = "${sourceID}"
-              and status <= 3
-              and session_type = ${sessionType}
-          order by send_time ${isReverse ? 'asc' : 'desc'}
-          limit ${count};    
-          `
-  );
+  const condition = isSelf
+    ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
+    : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
+  const sql = `
+  select * from local_chat_logs
+      where
+        ${condition}
+        and status <= ${MessageStatus.Failed}
+        and session_type = ${sessionType}
+      order by send_time ${isReverse ? 'asc' : 'desc'}
+      limit ${count};`;
+  return db.exec(sql);
+}
+
+export function searchAllMessageByContentType(
+  db: Database,
+  contentType: MessageType
+) {
+  return db.exec(`
+  select * from local_chat_logs
+      where
+          content_type = ${contentType};
+    `);
 }
 
 export function getMsgSeqListByPeerUserID(

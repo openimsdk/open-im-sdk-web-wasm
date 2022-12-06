@@ -14,6 +14,7 @@ import {
   batchInsertMessageList,
   getMessageList,
   getMessageListNoTime,
+  searchAllMessageByContentType,
   getMsgSeqListByPeerUserID,
   getMsgSeqListBySelfUserID,
   getMsgSeqListByGroupID,
@@ -59,6 +60,7 @@ import {
   superGroupGetMessageListNoTime,
   superGroupGetMessageList,
   superGroupUpdateColumnsMessage,
+  superGroupSearchAllMessageByContentType,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -89,6 +91,10 @@ rpc.registerMethod(
 );
 rpc.registerMethod('getMessageList', getMessageList);
 rpc.registerMethod('getMessageListNoTime', getMessageListNoTime);
+rpc.registerMethod(
+  'searchAllMessageByContentType',
+  searchAllMessageByContentType
+);
 rpc.registerMethod('getMsgSeqListByPeerUserID', getMsgSeqListByPeerUserID);
 rpc.registerMethod('getMsgSeqListBySelfUserID', getMsgSeqListBySelfUserID);
 rpc.registerMethod('getMsgSeqListByGroupID', getMsgSeqListByGroupID);
@@ -105,7 +111,7 @@ rpc.registerMethod('updateColumnsConversation', updateColumnsConversation);
 rpc.registerMethod('decrConversationUnreadCount', decrConversationUnreadCount);
 rpc.registerMethod('batchInsertConversationList', batchInsertConversationList);
 rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
-rpc.registerMethod('GetTotalUnreadMsgCountDB', getTotalUnreadMsgCount);
+rpc.registerMethod('getTotalUnreadMsgCountDB', getTotalUnreadMsgCount);
 rpc.registerMethod('insertConversation', insertConversation);
 
 rpc.registerMethod('getLoginUser', getLoginUser);
@@ -150,6 +156,10 @@ rpc.registerMethod('superGroupGetMessageList', superGroupGetMessageList);
 rpc.registerMethod(
   'superGroupUpdateColumnsMessage',
   superGroupUpdateColumnsMessage
+);
+rpc.registerMethod(
+  'superGroupSearchAllMessageByContentType',
+  superGroupSearchAllMessageByContentType
 );
 
 rpc.registerMethod('exec', async (sql: string) => {

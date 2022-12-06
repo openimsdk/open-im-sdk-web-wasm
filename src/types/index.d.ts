@@ -21,6 +21,7 @@ declare global {
     batchInsertMessageList: DatabaseApi;
     getMessageList: DatabaseApi;
     getMessageListNoTime: DatabaseApi;
+    searchAllMessageByContentType: DatabaseApi;
     getMsgSeqListByPeerUserID: (userID: string) => Promise<string | undefined>;
     getMsgSeqListBySelfUserID: (userID: string) => Promise<string | undefined>;
     getMsgSeqListByGroupID: (groupID: string) => Promise<string | undefined>;
@@ -67,6 +68,7 @@ declare global {
     superGroupGetMessageListNoTime: DatabaseApi;
     superGroupGetMessageList: DatabaseApi;
     getRowsModified: DatabaseApi;
+    superGroupSearchAllMessageByContentType: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;

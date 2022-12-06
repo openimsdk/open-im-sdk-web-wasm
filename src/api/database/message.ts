@@ -1,4 +1,4 @@
-import { DatabaseErrorCode } from '@/constant';
+import { DatabaseErrorCode, MessageType } from '@/constant';
 import {
   ClientMessage,
   getMessage as databaseGetMessage,
@@ -11,6 +11,7 @@ import {
   batchInsertMessageList as databaseBatchInsertMessageList,
   getMessageList as databaseGetMesageList,
   getMessageListNoTime as databaseGetMessageListNoTime,
+  searchAllMessageByContentType as databaseSearchAllMessageByContentType,
   getMsgSeqListByPeerUserID as databaseGetMsgSeqListByPeerUserID,
   getMsgSeqListBySelfUserID as databaseGetMsgSeqListBySelfUserID,
   getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
@@ -174,11 +175,12 @@ export async function updateColumnsMessage(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const message = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(messageStr), { groupName: 'name' })
-    ) as ClientMessage;
 
-    const execResult = databaseUpdateMessage(db, clientMsgId, message);
+    const execResult = databaseUpdateMessage(
+      db,
+      clientMsgId,
+      JSON.parse(messageStr) as ClientMessage
+    );
     const modifed = db.getRowsModified();
     if (modifed === 0) {
       throw 'updateMessage no record updated';
@@ -308,6 +310,25 @@ export async function getMessageList(
   }
 }
 
+export async function searchAllMessageByContentType(
+  contentType: MessageType
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseSearchAllMessageByContentType(db, contentType);
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
 export async function getMsgSeqListByPeerUserID(
   userID: string
 ): Promise<string> {
