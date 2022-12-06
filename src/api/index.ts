@@ -212,6 +212,15 @@ export function initDatabaseAPI(): void {
   window.superGroupSearchAllMessageByContentType = registeMethodOnWindow(
     'superGroupSearchAllMessageByContentType'
   );
+  window.getMsgSeqListByPeerUserID = registeMethodOnWindow(
+    'getMsgSeqListByPeerUserID'
+  );
+  window.getMsgSeqListBySelfUserID = registeMethodOnWindow(
+    'getMsgSeqListBySelfUserID'
+  );
+  window.getMsgSeqListByGroupID = registeMethodOnWindow(
+    'getMsgSeqListByGroupID'
+  );
 
   // debug
   window.exec = registeMethodOnWindow('exec');

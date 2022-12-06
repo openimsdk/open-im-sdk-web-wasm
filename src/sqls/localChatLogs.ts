@@ -175,3 +175,41 @@ export function searchAllMessageByContentType(
           content_type = ${contentType};
     `);
 }
+
+export function getMsgSeqListByPeerUserID(
+  db: Database,
+  userID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE recv_id="${userID}" 
+    or send_id="${userID}"
+    `
+  );
+}
+
+export function getMsgSeqListBySelfUserID(
+  db: Database,
+  userID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE recv_id="${userID}" 
+    and send_id="${userID}"
+    `
+  );
+}
+
+export function getMsgSeqListByGroupID(
+  db: Database,
+  groupID: string
+): QueryExecResult[] {
+  return db.exec(
+    `  
+    SELECT seq FROM local_chat_logs 
+    WHERE recv_id="${groupID}"
+    `
+  );
+}

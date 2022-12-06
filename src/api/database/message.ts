@@ -12,6 +12,9 @@ import {
   getMessageList as databaseGetMesageList,
   getMessageListNoTime as databaseGetMessageListNoTime,
   searchAllMessageByContentType as databaseSearchAllMessageByContentType,
+  getMsgSeqListByPeerUserID as databaseGetMsgSeqListByPeerUserID,
+  getMsgSeqListBySelfUserID as databaseGetMsgSeqListBySelfUserID,
+  getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -315,6 +318,79 @@ export async function searchAllMessageByContentType(
     const execResult = databaseSearchAllMessageByContentType(db, contentType);
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+export async function getMsgSeqListByPeerUserID(
+  userID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqListByPeerUserID(db, userID);
+    const converedResult = converSqlExecResult(execResult[0], 'CamelCase');
+
+    return formatResponse(
+      converedResult.map(item => {
+        return item.seq;
+      })
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMsgSeqListBySelfUserID(
+  userID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqListBySelfUserID(db, userID);
+
+    const converedResult = converSqlExecResult(execResult[0], 'CamelCase');
+
+    return formatResponse(
+      converedResult.map(item => {
+        return item.seq;
+      })
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMsgSeqListByGroupID(groupID: string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMsgSeqListByGroupID(db, groupID);
+    const converedResult = converSqlExecResult(execResult[0], 'CamelCase');
+
+    return formatResponse(
+      converedResult.map(item => {
+        return item.seq;
+      })
     );
   } catch (e) {
     console.error(e);

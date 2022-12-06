@@ -22,6 +22,10 @@ declare global {
     getMessageList: DatabaseApi;
     getMessageListNoTime: DatabaseApi;
     searchAllMessageByContentType: DatabaseApi;
+    getMsgSeqListByPeerUserID: (userID: string) => Promise<string | undefined>;
+    getMsgSeqListBySelfUserID: (userID: string) => Promise<string | undefined>;
+    getMsgSeqListByGroupID: (groupID: string) => Promise<string | undefined>;
+
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;
