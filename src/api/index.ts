@@ -221,6 +221,9 @@ export function initDatabaseAPI(): void {
   window.getMsgSeqListByGroupID = registeMethodOnWindow(
     'getMsgSeqListByGroupID'
   );
+  window.updateMessageStatusBySourceID = registeMethodOnWindow(
+    'updateMessageStatusBySourceID'
+  );
 
   // debug
   window.exec = registeMethodOnWindow('exec');

@@ -18,6 +18,7 @@ import {
   getMsgSeqListByPeerUserID,
   getMsgSeqListBySelfUserID,
   getMsgSeqListByGroupID,
+  updateMessageStatusBySourceID,
 
   // conversation
   getAllConversationList,
@@ -98,6 +99,10 @@ rpc.registerMethod(
 rpc.registerMethod('getMsgSeqListByPeerUserID', getMsgSeqListByPeerUserID);
 rpc.registerMethod('getMsgSeqListBySelfUserID', getMsgSeqListBySelfUserID);
 rpc.registerMethod('getMsgSeqListByGroupID', getMsgSeqListByGroupID);
+rpc.registerMethod(
+  'updateMessageStatusBySourceID',
+  updateMessageStatusBySourceID
+);
 
 rpc.registerMethod('getAllConversationList', getAllConversationList);
 rpc.registerMethod(

@@ -184,7 +184,7 @@ export function getMsgSeqListByPeerUserID(
     `  
     SELECT seq FROM local_chat_logs 
     WHERE recv_id="${userID}" 
-    or send_id="${userID}"
+    or send_id="${userID}";
     `
   );
 }
@@ -197,7 +197,7 @@ export function getMsgSeqListBySelfUserID(
     `  
     SELECT seq FROM local_chat_logs 
     WHERE recv_id="${userID}" 
-    and send_id="${userID}"
+    and send_id="${userID}";
     `
   );
 }
@@ -209,7 +209,28 @@ export function getMsgSeqListByGroupID(
   return db.exec(
     `  
     SELECT seq FROM local_chat_logs 
-    WHERE recv_id="${groupID}"
+    WHERE recv_id="${groupID}";
+    `
+  );
+}
+
+export function updateMessageStatusBySourceID(
+  db: Database,
+  sourceID: string,
+  status: number,
+  sessionType: number,
+  loginUserID: string
+): QueryExecResult[] {
+  let condition = `(send_id= "${sourceID}" or recv_id="${sourceID}")`;
+  if (sessionType === 1 && sourceID === loginUserID) {
+    condition = `send_id= "${sourceID}" AND recv_id="${sourceID}"`;
+  }
+  return db.exec(
+    `
+        update local_chat_logs
+        set status=${status}
+        where session_type=${sessionType}
+        AND ${condition};
     `
   );
 }
