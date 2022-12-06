@@ -14,6 +14,8 @@ import {
   batchInsertMessageList,
   getMessageList,
   getMessageListNoTime,
+  getMsgSeqListByPeerUserID,
+  getMsgSeqListBySelfUserID,
 
   // conversation
   getAllConversationList,
@@ -86,6 +88,8 @@ rpc.registerMethod(
 );
 rpc.registerMethod('getMessageList', getMessageList);
 rpc.registerMethod('getMessageListNoTime', getMessageListNoTime);
+rpc.registerMethod('getMsgSeqListByPeerUserID', getMsgSeqListByPeerUserID);
+rpc.registerMethod('getMsgSeqListBySelfUserID', getMsgSeqListBySelfUserID);
 
 rpc.registerMethod('getAllConversationList', getAllConversationList);
 rpc.registerMethod(
