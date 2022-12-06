@@ -16,6 +16,7 @@ import {
   getMessageListNoTime,
   getMsgSeqListByPeerUserID,
   getMsgSeqListBySelfUserID,
+  getMsgSeqListByGroupID,
 
   // conversation
   getAllConversationList,
@@ -90,6 +91,7 @@ rpc.registerMethod('getMessageList', getMessageList);
 rpc.registerMethod('getMessageListNoTime', getMessageListNoTime);
 rpc.registerMethod('getMsgSeqListByPeerUserID', getMsgSeqListByPeerUserID);
 rpc.registerMethod('getMsgSeqListBySelfUserID', getMsgSeqListBySelfUserID);
+rpc.registerMethod('getMsgSeqListByGroupID', getMsgSeqListByGroupID);
 
 rpc.registerMethod('getAllConversationList', getAllConversationList);
 rpc.registerMethod(
