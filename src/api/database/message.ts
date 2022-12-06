@@ -15,6 +15,7 @@ import {
   getMsgSeqListByPeerUserID as databaseGetMsgSeqListByPeerUserID,
   getMsgSeqListBySelfUserID as databaseGetMsgSeqListBySelfUserID,
   getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
+  updateMessageStatusBySourceID as databaseUpdateMessageStatusBySourceID,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -392,6 +393,38 @@ export async function getMsgSeqListByGroupID(groupID: string): Promise<string> {
         return item.seq;
       })
     );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateMessageStatusBySourceID(
+  sourceID: string,
+  status: number,
+  sessionType: number,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const modifed = databaseUpdateMessageStatusBySourceID(
+      db,
+      sourceID,
+      status,
+      sessionType,
+      loginUserID
+    );
+    if (modifed.length === 0) {
+      throw 'updateMessageStatusBySourceID no record updated';
+    }
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

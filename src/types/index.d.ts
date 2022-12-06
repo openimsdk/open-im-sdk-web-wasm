@@ -25,6 +25,7 @@ declare global {
     getMsgSeqListByPeerUserID: (userID: string) => Promise<string | undefined>;
     getMsgSeqListBySelfUserID: (userID: string) => Promise<string | undefined>;
     getMsgSeqListByGroupID: (groupID: string) => Promise<string | undefined>;
+    updateMessageStatusBySourceID: DatabaseApi;
 
     // conversation
     getAllConversationListDB: DatabaseApi;
