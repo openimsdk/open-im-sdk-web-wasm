@@ -10,6 +10,7 @@ import {
   updateColumnsConversation as databaseUpdateColumnsConversation,
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
   getMultipleConversation as databaseGetMultipleConversation,
+  resetConversation as databaseResetConversation,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -253,6 +254,30 @@ export async function getTotalUnreadMsgCount(): Promise<string> {
     const execResult = databaseGetTotalUnreadMsgCount(db);
 
     return formatResponse(execResult[0]?.values[0]?.[0]);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function resetConversation(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    databaseResetConversation(db, conversationID);
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'resetConversation no record updated';
+    }
+
+    return formatResponse('resetConversation updated');
   } catch (e) {
     console.error(e);
 
