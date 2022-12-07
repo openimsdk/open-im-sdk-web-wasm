@@ -149,6 +149,7 @@ export function initDatabaseAPI(): void {
   window.getTotalUnreadMsgCount = registeMethodOnWindow(
     'getTotalUnreadMsgCount'
   );
+  window.resetConversation = registeMethodOnWindow('resetConversation');
 
   // users
   window.getLoginUser = registeMethodOnWindow('getLoginUser');

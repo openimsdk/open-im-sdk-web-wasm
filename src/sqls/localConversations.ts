@@ -142,3 +142,17 @@ export function getTotalUnreadMsgCount(db: Database): QueryExecResult[] {
     `
   );
 }
+export function resetConversation(
+  db: Database,
+  conversationID: string
+): QueryExecResult[] {
+  return db.exec(`
+  UPDATE local_conversations
+    SET unread_count=0,
+    latest_msg="",
+    latest_msg_send_time=0,
+    draft_text="",
+    draft_text_time=0
+  WHERE conversation_id = "${conversationID}"
+  `);
+}

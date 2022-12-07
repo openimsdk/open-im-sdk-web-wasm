@@ -221,7 +221,7 @@ export function updateMessageStatusBySourceID(
   sessionType: number,
   loginUserID: string
 ): QueryExecResult[] {
-  let condition = `(send_id= "${sourceID}" or recv_id="${sourceID}")`;
+  let condition = `(send_id="${sourceID}" or recv_id="${sourceID}")`;
   if (sessionType === 1 && sourceID === loginUserID) {
     condition = `send_id= "${sourceID}" AND recv_id="${sourceID}"`;
   }

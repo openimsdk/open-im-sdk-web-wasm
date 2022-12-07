@@ -31,6 +31,7 @@ import {
   batchInsertConversationList,
   insertConversation,
   getTotalUnreadMsgCount,
+  resetConversation,
 
   // users
   getLoginUser,
@@ -77,6 +78,7 @@ const rpc = new RPC({
 rpc.registerMethod('initDB', init);
 rpc.registerMethod('close', close);
 
+//message
 rpc.registerMethod('getMessage', getMessage);
 rpc.registerMethod('getMultipleMessage', getMultipleMessage);
 rpc.registerMethod('getSendingMessageList', getSendingMessageList);
@@ -104,6 +106,7 @@ rpc.registerMethod(
   updateMessageStatusBySourceID
 );
 
+// conversation
 rpc.registerMethod('getAllConversationList', getAllConversationList);
 rpc.registerMethod(
   'getAllConversationListToSync',
@@ -119,10 +122,13 @@ rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
 rpc.registerMethod('getTotalUnreadMsgCountDB', getTotalUnreadMsgCount);
 rpc.registerMethod('insertConversation', insertConversation);
 
+// users
 rpc.registerMethod('getLoginUser', getLoginUser);
 rpc.registerMethod('insertLoginUser', insertLoginUser);
 rpc.registerMethod('updateLoginUserByMap', updateLoginUserByMap);
+rpc.registerMethod('resetConversation', resetConversation);
 
+// super group
 rpc.registerMethod('getJoinedSuperGroupList', getJoinedSuperGroupList);
 rpc.registerMethod('getJoinedSuperGroupIDList', getJoinedSuperGroupIDList);
 rpc.registerMethod('getSuperGroupInfoByGroupID', getSuperGroupInfoByGroupID);
@@ -130,6 +136,7 @@ rpc.registerMethod('deleteSuperGroup', deleteSuperGroup);
 rpc.registerMethod('insertSuperGroup', insertSuperGroup);
 rpc.registerMethod('updateSuperGroup', updateSuperGroup);
 
+// unread messages
 rpc.registerMethod(
   'deleteConversationUnreadMessageList',
   deleteConversationUnreadMessageList
@@ -139,6 +146,7 @@ rpc.registerMethod(
   batchInsertConversationUnreadMessageList
 );
 
+// super group messages
 rpc.registerMethod('superGroupGetMessage', superGroupGetMessage);
 rpc.registerMethod(
   'superGroupGetMultipleMessage',

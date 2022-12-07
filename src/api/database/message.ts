@@ -413,18 +413,20 @@ export async function updateMessageStatusBySourceID(
   try {
     const db = await getInstance();
 
-    const modifed = databaseUpdateMessageStatusBySourceID(
+    databaseUpdateMessageStatusBySourceID(
       db,
       sourceID,
       status,
       sessionType,
       loginUserID
     );
-    if (modifed.length === 0) {
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
       throw 'updateMessageStatusBySourceID no record updated';
     }
 
-    return formatResponse('');
+    return formatResponse(modifed);
   } catch (e) {
     console.error(e);
 
