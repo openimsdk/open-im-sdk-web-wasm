@@ -43,6 +43,8 @@ declare global {
     getTotalUnreadMsgCount: (
       operationID: string
     ) => Promise<string | undefined>;
+    resetConversation: DatabaseApi;
+
     // users
     getLoginUser: DatabaseApi;
     insertLoginUser: DatabaseApi;
