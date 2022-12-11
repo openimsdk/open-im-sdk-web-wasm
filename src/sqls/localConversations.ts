@@ -300,7 +300,7 @@ export function removeConversationDraft(
   return db.exec(`
   update local_conversations
     set draft_text="${draftText}",
-    draft_text_time=0,
+    draft_text_time=0
     where conversation_id = "${conversationID}"
   `);
 }

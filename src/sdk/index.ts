@@ -817,6 +817,7 @@ class SDK extends Emitter {
     return this._invoker('setConversationDraft ', window.setConversationDraft, [
       operationID,
       data.conversationID,
+      data.draftText,
     ]);
   }
 

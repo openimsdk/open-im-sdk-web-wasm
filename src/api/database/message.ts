@@ -166,7 +166,7 @@ export async function updateMessage(
   try {
     const db = await getInstance();
     const message = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(messageStr), { groupName: 'name' })
+      convertObjectField(JSON.parse(messageStr))
     ) as ClientMessage;
 
     const execResult = databaseUpdateMessage(db, clientMsgId, message);
@@ -194,7 +194,7 @@ export async function updateColumnsMessage(
   try {
     const db = await getInstance();
     const message = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(messageStr), { groupName: 'name' })
+      convertObjectField(JSON.parse(messageStr))
     ) as ClientMessage;
 
     const execResult = databaseUpdateMessage(db, clientMsgId, message);

@@ -19,6 +19,7 @@ import {
   superGroupGetSendingMessageList as databaseSuperGroupGetSendingMessageList,
   superGroupUpdateGroupMessageHasRead as databaseSuperGroupUpdateGroupMessageHasRead,
   superGroupGetMsgSeqByClientMsgID as databaseSuperGroupGetMsgSeqByClientMsgID,
+  superGroupUpdateMsgSenderFaceURLAndSenderNickname as databaseSuperGroupUpdateMsgSenderFaceURLAndSenderNickname,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -575,6 +576,43 @@ export async function superGroupGetMsgSeqByClientMsgID(
     );
 
     return formatResponse(execResult[0]?.values[0]?.[0]);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupUpdateMsgSenderFaceURLAndSenderNickname(
+  sendID: string,
+  faceURL: string,
+  nickname: string,
+  sessionType: number,
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult =
+      databaseSuperGroupUpdateMsgSenderFaceURLAndSenderNickname(
+        db,
+        sendID,
+        faceURL,
+        nickname,
+        sessionType,
+        groupID
+      );
+
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'superGroupUpdateGroupMessageHasRead no record updated';
+    }
+
+    return formatResponse(execResult);
   } catch (e) {
     console.error(e);
 

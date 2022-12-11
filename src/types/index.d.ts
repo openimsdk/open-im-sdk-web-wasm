@@ -66,7 +66,7 @@ declare global {
     removeConversationDraft: DatabaseApi;
     resetAllConversation: DatabaseApi;
     resetConversation: DatabaseApi;
-    setConversationDraft: DatabaseApi;
+    setConversationDraftDB: DatabaseApi;
     setMultipleConversationRecvMsgOpt: DatabaseApi;
     unPinConversation: DatabaseApi;
     // users
@@ -102,6 +102,7 @@ declare global {
     superGroupGetSendingMessageList: DatabaseApi;
     superGroupUpdateGroupMessageHasRead: DatabaseApi;
     superGroupGetMsgSeqByClientMsgID: DatabaseApi;
+    superGroupUpdateMsgSenderFaceURLAndSenderNickname: DatabaseApi;
     getRowsModified: DatabaseApi;
 
     // black

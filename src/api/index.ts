@@ -226,7 +226,7 @@ export function initDatabaseAPI(): void {
   window.resetAllConversation = registeMethodOnWindow('resetAllConversation');
   window.clearConversation = registeMethodOnWindow('clearConversation');
   window.clearAllConversation = registeMethodOnWindow('clearAllConversation');
-  window.setConversationDraft = registeMethodOnWindow('setConversationDraft');
+  window.setConversationDraftDB = registeMethodOnWindow('setConversationDraft');
   window.removeConversationDraft = registeMethodOnWindow(
     'removeConversationDraft'
   );
@@ -322,6 +322,8 @@ export function initDatabaseAPI(): void {
   window.superGroupGetMsgSeqByClientMsgID = registeMethodOnWindow(
     'superGroupGetMsgSeqByClientMsgID'
   );
+  window.superGroupUpdateMsgSenderFaceURLAndSenderNickname =
+    registeMethodOnWindow('superGroupUpdateMsgSenderFaceURLAndSenderNickname');
 
   // debug
   window.exec = registeMethodOnWindow('exec');

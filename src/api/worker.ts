@@ -99,6 +99,7 @@ import {
   superGroupUpdateGroupMessageHasRead,
   superGroupUpdateMessageStatusBySourceID,
   superGroupUpdateColumnsMessage,
+  superGroupUpdateMsgSenderFaceURLAndSenderNickname,
 
   // black
   getBlackList,
@@ -340,6 +341,10 @@ rpc.registerMethod(
 rpc.registerMethod(
   'superGroupGetMsgSeqByClientMsgID',
   superGroupGetMsgSeqByClientMsgID
+);
+rpc.registerMethod(
+  'superGroupUpdateMsgSenderFaceURLAndSenderNickname',
+  superGroupUpdateMsgSenderFaceURLAndSenderNickname
 );
 
 // black

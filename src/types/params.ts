@@ -95,6 +95,7 @@ export type VideoMsgParams = {
   snapshotUrl: string;
   snapshotWidth: number;
   snapshotHeight: number;
+  snapShotType?: string;
 };
 
 export type VideoMsgFullParams = {
@@ -236,6 +237,7 @@ export type SoundMsgParams = {
   sourceUrl: string;
   dataSize: number;
   duration: number;
+  soundType?: string;
 };
 
 export type FileMsgParams = {
@@ -244,6 +246,7 @@ export type FileMsgParams = {
   uuid: string;
   sourceUrl: string;
   fileSize: number;
+  fileType?: string;
 };
 
 export type FileMsgFullParams = {
