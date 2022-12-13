@@ -423,7 +423,7 @@ export async function updateMessageStatusBySourceID(
 
     const modifed = db.getRowsModified();
     if (modifed === 0) {
-      throw 'updateMessageStatusBySourceID no record updated';
+      // throw 'updateMessageStatusBySourceID no record updated';
     }
 
     return formatResponse(modifed);
