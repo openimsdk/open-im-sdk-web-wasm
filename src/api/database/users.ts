@@ -62,12 +62,17 @@ export async function insertLoginUser(userStr: string): Promise<string> {
 
 export async function updateLoginUserByMap(
   userID: string,
-  user: ClientUser
+  userInfoObj: ClientUser
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseUpdateLoginUserByMap(db, userID, user);
+    const execResult = databaseUpdateLoginUserByMap(db, userID, userInfoObj);
+    const modifed = db.getRowsModified();
+
+    if (modifed === 0) {
+      console.error('updateLoginUserByMap no record updated');
+    }
 
     return formatResponse(execResult);
   } catch (e) {

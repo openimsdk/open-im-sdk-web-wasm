@@ -19,7 +19,7 @@ export function localUsers(db: Database): QueryExecResult[] {
             'ex' varchar(1024),
             'attached_info' varchar(1024),
             'global_recv_msg_opt' integer,
-             primary key ('user_id')
+            primary key ('user_id')
         )
     `
   );
@@ -28,7 +28,7 @@ export function localUsers(db: Database): QueryExecResult[] {
 export function getLoginUser(db: Database, userID: string): QueryExecResult[] {
   return db.exec(
     `
-        select *, name as nickname from local_users where user_id = '${userID}'  limit 1;
+        select * name as nickname from local_users where user_id = '${userID}' limit 1;
     `
   );
 }
@@ -45,23 +45,14 @@ export function insertLoginUser(
 export function updateLoginUserByMap(
   db: Database,
   userID: string,
-  user: ClientUser
+  userInfoObj: ClientUser
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        update local_users set 
-            'app_manger_level'=${user.app_manger_level},
-            'attached_info'='${user.attached_info}',
-            'birth'=${user.birth},
-            'create_time'=${user.create_time},
-            'email'='${user.email}',
-            'ex'='${user.ex}',
-            'face_url'='${user.face_url}',
-            'gender'=${user.gender},
-            'global_recv_msg_opt'=${user.global_recv_msg_opt},
-            'name'='${user.nickname}',
-            'phone_number'='${user.phone_number}' 
-        where 'user_id' = '${userID}';
-      `
-  );
+  const sql = squel
+    .update()
+    .table('local_users')
+    .setFields(userInfoObj)
+    .where(`user_id = '${userID}'`)
+    .toString();
+
+  return db.exec(sql);
 }
