@@ -25,6 +25,9 @@ export function localChatLogs(db: Database): QueryExecResult[] {
         'create_time' integer,
         'attached_info' varchar(1024),
         'ex' varchar(1024),
+        'is_react' numeric,
+        'is_external_extensions' numeric,
+        'msg_first_modify_time' integer,
         primary key ('client_msg_id'))
     `);
 }
