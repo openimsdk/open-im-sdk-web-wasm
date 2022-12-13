@@ -68,6 +68,11 @@ export async function updateLoginUserByMap(
     const db = await getInstance();
 
     const execResult = databaseUpdateLoginUserByMap(db, userID, userInfoObj);
+    const modifed = db.getRowsModified();
+
+    if (modifed === 0) {
+      console.error('updateLoginUserByMap no record updated');
+    }
 
     return formatResponse(execResult);
   } catch (e) {
