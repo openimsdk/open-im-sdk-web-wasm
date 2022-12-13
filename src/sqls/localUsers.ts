@@ -47,21 +47,12 @@ export function updateLoginUserByMap(
   userID: string,
   userInfoObj: ClientUser
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        update local_users set 
-            'app_manger_level'=${userInfoObj.app_manger_level},
-            'attached_info'='${userInfoObj.attached_info}',
-            'birth'=${userInfoObj.birth},
-            'create_time'=${userInfoObj.create_time},
-            'email'='${userInfoObj.email}',
-            'ex'='${userInfoObj.ex}',
-            'face_url'='${userInfoObj.face_url}',
-            'gender'=${userInfoObj.gender},
-            'global_recv_msg_opt'=${userInfoObj.global_recv_msg_opt},
-            'name'='${userInfoObj.nickname}',
-            'phone_number'='${userInfoObj.phone_number}' 
-        where user_id = '${userID}';
-      `
-  );
+  const sql = squel
+    .update()
+    .table('local_users')
+    .setFields(userInfoObj)
+    .where(`user_id = '${userID}'`)
+    .toString();
+
+  return db.exec(sql);
 }
