@@ -72,6 +72,11 @@ declare global {
     superGroupGetMessageList: DatabaseApi;
     getRowsModified: DatabaseApi;
     superGroupSearchAllMessageByContentType: DatabaseApi;
+    // reaction extension
+    getMessageReactionExtension: DatabaseApi;
+    insertMessageReactionExtension: DatabaseApi;
+    getAndUpdateMessageReactionExtension: DatabaseApi;
+    deleteAndUpdateMessageReactionExtension: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;

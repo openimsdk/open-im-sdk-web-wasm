@@ -1,5 +1,6 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { jsonDecode, jsonEncode } from '@/utils';
 
 export type ClientMessageReaction = { [key: string]: any };
 
@@ -25,7 +26,7 @@ export function getMessageReactionExtension(
 
 export function insertMessageReactionExtension(
   db: Database,
-  messageReactionExtension: ClientMessageReaction
+  messageReactionExtension: ClientMessageReaction // client_msg_id , local_reaction_extensions
 ): QueryExecResult[] {
   const sql = squel
     .insert()
@@ -34,4 +35,111 @@ export function insertMessageReactionExtension(
     .toString();
 
   return db.exec(sql);
+}
+
+type KeyValue = {
+  typeKey: string;
+  value: string;
+  latestUpdateTime: number;
+};
+
+export function getAndUpdateMessageReactionExtension(
+  db: Database,
+  clientMsgID: string,
+  valueMap: Record<string, KeyValue>
+): QueryExecResult[] {
+  db.exec('begin');
+
+  const selectSql = squel
+    .select()
+    .field('local_reaction_extensions')
+    .from('local_chat_log_reaction_extensions')
+    .where(`client_msg_id = '${clientMsgID}'`)
+    .toString();
+
+  const selectResult = db.exec(selectSql);
+
+  if (selectResult.length === 0) {
+    const insertSql = squel
+      .insert()
+      .into('local_chat_log_reaction_extensions')
+      .setFields({
+        client_msg_id: clientMsgID,
+        local_reaction_extensions: jsonEncode(valueMap),
+      })
+      .toString();
+    db.exec(insertSql);
+
+    return db.exec('commit');
+  } else {
+    // update partial of local_reaction_extensions
+    const oldValue =
+      jsonDecode((selectResult[0].values[0][0] ?? '') as string) ?? {};
+    for (const clientMsgId in valueMap) {
+      oldValue[clientMsgId] = valueMap[clientMsgId];
+    }
+    const updateSql = squel
+      .update()
+      .table('local_chat_log_reaction_extensions')
+      .set('local_reaction_extensions', jsonEncode(oldValue))
+      .where(`client_msg_id = ${clientMsgID}`)
+      .toString();
+
+    db.exec(updateSql);
+
+    const modifiedCount = db.getRowsModified();
+    if (!(modifiedCount > 0)) {
+      db.exec('rollback');
+      throw 'getAndUpdateMessageReactionExtension rollback cause no updated after exec';
+    } else {
+      return db.exec('commit');
+    }
+  }
+}
+
+export function deleteAndUpdateMessageReactionExtension(
+  db: Database,
+  clientMsgID: string,
+  valueMap: Record<string, KeyValue>
+): QueryExecResult[] {
+  db.exec('begin');
+
+  const selectSql = squel
+    .select()
+    .field('local_reaction_extensions')
+    .from('local_chat_log_reaction_extensions')
+    .where(`client_msg_id = '${clientMsgID}'`)
+    .toString();
+
+  const selectResult = db.exec(selectSql);
+  if (selectResult.length === 0) {
+    return db.exec('commit');
+  } else {
+    // update partial of local_reaction_extensions
+    const oldValue =
+      jsonDecode((selectResult[0].values[0][0] ?? '') as string) ?? {};
+
+    for (const clientMsgId in valueMap) {
+      if (oldValue[clientMsgId]) {
+        delete oldValue[clientMsgId];
+      }
+    }
+
+    const updateSql = squel
+      .update()
+      .table('local_chat_log_reaction_extensions')
+      .set('local_reaction_extensions', jsonEncode(oldValue))
+      .where(`client_msg_id = ${clientMsgID}`)
+      .toString();
+
+    db.exec(updateSql);
+
+    const modifiedCount = db.getRowsModified();
+    if (!(modifiedCount > 0)) {
+      db.exec('rollback');
+      throw 'deleteAndUpdateMessageReactionExtension rollback cause no deleted after exec';
+    } else {
+      return db.exec('commit');
+    }
+  }
 }
