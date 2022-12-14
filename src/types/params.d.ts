@@ -17,11 +17,11 @@ type GetOneConversationParams = {
 
 type GetAdvancedHistoryMsgParams = {
   userID: string;
-  groupID: string;
   lastMinSeq: number;
-  count: number;
-  startClientMsgID: string;
+  groupID: string;
   conversationID?: string;
+  startClientMsgID: string;
+  count: number;
 };
 
 type GetHistoryMsgParams = {
