@@ -28,7 +28,7 @@ export function localUsers(db: Database): QueryExecResult[] {
 export function getLoginUser(db: Database, userID: string): QueryExecResult[] {
   return db.exec(
     `
-        select * name as nickname from local_users where user_id = '${userID}' limit 1;
+        select *, name as nickname from local_users where user_id = '${userID}' limit 1;
     `
   );
 }
