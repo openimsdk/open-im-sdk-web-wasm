@@ -26,11 +26,16 @@ export function localUsers(db: Database): QueryExecResult[] {
 }
 
 export function getLoginUser(db: Database, userID: string): QueryExecResult[] {
-  return db.exec(
-    `
-        select * name as nickname from local_users where user_id = '${userID}' limit 1;
-    `
-  );
+  //SELECT *, name as nickname FROM local_users WHERE (user_id = '{{userid}}') LIMIT 1
+  const sql = squel
+    .select()
+    .from('local_users')
+    .fields(['*', 'name as nickname'])
+    .where(`user_id = '${userID}'`)
+    .limit(1)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function insertLoginUser(

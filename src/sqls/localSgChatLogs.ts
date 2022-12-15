@@ -52,11 +52,14 @@ export function getSuperGroupNormalMsgSeq(
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
 
-  return db.exec(
-    `
-        select ifnull(max(seq),0) from local_sg_chat_logs_${groupID} where seq >0;
-    `
-  );
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .field('ifnull(max(seq),0)')
+    .where('seq > 0')
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function superGroupGetNormalMinSeq(
@@ -65,11 +68,14 @@ export function superGroupGetNormalMinSeq(
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
 
-  return db.exec(
-    `
-        select ifnull(min(seq),0) from local_sg_chat_logs_${groupID} where seq >0;
-    `
-  );
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .field('ifnull(min(seq),0)')
+    .where('seq > 0')
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function superGroupGetMessage(
@@ -79,11 +85,14 @@ export function superGroupGetMessage(
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
 
-  return db.exec(
-    `
-        select * from local_sg_chat_logs_${groupID} where client_msg_id = '${clientMsgID}' limit 1
-    `
-  );
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .where(`client_msg_id = '${clientMsgID}'`)
+    .limit(1)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function superGroupUpdateMessage(
@@ -144,11 +153,16 @@ export function superGroupGetMultipleMessage(
   _initSuperGroupTable(db, groupID);
 
   const values = msgIDList.map(v => `'${v}'`).join(',');
-  return db.exec(
-    `
-        select * from local_sg_chat_logs_${groupID} where client_msg_id in (${values}) order by send_time desc;
-    `
-  );
+
+  // SELECT * FROM local_sg_chat_logs_{{groupID}} WHERE (client_msg_id in (123,321)) ORDER BY send_time DESC
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .where(`client_msg_id in (${values})`)
+    .order('send_time', false)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function superGroupUpdateMessageTimeAndStatus(
@@ -161,18 +175,16 @@ export function superGroupUpdateMessageTimeAndStatus(
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
 
-  return db.exec(
-    `
-        update 
-            local_sg_chat_logs_${groupID}
-        set
-            'server_msg_id' = '${serverMsgID}',
-            'status' = ${status},
-            'send_time' = ${sendTime}
-        where
-            client_msg_id = '${clientMsgID}' and seq = 0;
-    `
-  );
+  const sql = squel
+    .update()
+    .table(`local_sg_chat_logs_${groupID}`)
+    .set('server_msg_id', `${serverMsgID}`)
+    .set('status', status)
+    .set('send_time', sendTime)
+    .where(squel.expr().and(`client_msg_id = '${clientMsgID}'`).and('seq = 0'))
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function superGroupGetMessageListNoTime(
@@ -184,17 +196,21 @@ export function superGroupGetMessageListNoTime(
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
 
-  return db.exec(
-    `
-        select * from local_sg_chat_logs_${groupID}
-        where
-            recv_id = "${groupID}"
-            and status <= ${MessageStatus.Failed}
-            and session_type = ${sessionType}
-        order by send_time ${isReverse ? 'asc' : 'desc'}
-        limit ${count};    
-    `
-  );
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .where(
+      squel
+        .expr()
+        .and(`recv_id = '${groupID}'`)
+        .and(`status <= ${MessageStatus.Failed}`)
+        .and(`session_type = ${sessionType}`)
+    )
+    .order('send_time', isReverse)
+    .limit(count)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function superGroupGetMessageList(
@@ -206,19 +222,22 @@ export function superGroupGetMessageList(
   isReverse: boolean
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .where(
+      squel
+        .expr()
+        .and(`recv_id = '${groupID}'`)
+        .and(`status <= ${MessageStatus.Failed}`)
+        .and(`send_time <= ${startTime}`)
+        .and(`session_type = ${sessionType}`)
+    )
+    .order('send_time', isReverse)
+    .limit(count)
+    .toString();
 
-  return db.exec(
-    `
-        select * from local_sg_chat_logs_${groupID}
-        where
-            recv_id = "${groupID}"
-            and status <= ${MessageStatus.Failed}
-            and send_time <= ${startTime}
-            and session_type = ${sessionType}
-        order by send_time ${isReverse ? 'asc' : 'desc'}
-        limit ${count};    
-    `
-  );
+  return db.exec(sql);
 }
 
 export function superGroupSearchAllMessageByContentType(
@@ -228,11 +247,11 @@ export function superGroupSearchAllMessageByContentType(
 ) {
   _initSuperGroupTable(db, groupID);
 
-  return db.exec(
-    `
-        SELECT * FROM local_sg_chat_logs_${groupID}
-        WHERE
-            content_type = ${contentType};
-    `
-  );
+  const sql = squel
+    .select()
+    .from(`local_sg_chat_logs_${groupID}`)
+    .where(`content_type = ${contentType}`)
+    .toString();
+
+  return db.exec(sql);
 }

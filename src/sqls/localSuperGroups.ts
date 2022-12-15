@@ -25,18 +25,16 @@ export function localSuperGroups(db: Database): QueryExecResult[] {
             'apply_member_friend' integer,
             'notification_update_time' integer,
             'notification_user_id' text,
-        primary key ('group_id')
-     )
+            primary key ('group_id')
+    )
     `
   );
 }
 
 export function getJoinedSuperGroupList(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
-        select * from local_super_groups;
-    `
-  );
+  const sql = squel.select().from('local_super_groups').toString();
+
+  return db.exec(sql);
 }
 
 export function insertSuperGroup(
@@ -71,20 +69,25 @@ export function deleteSuperGroup(
   db: Database,
   groupID: string
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        delete from local_super_groups where local_groups.group_id = '${groupID}';
-    `
-  );
+  const sql = squel
+    .delete()
+    .from('local_super_groups')
+    .where(`local_groups.group_id='${groupID}'`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getSuperGroupInfoByGroupID(
   db: Database,
   groupID: string
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        select * from local_super_groups where group_id = '${groupID}'  LIMIT 1;
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_super_groups')
+    .where(`group_id='${groupID}'`)
+    .limit(1)
+    .toString();
+
+  return db.exec(sql);
 }

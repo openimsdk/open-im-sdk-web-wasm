@@ -30,32 +30,51 @@ export function localChatLogs(db: Database): QueryExecResult[] {
 }
 
 export function getMessage(db: Database, messageId: string): QueryExecResult[] {
-  return db.exec(`
-      select * from 'local_chat_logs' where client_msg_id='${messageId}'
-    `);
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .where(`client_msg_id='${messageId}'`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getMultipleMessage(
   db: Database,
   msgIDList: string[]
 ): QueryExecResult[] {
+  // SELECT * FROM local_sg_chat_logs WHERE (client_msg_id in ('msg-id-1','msg-id-2')) ORDER BY send_time DESC
   const values = msgIDList.map(v => `'${v}'`).join(',');
+  const sql = squel
+    .select()
+    .from('local_sg_chat_logs')
+    .where(`client_msg_id in (${values})`)
+    .order('send_time', false)
+    .toString();
 
-  return db.exec(`
-      select * from local_sg_chat_logs where client_msg_id in (${values}) order by send_time desc;
-    `);
+  return db.exec(sql);
 }
 
 export function getSendingMessageList(db: Database): QueryExecResult[] {
-  return db.exec(`
-      select * from local_chat_logs where status = 1;
-    `);
+  // SELECT * FROM local_chat_logs WHERE (status = 1)
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .where('status = 1')
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getNormalMsgSeq(db: Database): QueryExecResult[] {
-  return db.exec(`
-      select ifnull(max(seq),0) from local_chat_logs;
-    `);
+  // SELECT ifnull(max(seq),0) FROM local_chat_logs
+  const sql = squel
+    .select()
+    .field('ifnull(max(seq),0)')
+    .from('local_chat_logs')
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function updateMessageTimeAndStatus(
@@ -65,15 +84,17 @@ export function updateMessageTimeAndStatus(
   sendTime: number,
   status: number
 ): QueryExecResult[] {
-  return db.exec(
-    `
-      update local_chat_logs set
-        server_msg_id='${serverMsgID}',
-        status=${status} ,
-        send_time=${sendTime}
-      where client_msg_id='${clientMsgID}' and seq=0;
-    `
-  );
+  // UPDATE local_chat_logs SET server_msg_id = '{{serverMsgID}}', status = {{1}}, send_time = {{167312312}} WHERE (client_msg_id='{{clientMsgID}}' and seq=0)
+  const sql = squel
+    .update()
+    .table('local_chat_logs')
+    .set('server_msg_id', `${serverMsgID}`)
+    .set('status', status)
+    .set('send_time', sendTime)
+    .where(`client_msg_id='${clientMsgID}' and seq=0`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function updateMessage(
@@ -125,20 +146,30 @@ export function getMessageList(
   isReverse: boolean,
   loginUserID: string
 ): QueryExecResult[] {
-  const isSelf = loginUserID === sourceID;
-  const condition = isSelf
-    ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
-    : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
-  const sql = `
-  select * from local_chat_logs
-    where
-        ${condition}
-        and status <= ${MessageStatus.Failed}
-        and send_time ${isReverse ? '>' : '<'} ${startTime}
-        and session_type = ${sessionType}
-    order by send_time ${isReverse ? 'asc' : 'desc'}
-    limit ${count};
-`;
+  // SELECT * FROM local_chat_logs WHERE (recv_id = '{{sourceID}}' OR send_id = '{{sourceID}}') AND (status <= 3) AND (send_time < 167312312) AND (session_type = 102) ORDER BY send_time DESC LIMIT 40
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .where(
+      loginUserID === sourceID
+        ? squel
+            .expr()
+            .and(`recv_id = '${sourceID}'`)
+            .and(`send_id = '${sourceID}'`)
+            .toString()
+        : squel
+            .expr()
+            .and(`recv_id = '${sourceID}'`)
+            .or(`send_id = '${sourceID}'`)
+            .toString()
+    )
+    .where(`status <= ${MessageStatus.Failed}`)
+    .where(`send_time ${isReverse ? '>' : '<'} ${startTime}`)
+    .where(`session_type = ${sessionType}`)
+    .order('send_time', isReverse)
+    .limit(count)
+    .toString();
+
   return db.exec(sql);
 }
 
@@ -150,18 +181,28 @@ export function getMessageListNoTime(
   isReverse: boolean,
   loginUserID: string
 ): QueryExecResult[] {
-  const isSelf = loginUserID === sourceID;
-  const condition = isSelf
-    ? `recv_id = "${sourceID}" and send_id = "${sourceID}"`
-    : `(recv_id = "${sourceID}" or send_id = "${sourceID}")`;
-  const sql = `
-  select * from local_chat_logs
-      where
-        ${condition}
-        and status <= ${MessageStatus.Failed}
-        and session_type = ${sessionType}
-      order by send_time ${isReverse ? 'asc' : 'desc'}
-      limit ${count};`;
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .where(
+      loginUserID === sourceID
+        ? squel
+            .expr()
+            .and(`recv_id = '${sourceID}'`)
+            .and(`send_id = '${sourceID}'`)
+            .toString()
+        : squel
+            .expr()
+            .and(`recv_id = '${sourceID}'`)
+            .or(`send_id = '${sourceID}'`)
+            .toString()
+    )
+    .where(`status <= ${MessageStatus.Failed}`)
+    .where(`session_type = ${sessionType}`)
+    .order('send_time', isReverse)
+    .limit(count)
+    .toString();
+
   return db.exec(sql);
 }
 
@@ -169,49 +210,54 @@ export function searchAllMessageByContentType(
   db: Database,
   contentType: MessageType
 ) {
-  return db.exec(`
-  select * from local_chat_logs
-      where
-          content_type = ${contentType};
-    `);
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .where(`content_type = ${contentType}`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getMsgSeqListByPeerUserID(
   db: Database,
   userID: string
 ): QueryExecResult[] {
-  return db.exec(
-    `  
-    SELECT seq FROM local_chat_logs 
-    WHERE recv_id="${userID}" 
-    or send_id="${userID}";
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .where(squel.expr().and(`recv_id='${userID}'`).or(`send_id='${userID}'`))
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getMsgSeqListBySelfUserID(
   db: Database,
   userID: string
 ): QueryExecResult[] {
-  return db.exec(
-    `  
-    SELECT seq FROM local_chat_logs 
-    WHERE recv_id="${userID}" 
-    and send_id="${userID}";
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .field('seq')
+    .where(`recv_id='${userID}'`)
+    .where(`send_id='${userID}'`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getMsgSeqListByGroupID(
   db: Database,
   groupID: string
 ): QueryExecResult[] {
-  return db.exec(
-    `  
-    SELECT seq FROM local_chat_logs 
-    WHERE recv_id="${groupID}";
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_chat_logs')
+    .field('seq')
+    .where(`recv_id='${groupID}'`)
+    .toString();
+  return db.exec(sql);
 }
 
 export function updateMessageStatusBySourceID(
@@ -221,16 +267,18 @@ export function updateMessageStatusBySourceID(
   sessionType: number,
   loginUserID: string
 ): QueryExecResult[] {
-  let condition = `(send_id="${sourceID}" or recv_id="${sourceID}")`;
-  if (sessionType === 1 && sourceID === loginUserID) {
-    condition = `send_id= "${sourceID}" AND recv_id="${sourceID}"`;
-  }
-  return db.exec(
-    `
-        update local_chat_logs
-        set status=${status}
-        where session_type=${sessionType}
-        AND ${condition};
-    `
-  );
+  // UPDATE local_chat_logs SET status = 1 WHERE (session_type={{102}}) AND (send_id= '{{sourceID}}' OR recv_id="{{sourceID}}")
+  const sql = squel
+    .update()
+    .table('local_chat_logs')
+    .set('status', status)
+    .where(`session_type=${sessionType}`)
+    .where(
+      sessionType === 1 && sourceID === loginUserID
+        ? squel.expr().and(`send_id='${sourceID}'`).and(`recv_id='${sourceID}'`)
+        : squel.expr().and(`send_id= '${sourceID}'`).or(`recv_id="${sourceID}"`)
+    )
+    .toString();
+
+  return db.exec(sql);
 }

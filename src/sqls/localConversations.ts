@@ -33,38 +33,47 @@ export function localConversations(db: Database): QueryExecResult[] {
 }
 
 export function getAllConversationList(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
-        select * from local_conversations where latest_msg_send_time > 0 order by case when is_pinned=1 then 0 else 1 end,max(latest_msg_send_time,draft_text_time) desc;
-    `
-  );
+  // SELECT * FROM local_conversations WHERE (latest_msg_send_time > 0) ORDER BY case when is_pinned=1 then 0 else 1 end,max(latest_msg_send_time,draft_text_time) DESC
+  const sql = squel
+    .select()
+    .from('local_conversations')
+    .where('latest_msg_send_time > 0')
+    .order(
+      'case when is_pinned=1 then 0 else 1 end,max(latest_msg_send_time,draft_text_time)',
+      false
+    )
+    .toString();
+  return db.exec(sql);
 }
 
 export function getAllConversationListToSync(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
-        select * from local_conversations;
-    `
-  );
+  const sql = squel.select().from('local_conversations').toString();
+
+  return db.exec(sql);
 }
 
 export function getHiddenConversationList(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
-        select * from local_conversations where latest_msg_send_time = 0;
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_conversations')
+    .where('latest_msg_send_time=0')
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getConversation(
   db: Database,
   conversationID: string
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        select * from local_conversations where conversation_id = '${conversationID}' limit 1;
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_conversations')
+    .where(`conversation_id = '${conversationID}'`)
+    .limit(1)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function getMultipleConversation(
@@ -73,13 +82,13 @@ export function getMultipleConversation(
 ): QueryExecResult[] {
   const ids = conversationIDList.map(v => `'${v}'`);
 
-  return db.exec(
-    `
-        select * from local_conversations where conversation_id in (${ids.join(
-          ','
-        )});
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_conversations')
+    .where(`conversation_id in (${ids.join(',')})`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function updateColumnsConversation(
@@ -136,23 +145,30 @@ export function batchInsertConversationList(
 }
 
 export function getTotalUnreadMsgCount(db: Database): QueryExecResult[] {
-  return db.exec(
-    `
-        select sum(unread_count) from local_conversations;
-    `
-  );
+  const sql = squel
+    .select()
+    .from('local_conversations')
+    .field('sum(unread_count)')
+    .toString();
+
+  return db.exec(sql);
 }
+
 export function resetConversation(
   db: Database,
   conversationID: string
 ): QueryExecResult[] {
-  return db.exec(`
-  UPDATE local_conversations
-    SET unread_count=0,
-    latest_msg="",
-    latest_msg_send_time=0,
-    draft_text="",
-    draft_text_time=0
-  WHERE conversation_id = "${conversationID}"
-  `);
+  // UPDATE local_conversations SET unread_count = 0, latest_msg = '', latest_msg_send_time = 0, draft_text = '', draft_text_time = 0 WHERE (conversation_id="{{conversationID}}")
+  const sql = squel
+    .update()
+    .table('local_conversations')
+    .set('unread_count', 0)
+    .set('latest_msg', '')
+    .set('latest_msg_send_time', 0)
+    .set('draft_text', '')
+    .set('draft_text_time', 0)
+    .where(`conversation_id="${conversationID}"`)
+    .toString();
+
+  return db.exec(sql);
 }
