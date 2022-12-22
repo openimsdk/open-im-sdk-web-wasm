@@ -37,6 +37,7 @@ export type IMConfig = {
   api_addr: string;
   ws_addr: string;
   log_level: number;
+  is_need_encryption: boolean;
 };
 
 export type MessageEntity = {

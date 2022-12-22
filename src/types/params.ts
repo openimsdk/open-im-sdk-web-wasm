@@ -26,6 +26,7 @@ export type LoginParam = {
   apiAddress: string;
   wsAddress: string;
   logLevel?: number;
+  isNeedEncryption?: boolean;
 };
 
 export type GetOneConversationParams = {
@@ -387,6 +388,12 @@ export type FindMessageParams = {
   conversationID: string;
   clientMsgIDList: string[];
 };
+
 export type PartialUserItem = Partial<Omit<FullUserItem, 'userID'>> & {
   userID: string;
+};
+
+export type CustomSignalParams = {
+  roomID: string;
+  custom: string;
 };

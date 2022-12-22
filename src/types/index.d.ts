@@ -730,10 +730,24 @@ declare global {
       opt: OptType
     ) => Promise<string>;
     newRevokeMessage: (operationID: string, message: string) => Promise<string>;
+    wakeUp: (operationID: string) => Promise<string>;
     findMessageList: (
       operationID: string,
       conversationID: string,
       clientMsgIDList: string[]
+    ) => Promise<string>;
+    signalingGetRoomByGroupID: (
+      operationID: string,
+      groupID: string
+    ) => Promise<string>;
+    signalingGetTokenByRoomID: (
+      operationID: string,
+      roomID: string
+    ) => Promise<string>;
+    signalingSendCustomSignal: (
+      operationID: string,
+      custom: string,
+      roomID: string
     ) => Promise<string>;
 
     // debug

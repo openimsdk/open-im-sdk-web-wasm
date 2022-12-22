@@ -14,6 +14,7 @@ import {
   ChangeGroupMuteParams,
   CreateGroupParams,
   CustomMsgParams,
+  CustomSignalParams,
   FaceMessageParams,
   FileMsgFullParams,
   FileMsgParams,
@@ -180,6 +181,7 @@ class SDK extends Emitter {
       api_addr: params.apiAddress,
       ws_addr: params.wsAddress,
       log_level: params.logLevel || 6,
+      is_need_encryption: params.isNeedEncryption || false,
     };
     window.initSDK(operationID, JSON.stringify(config));
 
@@ -1226,6 +1228,30 @@ class SDK extends Emitter {
       operationID,
       JSON.stringify(data),
     ]);
+  }
+  wakeUp(operationID = uuidv4()) {
+    return this._invoker('wakeUp', window.wakeUp, [operationID]);
+  }
+  signalingGetRoomByGroupID(groupID: string, operationID = uuidv4()) {
+    return this._invoker(
+      'signalingGetRoomByGroupID ',
+      window.signalingGetRoomByGroupID,
+      [operationID, groupID]
+    );
+  }
+  signalingGetTokenByRoomID(roomID: string, operationID = uuidv4()) {
+    return this._invoker(
+      'signalingGetTokenByRoomID ',
+      window.signalingGetTokenByRoomID,
+      [operationID, roomID]
+    );
+  }
+  signalingSendCustomSignal(data: CustomSignalParams, operationID = uuidv4()) {
+    return this._invoker(
+      'signalingSendCustomSignal ',
+      window.signalingSendCustomSignal,
+      [operationID, data.custom, data.roomID]
+    );
   }
 }
 
