@@ -83,3 +83,52 @@ type AdvancedMsgParams = {
   text: string;
   messageEntityList?: MessageEntity[];
 };
+
+type KeyValue = {
+  typeKey: string;
+  value: string;
+  latestUpdateTime: number;
+};
+
+type SetMessageReactionExtensionsParams = Array<KeyValue>;
+
+type SetMessageReactionExtensionsCallback = {
+  key: string;
+  value: string;
+  errCode?: number;
+  errMsg?: string;
+};
+
+type DeleteMessageReactionExtensionsParams = Array<string>;
+
+type SetMessageReactionExtensionsReq = {
+  operationID: string;
+  clientMsgID: string;
+  sourceID: string;
+  sessionType: number;
+  reactionExtensionList: Record<string, KeyValue>;
+  isReact: boolean;
+  isExternalExtensions: boolean;
+  msgFirstModifyTime: number;
+};
+
+type DeleteMessageReactionExtensionsReq = {
+  operationID: string;
+  sourceID: string;
+  sessionType: numberstring;
+  clientMsgID: string;
+  msgFirstModifyTime: numberstring;
+  reactionExtensionList: Array<KeyValue>;
+};
+
+type OperateMessageListReactionExtensionsReq = {
+  clientMsgID: string;
+  msgFirstModifyTime: number;
+};
+
+type GetMessageListReactionExtensionsReq = {
+  operationID: string;
+  sourceID: string;
+  sessionType: number;
+  messageReactionKeyList: Array<OperateMessageListReactionExtensionsReq>;
+};

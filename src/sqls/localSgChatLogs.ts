@@ -6,14 +6,53 @@ export type ClientSuperGroupMessage = { [key: string]: any };
 
 const GroupTableMap: Record<string, boolean> = {};
 
-function _initSuperGroupTable(db: Database, groupID: string) {
+function diff(arr1: Array<string>, arr2: Array<string>) {
+  const newArr1 = arr1.filter(value => arr2.indexOf(value) == -1);
+  const newArr2 = arr2.filter(value => arr1.indexOf(value) == -1);
+  return newArr1.concat(newArr2);
+}
+
+function _initSuperGroupTable(
+  db: Database,
+  groupID: string,
+  colums?: Array<string>
+) {
   if (GroupTableMap[groupID]) {
-    return;
+    // return;
+    const sql = `select * from local_sg_chat_logs_${groupID} limit 1`;
+
+    const stmt = db.prepare(sql);
+    stmt.step(); // Execute the statement
+    console.log('==>', stmt.getColumnNames());
   }
 
   localSgChatLogs(db, groupID);
   GroupTableMap[groupID] = true;
 }
+
+const localSgChatLogsModel = {
+  client_msg_id: 'char(64)',
+  server_msg_id: 'char(64)',
+  send_id: 'char(64)',
+  recv_id: 'char(64)',
+  sender_platform_id: 'integer',
+  sender_nick_name: 'varchar(255)',
+  sender_face_url: 'varchar(255)',
+  session_type: 'integer',
+  msg_from: 'integer',
+  content_type: 'integer',
+  content: 'varchar(1000)',
+  is_read: 'numeric',
+  status: 'integer',
+  seq: 'integer default 0',
+  send_time: 'integer',
+  create_time: 'integer',
+  attached_info: 'varchar(1024)',
+  ex: 'varchar(1024)',
+  is_react: 'numeric',
+  is_external_extensions: 'numeric',
+  msg_first_modify_time: 'integer',
+};
 
 export function localSgChatLogs(
   db: Database,
@@ -40,6 +79,9 @@ export function localSgChatLogs(
         'create_time' integer,
         'attached_info' varchar(1024),
         'ex' varchar(1024),
+        'is_react' numeric,
+        'is_external_extensions' numeric,
+        'msg_first_modify_time' integer,
         primary key ('client_msg_id')
     );
     `

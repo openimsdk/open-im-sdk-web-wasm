@@ -25,8 +25,8 @@ export function localSuperGroups(db: Database): QueryExecResult[] {
             'apply_member_friend' integer,
             'notification_update_time' integer,
             'notification_user_id' text,
-        primary key ('group_id')
-     )
+            primary key ('group_id')
+    )
     `
   );
 }

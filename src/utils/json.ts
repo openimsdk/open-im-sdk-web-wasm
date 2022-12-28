@@ -12,9 +12,9 @@ export function jsonEncode(obj: any, init = '{}', prettier = false): string {
 /**
  * json string => obj
  */
-export function jsonDecode(json: string, defaultValue = {}): any {
+export function jsonDecode(jsonStr: string, defaultValue = {}): any {
   try {
-    return JSON.parse(json);
+    return JSON.parse(jsonStr);
   } catch (error) {
     return defaultValue;
   }
