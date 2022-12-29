@@ -172,6 +172,10 @@ export enum RequestFunc {
   SETGROUPMEMBERROLELEVEL = 'SetGroupMemberRoleLevel',
   SETGROUPVERIFICATION = 'SetGroupVerification',
   SETGLOBALRECVMESSAGEOPT = 'SetGlobalRecvMessageOpt',
+  MODIFYGROUPMESSAGEREACTION = 'ModifyGroupMessageReaction',
+  SETMESSAGEREACTIONEXTENSIONS = 'SetMessageReactionExtensions',
+  DELETEMESSAGEREACTIONEXTENSIONS = 'DeleteMessageReactionExtensions',
+  GETMESSAGELISTREACTIONEXTENSIONS = 'GetMessageListReactionExtensions',
 }
 
 export enum Platform {

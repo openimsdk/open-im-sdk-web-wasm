@@ -8,16 +8,20 @@ import {
   AdvancedMsgParams,
   AdvancedQuoteMsgParams,
   CustomMsgParams,
+  DeleteMessageReactionExtensionsParams,
   GetAdvancedHistoryMsgParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
+  GetMessageListReactionExtensionsParams,
   GetOneConversationParams,
   ImageMsgParams,
   LoginParam,
   MarkC2CParams,
   MarkNotiParams,
+  modifyGroupMessageReactionParams,
   QuoteMsgParams,
   SendMsgParams,
+  SetMessageReactionExtensionsParams,
 } from '../types/params';
 
 import { IMConfig, WsResponse } from '../types/entity';
@@ -360,12 +364,62 @@ class SDK extends Emitter {
       data,
     ]);
   }
+
   async revokeMessage(params: string, operationID = uuidv4()) {
     return await this._invoker('revokeMessage', window.revokeMessage, [
       operationID,
       params,
     ]);
   }
+  async modifyGroupMessageReaction(
+    params: modifyGroupMessageReactionParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'modifyGroupMessageReaction',
+      window.modifyGroupMessageReaction,
+      [
+        operationID,
+        params.counter,
+        params.reactionType,
+        params.groupID,
+        params.msgID,
+      ]
+    );
+  }
+  async setMessageReactionExtensions(
+    params: SetMessageReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'setMessageReactionExtensions',
+      window.setMessageReactionExtensions,
+      [operationID, params.message, params.reactionExtensionList]
+    );
+  }
+
+  async deleteMessageReactionExtensions(
+    params: DeleteMessageReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'deleteMessageReactionExtensions',
+      window.deleteMessageReactionExtensions,
+      [operationID, params.message, params.reactionExtensionKeyList]
+    );
+  }
+
+  async getMessageListReactionExtensions(
+    params: GetMessageListReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getMessageListReactionExtensions',
+      window.getMessageListReactionExtensions,
+      [operationID, params.messageList]
+    );
+  }
+
   async exportDB(operationID = uuidv4()) {
     return await this._invoker('exportDB', window.exportDB, [operationID]);
   }

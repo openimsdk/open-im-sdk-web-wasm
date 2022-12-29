@@ -170,6 +170,31 @@ declare global {
 
     newRevokeMessage: (operationID: string, message: string) => Promise<string>;
 
+    modifyGroupMessageReaction: (
+      operationID: string,
+      counter: number,
+      reactionType: number,
+      groupID: string,
+      msgID: string
+    ) => Promise<string>;
+
+    setMessageReactionExtensions: (
+      operationID: string,
+      message: string,
+      reactionExtensionList: string
+    ) => Promise<string>;
+
+    deleteMessageReactionExtensions: (
+      operationID: string,
+      message: string,
+      reactionExtensionKeyList: string
+    ) => Promise<string>;
+
+    getMessageListReactionExtensions: (
+      operationID: string,
+      messageList: string
+    ) => Promise<string>;
+
     // debug
     exec: (sql: string) => Promise<any>;
     exportDB: () => Promise<string>; //return Uint8Array

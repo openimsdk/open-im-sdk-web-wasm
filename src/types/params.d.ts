@@ -84,13 +84,57 @@ type AdvancedMsgParams = {
   messageEntityList?: MessageEntity[];
 };
 
+type MessageRevoked = {
+  revokerID: string;
+  revokerRole: number;
+  clientMsgID: string;
+  revokerNickname: string;
+  revokeTime: number;
+  sourceMessageSendTime: number;
+  sourceMessageSendID: string;
+  sourceMessageSenderNickname: string;
+  sessionType: number;
+  seq: number;
+};
+
 type KeyValue = {
   typeKey: string;
   value: string;
   latestUpdateTime: number;
 };
 
-type SetMessageReactionExtensionsParams = Array<KeyValue>;
+// type SetMessageReactionExtensionsParams = Array<KeyValue>;
+
+type MessageReaction = {
+  clientMsgID: string;
+  reactionType: number;
+  counter: number;
+  userID: string;
+  groupID: string;
+  sessionType: number;
+  info: string;
+};
+
+type modifyGroupMessageReactionParams = {
+  counter: number;
+  reactionType: number;
+  groupID: string;
+  msgID: string;
+};
+
+type SetMessageReactionExtensionsParams = {
+  message: string;
+  reactionExtensionList: string;
+};
+
+type DeleteMessageReactionExtensionsParams = {
+  message: string;
+  reactionExtensionKeyList: string;
+};
+
+type GetMessageListReactionExtensionsParams = {
+  messageList: string;
+};
 
 type SetMessageReactionExtensionsCallback = {
   key: string;
