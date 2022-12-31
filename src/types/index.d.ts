@@ -162,9 +162,8 @@ declare global {
       getMessageOptions: string
     ) => Promise<string>;
     revokeMessage: (operationID: string, params: string) => Promise<string>;
-
     newRevokeMessage: (operationID: string, message: string) => Promise<string>;
-
+    updateFcmToken: (operationID: string, fcmToken: string) => Promise<string>;
     // debug
     exec: (sql: string) => Promise<any>;
     exportDB: () => Promise<string>; //return Uint8Array
