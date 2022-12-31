@@ -366,6 +366,12 @@ class SDK extends Emitter {
       params,
     ]);
   }
+  async updateFcmToken(fcmToken: string, operationID = uuidv4()) {
+    return await this._invoker('updateFcmToken', window.updateFcmToken, [
+      operationID,
+      fcmToken,
+    ]);
+  }
   async exportDB(operationID = uuidv4()) {
     return await this._invoker('exportDB', window.exportDB, [operationID]);
   }
