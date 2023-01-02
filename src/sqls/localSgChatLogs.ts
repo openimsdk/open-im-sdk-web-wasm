@@ -332,7 +332,7 @@ export function superGroupSearchMessageByContentTypeAndKeyword(
   });
   return db.exec(
     `  
-    SELECT * FROM SELECT * FROM local_sg_chat_logs_${groupID} 
+    SELECT * FROM local_sg_chat_logs_${groupID} 
           WHERE send_time between ${startTime} and ${finalEndTime}
           AND status <=3  
           And content_type IN (${values})
