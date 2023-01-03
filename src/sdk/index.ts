@@ -379,6 +379,20 @@ class SDK extends Emitter {
       [operationID, isBackground]
     );
   }
+  async setAppBackground(operationID = uuidv4()) {
+    return await this._invoker(
+      'setAppBackgroundStatus',
+      window.setAppBackgroundStatus,
+      [operationID, true]
+    );
+  }
+  async setAppForeground(operationID = uuidv4()) {
+    return await this._invoker(
+      'setAppBackgroundStatus',
+      window.setAppBackgroundStatus,
+      [operationID, false]
+    );
+  }
   async exportDB(operationID = uuidv4()) {
     return await this._invoker('exportDB', window.exportDB, [operationID]);
   }
