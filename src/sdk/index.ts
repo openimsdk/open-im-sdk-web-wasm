@@ -394,7 +394,7 @@ class SDK extends Emitter {
     return await this._invoker(
       'setMessageReactionExtensions',
       window.setMessageReactionExtensions,
-      [operationID, params.message, params.reactionExtensionList]
+      [operationID, params.messageStr, params.reactionExtensionListStr]
     );
   }
 

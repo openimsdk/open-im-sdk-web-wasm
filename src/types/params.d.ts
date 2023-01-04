@@ -103,8 +103,6 @@ type KeyValue = {
   latestUpdateTime: number;
 };
 
-// type SetMessageReactionExtensionsParams = Array<KeyValue>;
-
 type MessageReaction = {
   clientMsgID: string;
   reactionType: number;
@@ -123,9 +121,11 @@ type modifyGroupMessageReactionParams = {
 };
 
 type SetMessageReactionExtensionsParams = {
-  message: string;
-  reactionExtensionList: string;
+  messageStr: string;
+  reactionExtensionListStr: string;
 };
+
+type SetMessageReactionExtensionsParam = Array<KeyValue>;
 
 type DeleteMessageReactionExtensionsParams = {
   message: string;
