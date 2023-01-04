@@ -5,7 +5,7 @@ import { MessageStatus, MessageType } from '@/constant';
 export type ClientMessage = { [key: string]: any };
 
 export function localChatLogs(db: Database): QueryExecResult[] {
-  return db.exec(`
+  db.exec(`
       create table if not exists 'local_chat_logs' (
         'client_msg_id' char(64),
         'server_msg_id' char(64),
@@ -25,8 +25,54 @@ export function localChatLogs(db: Database): QueryExecResult[] {
         'create_time' integer,
         'attached_info' varchar(1024),
         'ex' varchar(1024),
+        
+        'is_react' numeric,
+        'is_external_extensions' numeric,
+        'msg_first_modify_time' integer,
+
         primary key ('client_msg_id'))
     `);
+
+  const tableInfo = db.exec('PRAGMA table_info(local_chat_logs)');
+  if (tableInfo.length <= 0) {
+    return tableInfo;
+  }
+
+  // check column for old version
+  const hasColumnIsReact = tableInfo[0].values.find(v => v[1] === 'is_react');
+  const hasColumnIsExternalExtensions = tableInfo[0].values.find(
+    v => v[1] === 'is_external_extensions'
+  );
+  const hasColumnMsgFirstModifyTime = tableInfo[0].values.find(
+    v => v[1] === 'msg_first_modify_time'
+  );
+
+  const result: QueryExecResult[] = [];
+  if (!hasColumnIsReact) {
+    result.push(
+      ...db.exec(`
+        alter table local_chat_logs add is_react numeric
+    `)
+    );
+  }
+
+  if (!hasColumnIsExternalExtensions) {
+    result.push(
+      ...db.exec(`
+        alter table local_chat_logs add is_external_extensions numeric
+    `)
+    );
+  }
+
+  if (!hasColumnMsgFirstModifyTime) {
+    result.push(
+      ...db.exec(`
+        alter table local_chat_logs add msg_first_modify_time integer
+    `)
+    );
+  }
+
+  return result;
 }
 
 export function getMessage(db: Database, messageId: string): QueryExecResult[] {
