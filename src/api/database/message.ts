@@ -40,7 +40,11 @@ export async function getMessage(messageId: string): Promise<string> {
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])[0]
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])[0]
     );
   } catch (e) {
     console.error(e);
@@ -62,7 +66,11 @@ export async function getMultipleMessage(
     const execResult = databaseGetMultipleMessage(db, messageIds);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -82,7 +90,11 @@ export async function getSendingMessageList(): Promise<string> {
     const execResult = databaseGetSendingMessageList(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -263,7 +275,11 @@ export async function getMessageListNoTime(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -298,7 +314,11 @@ export async function getMessageList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -318,7 +338,11 @@ export async function searchAllMessageByContentType(
     const db = await getInstance();
     const execResult = databaseSearchAllMessageByContentType(db, contentType);
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
