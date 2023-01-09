@@ -1,52 +1,14 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { MessageStatus, MessageType } from '@/constant';
-import { localChatLogsModel } from '@/constant/db-model';
 
 export type ClientSuperGroupMessage = { [key: string]: any };
 
 const GroupTableMap: Record<string, boolean> = {};
 
-function _initAndCheckSuperGroupTable(
-  db: Database,
-  groupID: string,
-  colums?: Array<string>
-) {
+function _initSuperGroupTable(db: Database, groupID: string) {
   if (GroupTableMap[groupID]) {
-    if (colums) {
-      try {
-        const sql = `select * from local_sg_chat_logs_${groupID} limit 1`;
-
-        const stmt = db.prepare(sql);
-
-        stmt.step();
-
-        const dbCurrentClms = stmt.getColumnNames();
-
-        const missingClms: Array<string> = [];
-
-        colums.forEach(value => {
-          if (dbCurrentClms.indexOf(value) === -1) {
-            missingClms.push(value);
-          }
-        });
-
-        if (missingClms.length > 0) {
-          const addClms = missingClms.filter(val => {
-            return Object.keys(localChatLogsModel).includes(val);
-          });
-
-          addClms.forEach(val => {
-            const sql = `ALTER TABLE local_sg_chat_logs_${groupID} ADD ${val} ${localChatLogsModel[val]}`;
-            db.exec(sql);
-          });
-        }
-      } catch (error) {
-        console.error(error, `local_sg_chat_logs_${groupID}`);
-      }
-    } else {
-      return;
-    }
+    return;
   }
 
   localSgChatLogs(db, groupID);
@@ -78,9 +40,6 @@ export function localSgChatLogs(
         'create_time' integer,
         'attached_info' varchar(1024),
         'ex' varchar(1024),
-        'is_react' numeric,
-        'is_external_extensions' numeric,
-        'msg_first_modify_time' integer,
         primary key ('client_msg_id')
     );
     `
@@ -91,7 +50,7 @@ export function getSuperGroupNormalMsgSeq(
   db: Database,
   groupID: string
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `
@@ -104,7 +63,7 @@ export function superGroupGetNormalMinSeq(
   db: Database,
   groupID: string
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `
@@ -118,7 +77,7 @@ export function superGroupGetMessage(
   groupID: string,
   clientMsgID: string
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `
@@ -133,7 +92,7 @@ export function superGroupUpdateMessage(
   clientMsgID: string,
   message: ClientSuperGroupMessage
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID, Object.keys(message));
+  _initSuperGroupTable(db, groupID);
 
   const sql = squel
     .update()
@@ -150,7 +109,7 @@ export function superGroupBatchInsertMessageList(
   groupID: string,
   messageList: ClientSuperGroupMessage[]
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID, Object.keys(messageList[0]));
+  _initSuperGroupTable(db, groupID);
 
   const sql = squel
     .insert()
@@ -166,7 +125,7 @@ export function superGroupInsertMessage(
   groupID: string,
   message: ClientSuperGroupMessage
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID, Object.keys(message));
+  _initSuperGroupTable(db, groupID);
 
   const sql = squel
     .insert()
@@ -182,7 +141,7 @@ export function superGroupGetMultipleMessage(
   groupID: string,
   msgIDList: string[]
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   const values = msgIDList.map(v => `'${v}'`).join(',');
   return db.exec(
@@ -200,7 +159,7 @@ export function superGroupUpdateMessageTimeAndStatus(
   sendTime: number,
   status: number
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `
@@ -223,7 +182,7 @@ export function superGroupGetMessageListNoTime(
   count: number,
   isReverse: boolean
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `
@@ -246,7 +205,7 @@ export function superGroupGetMessageList(
   startTime: number,
   isReverse: boolean
 ): QueryExecResult[] {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `
@@ -267,7 +226,7 @@ export function superGroupSearchAllMessageByContentType(
   groupID: string,
   contentType: MessageType
 ) {
-  _initAndCheckSuperGroupTable(db, groupID);
+  _initSuperGroupTable(db, groupID);
 
   return db.exec(
     `

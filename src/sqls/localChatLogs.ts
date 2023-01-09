@@ -1,12 +1,11 @@
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { MessageStatus, MessageType } from '@/constant';
-import { localChatLogsModel } from '@/constant/db-model';
 
 export type ClientMessage = { [key: string]: any };
 
 export function localChatLogs(db: Database): QueryExecResult[] {
-  const execResult = db.exec(`
+  return db.exec(`
       create table if not exists 'local_chat_logs' (
         'client_msg_id' char(64),
         'server_msg_id' char(64),
@@ -26,45 +25,8 @@ export function localChatLogs(db: Database): QueryExecResult[] {
         'create_time' integer,
         'attached_info' varchar(1024),
         'ex' varchar(1024),
-        'is_react' numeric,
-        'is_external_extensions' numeric,
-        'msg_first_modify_time' integer,
         primary key ('client_msg_id'))
     `);
-
-  try {
-    const sql = 'select * from local_chat_logs limit 1';
-    const stmt = db.prepare(sql);
-    stmt.step();
-    const dbCurrentClms = stmt.getColumnNames();
-
-    const missingClms: Array<string> = [];
-
-    Object.keys(localChatLogsModel).forEach(value => {
-      if (dbCurrentClms.indexOf(value) === -1) {
-        missingClms.push(value);
-      }
-    });
-
-    if (missingClms.length > 0) {
-      const addClms = missingClms.filter(val => {
-        return Object.keys(localChatLogsModel).includes(val);
-      });
-
-      addClms.forEach(val => {
-        // sqlite not support add multiple column
-        const sql = `ALTER TABLE local_chat_logs ADD ${val} ${localChatLogsModel[val]}`;
-        db.exec(sql);
-      });
-
-      return execResult;
-    }
-
-    return execResult;
-  } catch (error) {
-    console.error(error);
-    return execResult;
-  }
 }
 
 export function getMessage(db: Database, messageId: string): QueryExecResult[] {
