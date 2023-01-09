@@ -13,6 +13,7 @@ import {
   GetGroupMemberParams,
   GetHistoryMsgParams,
   GetMessageListReactionExtensionsParams,
+  GetMessageListSomeReactionExtensionsParams,
   GetOneConversationParams,
   ImageMsgParams,
   LoginParam,
@@ -22,6 +23,7 @@ import {
   QuoteMsgParams,
   SendMsgParams,
   SetMessageReactionExtensionsParams,
+  AddMessageReactionExtensionsParams,
 } from '../types/params';
 
 import { IMConfig, WsResponse } from '../types/entity';
@@ -398,6 +400,17 @@ class SDK extends Emitter {
     );
   }
 
+  async addMessageReactionExtensions(
+    params: AddMessageReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'addMessageReactionExtensions',
+      window.addMessageReactionExtensions,
+      [operationID, params.messageStr, params.reactionExtensionListStr]
+    );
+  }
+
   async deleteMessageReactionExtensions(
     params: DeleteMessageReactionExtensionsParams,
     operationID = uuidv4()
@@ -416,7 +429,18 @@ class SDK extends Emitter {
     return await this._invoker(
       'getMessageListReactionExtensions',
       window.getMessageListReactionExtensions,
-      [operationID, params.messageList]
+      [operationID, params.messageListStr]
+    );
+  }
+
+  async getMessageListSomeReactionExtensions(
+    params: GetMessageListSomeReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getMessageListSomeReactionExtensions',
+      window.getMessageListSomeReactionExtensions,
+      [operationID, params.messageListStr, params.reactionExtensionKeyListStr]
     );
   }
 

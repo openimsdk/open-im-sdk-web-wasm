@@ -182,6 +182,11 @@ declare global {
       message: string,
       reactionExtensionList: string
     ) => Promise<string>;
+    addMessageReactionExtensions: (
+      operationID: string,
+      message: string,
+      reactionExtensionList: string
+    ) => Promise<string>;
 
     deleteMessageReactionExtensions: (
       operationID: string,
@@ -191,7 +196,13 @@ declare global {
 
     getMessageListReactionExtensions: (
       operationID: string,
-      messageList: string
+      messageListStr: string
+    ) => Promise<string>;
+
+    getMessageListSomeReactionExtensions: (
+      operationID: string,
+      messageListStr: string,
+      reactionExtensionKeyListStr: string
     ) => Promise<string>;
 
     updateFcmToken: (operationID: string, fcmToken: string) => Promise<string>;

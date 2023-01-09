@@ -133,7 +133,12 @@ type DeleteMessageReactionExtensionsParams = {
 };
 
 type GetMessageListReactionExtensionsParams = {
-  messageList: string;
+  messageListStr: string;
+};
+
+type GetMessageListSomeReactionExtensionsParams = {
+  messageListStr: string;
+  reactionExtensionKeyListStr: string;
 };
 
 type SetMessageReactionExtensionsCallback = {
@@ -174,5 +179,24 @@ type GetMessageListReactionExtensionsReq = {
   operationID: string;
   sourceID: string;
   sessionType: number;
+  isExternalExtensions: boolean;
+  typeKeyList: Array<string>;
   messageReactionKeyList: Array<OperateMessageListReactionExtensionsReq>;
 };
+
+type AddMessageReactionExtensionsReq = {
+  operationID: string;
+  clientMsgID: string;
+  sourceID: string;
+  sessionType: int32;
+  reactionExtensionList: Record<string, KeyValue>;
+  isReact: bool; //`json:"isReact,omitempty"`
+  isExternalExtensions: bool; //`json:"isExternalExtensions,omitempty"`
+  msgFirstModifyTime: int64; //`json:"msgFirstModifyTime,omitempty"`
+};
+
+type AddMessageReactionExtensionsParams = {
+  messageStr: string;
+  reactionExtensionListStr: string;
+};
+AddMessageReactionExtensionsParam = Array<KeyValue>;

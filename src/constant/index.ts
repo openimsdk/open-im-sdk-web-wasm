@@ -176,7 +176,9 @@ export enum RequestFunc {
   MODIFYGROUPMESSAGEREACTION = 'ModifyGroupMessageReaction',
   SETMESSAGEREACTIONEXTENSIONS = 'SetMessageReactionExtensions',
   DELETEMESSAGEREACTIONEXTENSIONS = 'DeleteMessageReactionExtensions',
+  ADDMESSAGEREACTIONEXTENSIONS = 'AddMessageReactionExtensions',
   GETMESSAGELISTREACTIONEXTENSIONS = 'GetMessageListReactionExtensions',
+  GETMESSAGELISTSOMEREACTIONEXTENSIONS = 'GetMessageListSomeReactionExtensions',
 }
 
 export enum Platform {
@@ -255,4 +257,9 @@ export enum MessageType {
   GROUPMEMBERINFOUPDATED = 1516,
   BURNMESSAGECHANGE = 1701,
   LOADINGMESSAGE = 2000,
+}
+
+export enum MessageExtensionsAction {
+  SetMessageExtensions = 1,
+  AddMessageExtensions = 2,
 }
