@@ -167,7 +167,6 @@ declare global {
       getMessageOptions: string
     ) => Promise<string>;
     revokeMessage: (operationID: string, params: string) => Promise<string>;
-
     newRevokeMessage: (operationID: string, message: string) => Promise<string>;
 
     modifyGroupMessageReaction: (
@@ -195,6 +194,11 @@ declare global {
       messageList: string
     ) => Promise<string>;
 
+    updateFcmToken: (operationID: string, fcmToken: string) => Promise<string>;
+    setAppBackgroundStatus: (
+      operationID: string,
+      isBackground: boolean
+    ) => Promise<string>;
     // debug
     exec: (sql: string) => Promise<any>;
     exportDB: () => Promise<string>; //return Uint8Array
