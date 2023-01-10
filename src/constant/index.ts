@@ -55,6 +55,10 @@ export enum CbEvents {
   ONORGANIZATIONUPDATED = 'OnOrganizationUpdated',
   ONRECVNEWMESSAGEFROMOTHERWEB = 'OnRecvNewMessageFromOtherWeb',
   ONNEWRECVMESSAGEREVOKED = 'OnNewRecvMessageRevoked',
+  // reaction events
+  ONRECVMESSAGEEXTENSIONSCHANGED = 'OnRecvMessageExtensionsChanged',
+  ONRECVMESSAGEEXTENSIONSDELETED = 'OnRecvMessageExtensionsDeleted',
+  ONRECVMESSAGEEXTENSIONSADDED = 'OnRecvMessageExtensionsAdded',
 }
 
 export enum RequestFunc {
