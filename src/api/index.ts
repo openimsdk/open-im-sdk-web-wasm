@@ -27,12 +27,12 @@ function initWorker() {
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
-  initBackend(worker!);
+  initBackend(worker);
 
   rpc = new RPC({
     event: new RPCMessageEvent({
-      currentEndpoint: worker!,
-      targetEndpoint: worker!,
+      currentEndpoint: worker,
+      targetEndpoint: worker,
     }),
   });
 }
@@ -66,7 +66,7 @@ function catchErrorHandle(error: unknown) {
 }
 
 function registeMethodOnWindow(name: string, realName?: string) {
-  // console.info(`=> (database api) registe ${realName ?? name}`);
+  console.info(`=> (database api) registe ${realName ?? name}`);
 
   return async (...args: unknown[]) => {
     if (!rpc || !worker) {

@@ -14,11 +14,7 @@ export async function deleteConversationUnreadMessageList(
   try {
     const db = await getInstance();
 
-    const execResult = databaseDeleteConversationUnreadMessageList(
-      db,
-      conversationID,
-      sendTime
-    );
+    databaseDeleteConversationUnreadMessageList(db, conversationID, sendTime);
     const modifed = db.getRowsModified();
 
     return formatResponse(modifed);

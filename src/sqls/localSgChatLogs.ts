@@ -3,7 +3,7 @@ import { Database, QueryExecResult } from '@jlongster/sql.js';
 
 export type ClientSuperGroupMessage = { [key: string]: any };
 
-const GroupTableMap: Record<string, boolean> = {};
+// const GroupTableMap: Record<string, boolean> = {};
 
 function _initSuperGroupTable(db: Database, groupID: string) {
   // if (GroupTableMap[groupID]) {

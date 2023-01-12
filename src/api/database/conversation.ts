@@ -426,7 +426,7 @@ export async function resetConversation(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseResetConversation(db, conversationID);
+    databaseResetConversation(db, conversationID);
 
     return formatResponse('');
   } catch (e) {
@@ -443,7 +443,7 @@ export async function resetConversation(
 export async function resetAllConversation(): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseResetAllConversation(db);
+    databaseResetAllConversation(db);
 
     return formatResponse('');
   } catch (e) {
@@ -462,7 +462,7 @@ export async function clearConversation(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseClearConversation(db, conversationID);
+    databaseClearConversation(db, conversationID);
 
     return formatResponse('');
   } catch (e) {
@@ -479,7 +479,7 @@ export async function clearConversation(
 export async function clearAllConversation(): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseClearAllConversation(db);
+    databaseClearAllConversation(db);
 
     return formatResponse('');
   } catch (e) {
@@ -499,11 +499,7 @@ export async function setConversationDraft(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseSetConversationDraft(
-      db,
-      conversationID,
-      draftText
-    );
+    databaseSetConversationDraft(db, conversationID, draftText);
 
     return formatResponse('');
   } catch (e) {
@@ -523,11 +519,7 @@ export async function removeConversationDraft(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseRemoveConversationDraft(
-      db,
-      conversationID,
-      draftText
-    );
+    databaseRemoveConversationDraft(db, conversationID, draftText);
 
     return formatResponse('');
   } catch (e) {
@@ -547,7 +539,7 @@ export async function unPinConversation(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseUnPinConversation(db, conversationID, isPinned);
+    databaseUnPinConversation(db, conversationID, isPinned);
 
     return formatResponse('');
   } catch (e) {
@@ -622,7 +614,7 @@ export async function setMultipleConversationRecvMsgOpt(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseSetMultipleConversationRecvMsgOpt(
+    databaseSetMultipleConversationRecvMsgOpt(
       db,
       JSON.parse(conversationIDListStr),
       opt

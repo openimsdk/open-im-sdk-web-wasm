@@ -32,7 +32,7 @@ import {
   updateSingleMessageHasRead as databaseUpdateSingleMessageHasRead,
   updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
   updateMessageStatusBySourceID as databaseUpdateMessageStatusBySourceID,
-  setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
+  // setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
 } from '@/sqls';
 import {
   converSqlExecResult,

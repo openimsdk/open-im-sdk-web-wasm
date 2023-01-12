@@ -184,7 +184,7 @@ export async function addMemberCount(groupID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseaddMemberCount(db, groupID);
+    databaseaddMemberCount(db, groupID);
 
     return formatResponse('');
   } catch (e) {

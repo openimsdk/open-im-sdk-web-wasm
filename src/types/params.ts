@@ -12,7 +12,6 @@ import {
 import {
   OptType,
   AllowType,
-  GroupType,
   GroupJoinSource,
   GroupRole,
   GroupVerificationType,
@@ -395,5 +394,5 @@ export type PartialUserItem = Partial<Omit<FullUserItem, 'userID'>> & {
 
 export type CustomSignalParams = {
   roomID: string;
-  custom: string;
+  customInfo: string;
 };

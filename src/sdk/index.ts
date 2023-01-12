@@ -25,7 +25,6 @@ import {
   GetHistoryMsgParams,
   GetOneConversationParams,
   GetOneCveParams,
-  GetSubDepParams,
   GroupInfoParams,
   GroupMsgReadParams,
   ImageMsgParams,
@@ -100,11 +99,13 @@ class SDK extends Emitter {
     processor?: (data: string) => string
   ): Promise<WsResponse> {
     return new Promise(async (resolve, reject) => {
-      // console.info(
-      //   `SDK => [OperationID:${
-      //     args[0]
-      //   }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`
-      // );
+      console.info(
+        `SDK => [OperationID:${
+          args[0]
+        }] (invoked by js) run ${functionName} with args ${JSON.stringify(
+          args
+        )}`
+      );
 
       let response = {
         operationID: args[0],
@@ -128,7 +129,7 @@ class SDK extends Emitter {
           data = processor(data);
         }
         response.data = data;
-        resolve(response as WsResponse);
+        resolve(response);
       } catch (error) {
         // console.info(
         //   `SDK => [OperationID:${
@@ -187,23 +188,26 @@ class SDK extends Emitter {
 
     return await window.login(operationID, params.userID, params.token);
   }
-  logout(operationID = uuidv4()) {
+  logout = (operationID = uuidv4()) => {
     return this._invoker('logout', window.logout, [operationID]);
-  }
-  getAllConversationList(operationID = uuidv4()) {
+  };
+  getAllConversationList = (operationID = uuidv4()) => {
     return this._invoker(
       'getAllConversationList',
       window.getAllConversationList,
       [operationID]
     );
-  }
-  getOneConversation(params: GetOneConversationParams, operationID = uuidv4()) {
+  };
+  getOneConversation = (
+    params: GetOneConversationParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker('getOneConversation', window.getOneConversation, [
       operationID,
       params.sessionType,
       params.sourceID,
     ]);
-  }
+  };
   getAdvancedHistoryMessageList = (
     params: GetAdvancedHistoryMsgParams,
     operationID = uuidv4()
@@ -224,44 +228,53 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(params)]
     );
   };
-  getGroupsInfo(params: string[], operationID = uuidv4()) {
+  getGroupsInfo = (params: string[], operationID = uuidv4()) => {
     return this._invoker('getGroupsInfo', window.getGroupsInfo, [
       operationID,
       JSON.stringify(params),
     ]);
-  }
-  deleteConversationFromLocalAndSvr(
+  };
+  deleteConversationFromLocalAndSvr = (
     conversationID: string,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'deleteConversationFromLocalAndSvr',
       window.deleteConversationFromLocalAndSvr,
       [operationID, conversationID]
     );
-  }
-  markC2CMessageAsRead(params: MarkC2CParams, operationID = uuidv4()) {
+  };
+  markC2CMessageAsRead = (params: MarkC2CParams, operationID = uuidv4()) => {
     return this._invoker('markC2CMessageAsRead', window.markC2CMessageAsRead, [
       operationID,
       params.userID,
       JSON.stringify(params.msgIDList),
     ]);
-  }
-  markMessageAsReadByConID(params: MarkNotiParams, operationID = uuidv4()) {
+  };
+  markMessageAsReadByConID = (
+    params: MarkNotiParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'markMessageAsReadByConID',
       window.markMessageAsReadByConID,
       [operationID, params.conversationID, JSON.stringify(params.msgIDList)]
     );
-  }
-  markNotifyMessageHasRead(conversationID: string, operationID = uuidv4()) {
+  };
+  markNotifyMessageHasRead = (
+    conversationID: string,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'markNotifyMessageHasRead',
       window.markNotifyMessageHasRead,
       [operationID, conversationID, '[]']
     );
-  }
-  getGroupMemberList(params: GetGroupMemberParams, operationID = uuidv4()) {
+  };
+  getGroupMemberList = (
+    params: GetGroupMemberParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker('getGroupMemberList', window.getGroupMemberList, [
       operationID,
       params.groupID,
@@ -269,8 +282,8 @@ class SDK extends Emitter {
       params.offset,
       params.count,
     ]);
-  }
-  createTextMessage(text: string, operationID = uuidv4()) {
+  };
+  createTextMessage = (text: string, operationID = uuidv4()) => {
     return this._invoker(
       'createTextMessage',
       window.createTextMessage,
@@ -280,8 +293,8 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
-  createImageMessage(params: ImageMsgParams, operationID = uuidv4()) {
+  };
+  createImageMessage = (params: ImageMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createImageMessage',
       window.createImageMessageByURL,
@@ -296,8 +309,8 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
-  createCustomMessage(params: CustomMsgParams, operationID = uuidv4()) {
+  };
+  createCustomMessage = (params: CustomMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createCustomMessage',
       window.createCustomMessage,
@@ -307,8 +320,8 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
-  createQuoteMessage(params: QuoteMsgParams, operationID = uuidv4()) {
+  };
+  createQuoteMessage = (params: QuoteMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createQuoteMessage',
       window.createQuoteMessage,
@@ -318,7 +331,7 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
   createAdvancedQuoteMessage(
     params: AdvancedQuoteMsgParams,
     operationID = uuidv4()
@@ -338,7 +351,10 @@ class SDK extends Emitter {
       }
     );
   }
-  createAdvancedTextMessage(params: AdvancedMsgParams, operationID = uuidv4()) {
+  createAdvancedTextMessage = (
+    params: AdvancedMsgParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'createAdvancedTextMessage',
       window.createAdvancedTextMessage,
@@ -348,8 +364,8 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
-  sendMessage(params: SendMsgParams, operationID = uuidv4()) {
+  };
+  sendMessage = (params: SendMsgParams, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
       title: '你有一条新消息',
       desc: '',
@@ -364,8 +380,8 @@ class SDK extends Emitter {
       params.groupID,
       JSON.stringify(offlinePushInfo),
     ]);
-  }
-  sendMessageNotOss(params: SendMsgParams, operationID = uuidv4()) {
+  };
+  sendMessageNotOss = (params: SendMsgParams, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
       title: '你有一条新消息',
       desc: '',
@@ -380,8 +396,8 @@ class SDK extends Emitter {
       params.groupID,
       JSON.stringify(offlinePushInfo),
     ]);
-  }
-  sendMessageByBuffer(params: SendMsgParams, operationID = uuidv4()) {
+  };
+  sendMessageByBuffer = (params: SendMsgParams, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
       title: '你有一条新消息',
       desc: '',
@@ -398,7 +414,7 @@ class SDK extends Emitter {
       params.fileArrayBuffer,
       params.snpFileArrayBuffer,
     ]);
-  }
+  };
 
   exportDB(operationID = uuidv4()) {
     return this._invoker('exportDB', window.exportDB, [operationID]);
@@ -415,33 +431,36 @@ class SDK extends Emitter {
     );
   }
 
-  revokeMessage(params: string, operationID = uuidv4()) {
+  revokeMessage = (params: string, operationID = uuidv4()) => {
     return this._invoker('revokeMessage', window.revokeMessage, [
       operationID,
       params,
     ]);
-  }
+  };
 
-  setOneConversationPrivateChat(params: setPrvParams, operationID = uuidv4()) {
+  setOneConversationPrivateChat = (
+    params: setPrvParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'setOneConversationPrivateChat',
       window.setOneConversationPrivateChat,
       [operationID, params.conversationID, params.isPrivate]
     );
-  }
+  };
 
-  setOneConversationBurnDuration(
+  setOneConversationBurnDuration = (
     params: setBurnDurationParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'setOneConversationBurnDuration',
       window.setOneConversationBurnDuration,
       [operationID, params.conversationID, params.burnDuration]
     );
-  }
-  /* ----------------------------------------------新增-------------------------------------------------------- */
-  getLoginStatus(operationID = uuidv4()) {
+  };
+
+  getLoginStatus = (operationID = uuidv4()) => {
     return this._invoker(
       'getLoginStatus',
       window.getLoginStatus,
@@ -451,41 +470,33 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  // iLogin(data: LoginParams, operationID = uuidv4()) {
-  //   return this._invoker('iLogin', window.iLogin, [
-  //     operationID,
-  //     data.token,
-  //     data.userID,
-  //   ]);
-  // }
-
-  getLoginUser(operationID = uuidv4()) {
+  getLoginUser = (operationID = uuidv4()) => {
     return this._invoker('getLoginUser', window.getLoginUser, [operationID]);
-  }
+  };
 
-  getSelfUserInfo(operationID = uuidv4()) {
+  getSelfUserInfo = (operationID = uuidv4()) => {
     return this._invoker('getSelfUserInfo', window.getSelfUserInfo, [
       operationID,
     ]);
-  }
+  };
 
-  getUsersInfo(data: string[], operationID = uuidv4()) {
+  getUsersInfo = (data: string[], operationID = uuidv4()) => {
     return this._invoker('getUsersInfo', window.getUsersInfo, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
+  };
 
-  setSelfInfo(data: PartialUserItem, operationID = uuidv4()) {
+  setSelfInfo = (data: PartialUserItem, operationID = uuidv4()) => {
     return this._invoker('setSelfInfo', window.setSelfInfo, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
+  };
 
-  createTextAtMessage(data: AtMsgParams, operationID = uuidv4()) {
+  createTextAtMessage = (data: AtMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createTextAtMessage',
       window.createTextAtMessage,
@@ -501,8 +512,8 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
-  createSoundMessage(data: SoundMsgParams, operationID = uuidv4()) {
+  };
+  createSoundMessage = (data: SoundMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createSoundMessage',
       window.createSoundMessageByURL,
@@ -512,9 +523,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createVideoMessage(data: VideoMsgParams, operationID = uuidv4()) {
+  createVideoMessage = (data: VideoMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createVideoMessage',
       window.createVideoMessageByURL,
@@ -524,9 +535,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createFileMessage(data: FileMsgParams, operationID = uuidv4()) {
+  createFileMessage = (data: FileMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createFileMessage',
       window.createFileMessageByURL,
@@ -536,12 +547,12 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createFileMessageFromFullPath(
+  createFileMessageFromFullPath = (
     data: FileMsgFullParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'createFileMessageFromFullPath',
       window.createFileMessageFromFullPath,
@@ -551,9 +562,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createImageMessageFromFullPath(data: string, operationID = uuidv4()) {
+  createImageMessageFromFullPath = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'createImageMessageFromFullPath ',
       window.createImageMessageFromFullPath,
@@ -563,12 +574,12 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createSoundMessageFromFullPath(
+  createSoundMessageFromFullPath = (
     data: SouondMsgFullParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'createSoundMessageFromFullPath ',
       window.createSoundMessageFromFullPath,
@@ -578,7 +589,7 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
   createVideoMessageFromFullPath(
     data: VideoMsgFullParams,
@@ -601,7 +612,7 @@ class SDK extends Emitter {
     );
   }
 
-  createMergerMessage(data: MergerMsgParams, operationID = uuidv4()) {
+  createMergerMessage = (data: MergerMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createMergerMessage ',
       window.createMergerMessage,
@@ -616,9 +627,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createForwardMessage(data: string, operationID = uuidv4()) {
+  createForwardMessage = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'createForwardMessage ',
       window.createForwardMessage,
@@ -628,9 +639,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createFaceMessage(data: FaceMessageParams, operationID = uuidv4()) {
+  createFaceMessage = (data: FaceMessageParams, operationID = uuidv4()) => {
     return this._invoker(
       'createFaceMessage ',
       window.createFaceMessage,
@@ -640,9 +651,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createLocationMessage(data: LocationMsgParams, operationID = uuidv4()) {
+  createLocationMessage = (data: LocationMsgParams, operationID = uuidv4()) => {
     return this._invoker(
       'createLocationMessage ',
       window.createLocationMessage,
@@ -652,9 +663,9 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  createCardMessage(data: string, operationID = uuidv4()) {
+  createCardMessage = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'createCardMessage ',
       window.createCardMessage,
@@ -664,310 +675,325 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
-  deleteMessageFromLocalStorage(data: string, operationID = uuidv4()) {
+  deleteMessageFromLocalStorage = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'deleteMessageFromLocalStorage ',
       window.deleteMessageFromLocalStorage,
       [operationID, data]
     );
-  }
+  };
 
-  deleteMessageFromLocalAndSvr(data: string, operationID = uuidv4()) {
+  deleteMessageFromLocalAndSvr = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'deleteMessageFromLocalAndSvr ',
       window.deleteMessageFromLocalAndSvr,
       [operationID, data]
     );
-  }
+  };
 
-  deleteAllConversationFromLocal(operationID = uuidv4()) {
+  deleteAllConversationFromLocal = (operationID = uuidv4()) => {
     return this._invoker(
       'deleteAllConversationFromLocal ',
       window.deleteAllConversationFromLocal,
       [operationID]
     );
-  }
+  };
 
-  deleteAllMsgFromLocal(operationID = uuidv4()) {
+  deleteAllMsgFromLocal = (operationID = uuidv4()) => {
     return this._invoker(
       'deleteAllMsgFromLocal ',
       window.deleteAllMsgFromLocal,
       [operationID]
     );
-  }
+  };
 
-  deleteAllMsgFromLocalAndSvr(operationID = uuidv4()) {
+  deleteAllMsgFromLocalAndSvr = (operationID = uuidv4()) => {
     return this._invoker(
       'deleteAllMsgFromLocalAndSvr ',
       window.deleteAllMsgFromLocalAndSvr,
       [operationID]
     );
-  }
+  };
 
-  markGroupMessageHasRead(data: string, operationID = uuidv4()) {
+  markGroupMessageHasRead = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'markGroupMessageHasRead ',
       window.markGroupMessageHasRead,
       [operationID, data]
     );
-  }
+  };
 
-  markGroupMessageAsRead(data: GroupMsgReadParams, operationID = uuidv4()) {
+  markGroupMessageAsRead = (
+    data: GroupMsgReadParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'markGroupMessageAsRead ',
       window.markGroupMessageAsRead,
       [operationID, data.groupID, JSON.stringify(data.msgIDList)]
     );
-  }
+  };
 
-  insertSingleMessageToLocalStorage(
+  insertSingleMessageToLocalStorage = (
     data: InsertSingleMsgParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'insertSingleMessageToLocalStorage ',
       window.insertSingleMessageToLocalStorage,
       [operationID, data.message, data.recvID, data.sendID]
     );
-  }
+  };
 
-  insertGroupMessageToLocalStorage(
+  insertGroupMessageToLocalStorage = (
     data: InsertGroupMsgParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'insertGroupMessageToLocalStorage ',
       window.insertGroupMessageToLocalStorage,
       [operationID, data.message, data.groupID, data.sendID]
     );
-  }
-  typingStatusUpdate(data: TypingUpdateParams, operationID = uuidv4()) {
+  };
+  typingStatusUpdate = (data: TypingUpdateParams, operationID = uuidv4()) => {
     return this._invoker('typingStatusUpdate ', window.typingStatusUpdate, [
       operationID,
       data.recvID,
       data.msgTip,
     ]);
-  }
-  clearC2CHistoryMessage(data: string, operationID = uuidv4()) {
+  };
+  clearC2CHistoryMessage = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'clearC2CHistoryMessage ',
       window.clearC2CHistoryMessage,
       [operationID, data]
     );
-  }
-  clearC2CHistoryMessageFromLocalAndSvr(data: string, operationID = uuidv4()) {
+  };
+  clearC2CHistoryMessageFromLocalAndSvr = (
+    data: string,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'clearC2CHistoryMessageFromLocalAndSvr ',
       window.clearC2CHistoryMessageFromLocalAndSvr,
       [operationID, data]
     );
-  }
+  };
 
-  clearGroupHistoryMessage(data: string, operationID = uuidv4()) {
+  clearGroupHistoryMessage = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'clearGroupHistoryMessage ',
       window.clearGroupHistoryMessage,
       [operationID, data]
     );
-  }
-  clearGroupHistoryMessageFromLocalAndSvr(
+  };
+  clearGroupHistoryMessageFromLocalAndSvr = (
     data: string,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'clearGroupHistoryMessageFromLocalAndSvr ',
       window.clearGroupHistoryMessageFromLocalAndSvr,
       [operationID, data]
     );
-  }
-  getConversationListSplit(data: SplitParams, operationID = uuidv4()) {
+  };
+  getConversationListSplit = (data: SplitParams, operationID = uuidv4()) => {
     return this._invoker(
       'getConversationListSplit ',
       window.getConversationListSplit,
       [operationID, data.offset, data.count]
     );
-  }
-  getConversationIDBySessionType(
+  };
+  getConversationIDBySessionType = (
     data: GetOneCveParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'getConversationIDBySessionType ',
       window.getConversationIDBySessionType,
       [operationID, data.sourceID, data.sessionType]
     );
-  }
+  };
 
-  getMultipleConversation(data: string[], operationID = uuidv4()) {
+  getMultipleConversation = (data: string[], operationID = uuidv4()) => {
     return this._invoker(
       'getMultipleConversation ',
       window.getMultipleConversation,
       [operationID, JSON.stringify(data)]
     );
-  }
+  };
 
-  deleteConversation(data: string, operationID = uuidv4()) {
+  deleteConversation = (data: string, operationID = uuidv4()) => {
     return this._invoker('deleteConversation ', window.deleteConversation, [
       operationID,
       data,
     ]);
-  }
+  };
 
-  setConversationDraft(data: SetDraftParams, operationID = uuidv4()) {
+  setConversationDraft = (data: SetDraftParams, operationID = uuidv4()) => {
     return this._invoker('setConversationDraft ', window.setConversationDraft, [
       operationID,
       data.conversationID,
       data.draftText,
     ]);
-  }
+  };
 
-  pinConversation(data: PinCveParams, operationID = uuidv4()) {
+  pinConversation = (data: PinCveParams, operationID = uuidv4()) => {
     return this._invoker('pinConversation ', window.pinConversation, [
       operationID,
       data.conversationID,
       data.isPinned,
     ]);
-  }
-  getTotalUnreadMsgCount(operationID = uuidv4()) {
+  };
+  getTotalUnreadMsgCount = (operationID = uuidv4()) => {
     return this._invoker(
       'getTotalUnreadMsgCount ',
       window.getTotalUnreadMsgCount,
       [operationID]
     );
-  }
-  getConversationRecvMessageOpt(data: string[], operationID = uuidv4()) {
+  };
+  getConversationRecvMessageOpt = (data: string[], operationID = uuidv4()) => {
     return this._invoker(
       'getConversationRecvMessageOpt ',
       window.getConversationRecvMessageOpt,
       [operationID, JSON.stringify(data)]
     );
-  }
-  setConversationRecvMessageOpt(data: isRecvParams, operationID = uuidv4()) {
+  };
+  setConversationRecvMessageOpt = (
+    data: isRecvParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'setConversationRecvMessageOpt ',
       window.setConversationRecvMessageOpt,
       [operationID, JSON.stringify(data.conversationIDList), data.opt]
     );
-  }
-  searchLocalMessages(data: SearchLocalParams, operationID = uuidv4()) {
+  };
+  searchLocalMessages = (data: SearchLocalParams, operationID = uuidv4()) => {
     return this._invoker('searchLocalMessages ', window.searchLocalMessages, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  addFriend(data: AddFriendParams, operationID = uuidv4()) {
+  };
+  addFriend = (data: AddFriendParams, operationID = uuidv4()) => {
     return this._invoker('addFriend ', window.addFriend, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  searchFriends(data: SearchFriendParams, operationID = uuidv4()) {
+  };
+  searchFriends = (data: SearchFriendParams, operationID = uuidv4()) => {
     return this._invoker('searchFriends ', window.searchFriends, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  getDesignatedFriendsInfo(data: string[], operationID = uuidv4()) {
+  };
+  getDesignatedFriendsInfo = (data: string[], operationID = uuidv4()) => {
     return this._invoker(
       'getDesignatedFriendsInfo ',
       window.getDesignatedFriendsInfo,
       [operationID, JSON.stringify(data)]
     );
-  }
-  getRecvFriendApplicationList(operationID = uuidv4()) {
+  };
+  getRecvFriendApplicationList = (operationID = uuidv4()) => {
     return this._invoker(
       'getRecvFriendApplicationList ',
       window.getRecvFriendApplicationList,
       [operationID]
     );
-  }
-  getSendFriendApplicationList(operationID = uuidv4()) {
+  };
+  getSendFriendApplicationList = (operationID = uuidv4()) => {
     return this._invoker(
       'getSendFriendApplicationList ',
       window.getSendFriendApplicationList,
       [operationID]
     );
-  }
-  getFriendList(operationID = uuidv4()) {
+  };
+  getFriendList = (operationID = uuidv4()) => {
     return this._invoker('getFriendList ', window.getFriendList, [operationID]);
-  }
-  setFriendRemark(data: RemarkFriendParams, operationID = uuidv4()) {
+  };
+  setFriendRemark = (data: RemarkFriendParams, operationID = uuidv4()) => {
     return this._invoker('setFriendRemark ', window.setFriendRemark, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  checkFriend(data: string[], operationID = uuidv4()) {
+  };
+  checkFriend = (data: string[], operationID = uuidv4()) => {
     return this._invoker('checkFriend', window.checkFriend, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  acceptFriendApplication(data: AccessFriendParams, operationID = uuidv4()) {
+  };
+  acceptFriendApplication = (
+    data: AccessFriendParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'acceptFriendApplication',
       window.acceptFriendApplication,
       [operationID, JSON.stringify(data)]
     );
-  }
-  refuseFriendApplication(data: AccessFriendParams, operationID = uuidv4()) {
+  };
+  refuseFriendApplication = (
+    data: AccessFriendParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'refuseFriendApplication ',
       window.refuseFriendApplication,
       [operationID, JSON.stringify(data)]
     );
-  }
-  deleteFriend(data: string, operationID = uuidv4()) {
+  };
+  deleteFriend = (data: string, operationID = uuidv4()) => {
     return this._invoker('deleteFriend ', window.deleteFriend, [
       operationID,
       data,
     ]);
-  }
-  addBlack(data: string, operationID = uuidv4()) {
+  };
+  addBlack = (data: string, operationID = uuidv4()) => {
     return this._invoker('addBlack ', window.addBlack, [operationID, data]);
-  }
-  removeBlack(data: string, operationID = uuidv4()) {
+  };
+  removeBlack = (data: string, operationID = uuidv4()) => {
     return this._invoker('removeBlack ', window.removeBlack, [
       operationID,
       data,
     ]);
-  }
-  getBlackList(operationID = uuidv4()) {
+  };
+  getBlackList = (operationID = uuidv4()) => {
     return this._invoker('getBlackList ', window.getBlackList, [operationID]);
-  }
-  inviteUserToGroup(data: InviteGroupParams, operationID = uuidv4()) {
+  };
+  inviteUserToGroup = (data: InviteGroupParams, operationID = uuidv4()) => {
     return this._invoker('inviteUserToGroup ', window.inviteUserToGroup, [
       operationID,
       data.groupID,
       data.reason,
       JSON.stringify(data.userIDList),
     ]);
-  }
-  kickGroupMember(data: InviteGroupParams, operationID = uuidv4()) {
+  };
+  kickGroupMember = (data: InviteGroupParams, operationID = uuidv4()) => {
     return this._invoker('kickGroupMember ', window.kickGroupMember, [
       operationID,
       data.groupID,
       data.reason,
       JSON.stringify(data.userIDList),
     ]);
-  }
-  /* 、、、、、、、、、、、、、、、、周一问 */
-  getGroupMembersInfo(
+  };
+
+  getGroupMembersInfo = (
     data: Omit<InviteGroupParams, 'reason'>,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker('getGroupMembersInfo ', window.getGroupMembersInfo, [
       operationID,
       data.groupID,
       JSON.stringify(data.userIDList),
     ]);
-  }
-  getGroupMemberListByJoinTimeFilter(
+  };
+  getGroupMemberListByJoinTimeFilter = (
     data: GetGroupMemberByTimeParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'getGroupMemberListByJoinTimeFilter ',
       window.getGroupMemberListByJoinTimeFilter,
@@ -981,278 +1007,256 @@ class SDK extends Emitter {
         JSON.stringify(data.filterUserIDList),
       ]
     );
-  }
-  searchGroupMembers(data: SearchGroupMemberParams, operationID = uuidv4()) {
+  };
+  searchGroupMembers = (
+    data: SearchGroupMemberParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker('searchGroupMembers ', window.searchGroupMembers, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  setGroupApplyMemberFriend(data: SetMemberAuthParams, operationID = uuidv4()) {
+  };
+  setGroupApplyMemberFriend = (
+    data: SetMemberAuthParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'setGroupApplyMemberFriend ',
       window.setGroupApplyMemberFriend,
       [operationID, data.groupID, data.rule]
     );
-  }
-  setGroupLookMemberInfo(data: SetMemberAuthParams, operationID = uuidv4()) {
+  };
+  setGroupLookMemberInfo = (
+    data: SetMemberAuthParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'setGroupLookMemberInfo ',
       window.setGroupLookMemberInfo,
       [operationID, data.groupID, data.rule]
     );
-  }
-  getJoinedGroupList(operationID = uuidv4()) {
+  };
+  getJoinedGroupList = (operationID = uuidv4()) => {
     return this._invoker('getJoinedGroupList ', window.getJoinedGroupList, [
       operationID,
     ]);
-  }
-  createGroup(data: CreateGroupParams, operationID = uuidv4()) {
+  };
+  createGroup = (data: CreateGroupParams, operationID = uuidv4()) => {
     return this._invoker('createGroup ', window.createGroup, [
       operationID,
       JSON.stringify(data.groupBaseInfo),
       JSON.stringify(data.memberList),
     ]);
-  }
-  setGroupInfo(data: GroupInfoParams, operationID = uuidv4()) {
+  };
+  setGroupInfo = (data: GroupInfoParams, operationID = uuidv4()) => {
     return this._invoker('setGroupInfo ', window.setGroupInfo, [
       operationID,
       data.groupID,
       JSON.stringify(data.groupInfo),
     ]);
-  }
-  setGroupMemberNickname(data: MemberNameParams, operationID = uuidv4()) {
+  };
+  setGroupMemberNickname = (data: MemberNameParams, operationID = uuidv4()) => {
     return this._invoker(
       'setGroupMemberNickname ',
       window.setGroupMemberNickname,
       [operationID, data.groupID, data.userID, data.GroupMemberNickname]
     );
-  }
-  joinGroup(data: JoinGroupParams, operationID = uuidv4()) {
+  };
+  joinGroup = (data: JoinGroupParams, operationID = uuidv4()) => {
     return this._invoker('joinGroup ', window.joinGroup, [
       operationID,
       data.groupID,
       data.reqMsg,
       data.joinSource,
     ]);
-  }
-  searchGroups(data: SearchGroupParams, operationID = uuidv4()) {
+  };
+  searchGroups = (data: SearchGroupParams, operationID = uuidv4()) => {
     return this._invoker('searchGroups ', window.searchGroups, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  quitGroup(data: string, operationID = uuidv4()) {
+  };
+  quitGroup = (data: string, operationID = uuidv4()) => {
     return this._invoker('quitGroup ', window.quitGroup, [operationID, data]);
-  }
-  dismissGroup(data: string, operationID = uuidv4()) {
+  };
+  dismissGroup = (data: string, operationID = uuidv4()) => {
     return this._invoker('dismissGroup ', window.dismissGroup, [
       operationID,
       data,
     ]);
-  }
-  changeGroupMute(data: ChangeGroupMuteParams, operationID = uuidv4()) {
+  };
+  changeGroupMute = (data: ChangeGroupMuteParams, operationID = uuidv4()) => {
     return this._invoker('changeGroupMute ', window.changeGroupMute, [
       operationID,
       data.groupID,
       data.isMute,
     ]);
-  }
-  changeGroupMemberMute(
+  };
+  changeGroupMemberMute = (
     data: ChangeGroupMemberMuteParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'changeGroupMemberMute ',
       window.changeGroupMemberMute,
       [operationID, data.groupID, data.userID, data.mutedSeconds]
     );
-  }
-  transferGroupOwner(data: TransferGroupParams, operationID = uuidv4()) {
+  };
+  transferGroupOwner = (data: TransferGroupParams, operationID = uuidv4()) => {
     return this._invoker('transferGroupOwner ', window.transferGroupOwner, [
       operationID,
       data.groupID,
       data.newOwnerUserID,
     ]);
-  }
-  getSendGroupApplicationList(operationID = uuidv4()) {
+  };
+  getSendGroupApplicationList = (operationID = uuidv4()) => {
     return this._invoker(
       'getSendGroupApplicationList ',
       window.getSendGroupApplicationList,
       [operationID]
     );
-  }
-  getRecvGroupApplicationList(operationID = uuidv4()) {
+  };
+  getRecvGroupApplicationList = (operationID = uuidv4()) => {
     return this._invoker(
       'getRecvGroupApplicationList ',
       window.getRecvGroupApplicationList,
       [operationID]
     );
-  }
-  acceptGroupApplication(data: AccessGroupParams, operationID = uuidv4()) {
+  };
+  acceptGroupApplication = (
+    data: AccessGroupParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'acceptGroupApplication ',
       window.acceptGroupApplication,
       [operationID, data.groupID, data.fromUserID, data.handleMsg]
     );
-  }
-  refuseGroupApplication(data: AccessGroupParams, operationID = uuidv4()) {
+  };
+  refuseGroupApplication = (
+    data: AccessGroupParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'refuseGroupApplication ',
       window.refuseGroupApplication,
       [operationID, data.groupID, data.fromUserID, data.handleMsg]
     );
-  }
-  signalingInvite(data: RtcInvite, operationID = uuidv4()) {
+  };
+  signalingInvite = (data: RtcInvite, operationID = uuidv4()) => {
     return this._invoker('signalingInvite ', window.signalingInvite, [
       operationID,
       JSON.stringify({ invitation: data }),
     ]);
-  }
-  signalingInviteInGroup(data: RtcInvite, operationID = uuidv4()) {
+  };
+  signalingInviteInGroup = (data: RtcInvite, operationID = uuidv4()) => {
     return this._invoker(
       'signalingInviteInGroup ',
       window.signalingInviteInGroup,
       [operationID, JSON.stringify({ invitation: data })]
     );
-  }
-  signalingAccept(data: RtcActionParams, operationID = uuidv4()) {
+  };
+  signalingAccept = (data: RtcActionParams, operationID = uuidv4()) => {
     return this._invoker('signalingAccept ', window.signalingAccept, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  signalingReject(data: RtcActionParams, operationID = uuidv4()) {
+  };
+  signalingReject = (data: RtcActionParams, operationID = uuidv4()) => {
     return this._invoker('signalingReject ', window.signalingReject, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  signalingCancel(data: RtcActionParams, operationID = uuidv4()) {
+  };
+  signalingCancel = (data: RtcActionParams, operationID = uuidv4()) => {
     return this._invoker('signalingCancel ', window.signalingCancel, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  signalingHungUp(data: RtcActionParams, operationID = uuidv4()) {
+  };
+  signalingHungUp = (data: RtcActionParams, operationID = uuidv4()) => {
     return this._invoker('signalingHungUp ', window.signalingHungUp, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  getSubDepartment(data: GetSubDepParams, operationID = uuidv4()) {
-    return this._invoker('getSubDepartment ', window.getSubDepartment, [
-      operationID,
-      data.departmentID,
-      data.offset,
-      data.count,
-    ]);
-  }
-  getDepartmentMember(data: GetSubDepParams, operationID = uuidv4()) {
-    return this._invoker('getDepartmentMember ', window.getDepartmentMember, [
-      operationID,
-      data.departmentID,
-      data.offset,
-      data.count,
-    ]);
-  }
-  getUserInDepartment(userID: string, operationID = uuidv4()) {
-    return this._invoker('getUserInDepartment ', window.getUserInDepartment, [
-      operationID,
-      userID,
-    ]);
-  }
-  getDepartmentMemberAndSubDepartment(
-    departmentID: string,
-    operationID = uuidv4()
-  ) {
-    return this._invoker(
-      'getDepartmentMemberAndSubDepartment ',
-      window.getDepartmentMemberAndSubDepartment,
-      [operationID, departmentID]
-    );
-  }
-  getDepartmentInfo(departmentID: string, operationID = uuidv4()) {
-    return this._invoker('getDepartmentInfo ', window.getDepartmentInfo, [
-      operationID,
-      departmentID,
-    ]);
-  }
-  searchOrganization(data: any, operationID = uuidv4()) {
-    return this._invoker('searchOrganization ', window.searchOrganization, [
-      operationID,
-      JSON.stringify(data.input),
-      data.offset,
-      data.count,
-    ]);
-  }
-  resetConversationGroupAtType(data: string, operationID = uuidv4()) {
+  };
+  resetConversationGroupAtType = (data: string, operationID = uuidv4()) => {
     return this._invoker(
       'resetConversationGroupAtType ',
       window.resetConversationGroupAtType,
       [operationID, data]
     );
-  }
-  setGroupMemberRoleLevel(data: SetGroupRoleParams, operationID = uuidv4()) {
+  };
+  setGroupMemberRoleLevel = (
+    data: SetGroupRoleParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'setGroupMemberRoleLevel ',
       window.setGroupMemberRoleLevel,
       [operationID, data.groupID, data.userID, data.roleLevel]
     );
-  }
-  setGroupVerification(
+  };
+  setGroupVerification = (
     data: SetGroupVerificationParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker('setGroupVerification ', window.setGroupVerification, [
       operationID,
       data.groupID,
       data.verification,
     ]);
-  }
-  setGlobalRecvMessageOpt(data: { opt: OptType }, operationID = uuidv4()) {
+  };
+  setGlobalRecvMessageOpt = (
+    data: { opt: OptType },
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'setGlobalRecvMessageOpt ',
       window.setGlobalRecvMessageOpt,
       [operationID, data.opt]
     );
-  }
-  newRevokeMessage(data: string, operationID = uuidv4()) {
+  };
+  newRevokeMessage = (data: string, operationID = uuidv4()) => {
     return this._invoker('newRevokeMessage ', window.newRevokeMessage, [
       operationID,
       data,
     ]);
-  }
-  findMessageList(data: FindMessageParams, operationID = uuidv4()) {
+  };
+  findMessageList = (data: FindMessageParams, operationID = uuidv4()) => {
     return this._invoker('findMessageList ', window.findMessageList, [
       operationID,
       JSON.stringify(data),
     ]);
-  }
-  wakeUp(operationID = uuidv4()) {
+  };
+  wakeUp = (operationID = uuidv4()) => {
     return this._invoker('wakeUp', window.wakeUp, [operationID]);
-  }
-  signalingGetRoomByGroupID(groupID: string, operationID = uuidv4()) {
+  };
+  signalingGetRoomByGroupID = (groupID: string, operationID = uuidv4()) => {
     return this._invoker(
       'signalingGetRoomByGroupID ',
       window.signalingGetRoomByGroupID,
       [operationID, groupID]
     );
-  }
-  signalingGetTokenByRoomID(roomID: string, operationID = uuidv4()) {
+  };
+  signalingGetTokenByRoomID = (roomID: string, operationID = uuidv4()) => {
     return this._invoker(
       'signalingGetTokenByRoomID ',
       window.signalingGetTokenByRoomID,
       [operationID, roomID]
     );
-  }
-  signalingSendCustomSignal(data: CustomSignalParams, operationID = uuidv4()) {
+  };
+  signalingSendCustomSignal = (
+    data: CustomSignalParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker(
       'signalingSendCustomSignal ',
       window.signalingSendCustomSignal,
-      [operationID, data.custom, data.roomID]
+      [operationID, data.customInfo, data.roomID]
     );
-  }
+  };
 }
 
 let instance: SDK;
