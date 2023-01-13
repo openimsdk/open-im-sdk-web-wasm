@@ -418,7 +418,7 @@ class SDK extends Emitter {
     return await this._invoker(
       'deleteMessageReactionExtensions',
       window.deleteMessageReactionExtensions,
-      [operationID, params.message, params.reactionExtensionKeyList]
+      [operationID, params.messageStr, params.reactionExtensionKeyListStr]
     );
   }
 

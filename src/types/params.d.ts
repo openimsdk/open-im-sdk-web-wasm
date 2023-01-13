@@ -128,8 +128,8 @@ type SetMessageReactionExtensionsParams = {
 type SetMessageReactionExtensionsParam = Array<KeyValue>;
 
 type DeleteMessageReactionExtensionsParams = {
-  message: string;
-  reactionExtensionKeyList: string;
+  messageStr: string;
+  reactionExtensionKeyListStr: string;
 };
 
 type GetMessageListReactionExtensionsParams = {
