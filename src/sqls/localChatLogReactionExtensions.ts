@@ -143,3 +143,17 @@ export function deleteAndUpdateMessageReactionExtension(
     }
   }
 }
+
+export function getMultipleMessageReactionExtension(
+  db: Database,
+  msgIDList: string[]
+): QueryExecResult[] {
+  // "SELECT * FROM local_chat_log_reaction_extensions WHERE (client_msg_id IN ('123', '321'))";
+  const sql = squel
+    .select()
+    .from('local_chat_log_reaction_extensions')
+    .where('client_msg_id IN ?', msgIDList)
+    .toString();
+
+  return db.exec(sql);
+}

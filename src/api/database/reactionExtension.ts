@@ -4,7 +4,8 @@ import {
   getMessageReactionExtension as databaseGetMessageReactionExtension,
   insertMessageReactionExtension as databaseInsertMessageReactionExtension,
   getAndUpdateMessageReactionExtension as databaseGetAndUpdateMessageReactionExtension,
-  deleteAndUpdateMessageReactionExtension as databasDeleteAndUpdateMessageReactionExtension,
+  deleteAndUpdateMessageReactionExtension as databaseDeleteAndUpdateMessageReactionExtension,
+  getMultipleMessageReactionExtension as databaseGetMultipleMessageReactionExtension,
 } from '@/sqls/localChatLogReactionExtensions';
 import { converSqlExecResult, formatResponse, jsonDecode } from '@/utils';
 import { getInstance } from './instance';
@@ -102,10 +103,33 @@ export async function deleteAndUpdateMessageReactionExtension(
   try {
     const db = await getInstance();
 
-    const execResult = databasDeleteAndUpdateMessageReactionExtension(
+    const execResult = databaseDeleteAndUpdateMessageReactionExtension(
       db,
       clientMsgID,
       jsonDecode(valueMapStr)
+    );
+
+    return formatResponse(execResult);
+  } catch (error) {
+    console.error(error);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(error)
+    );
+  }
+}
+
+export async function getMultipleMessageReactionExtension(
+  msgIDList: string[]
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMultipleMessageReactionExtension(
+      db,
+      msgIDList
     );
 
     return formatResponse(execResult);

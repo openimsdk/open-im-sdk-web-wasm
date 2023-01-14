@@ -77,6 +77,7 @@ declare global {
     insertMessageReactionExtension: DatabaseApi;
     getAndUpdateMessageReactionExtension: DatabaseApi;
     deleteAndUpdateMessageReactionExtension: DatabaseApi;
+    getMultipleMessageReactionExtension: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;

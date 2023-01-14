@@ -72,6 +72,7 @@ import {
   getAndUpdateMessageReactionExtension,
   getMessageReactionExtension,
   insertMessageReactionExtension,
+  getMultipleMessageReactionExtension,
 } from '@/api/database/reactionExtension';
 
 const ctx = self;
@@ -232,4 +233,8 @@ rpc.registerMethod(
 rpc.registerMethod(
   'deleteAndUpdateMessageReactionExtension',
   deleteAndUpdateMessageReactionExtension
+);
+rpc.registerMethod(
+  'getMultipleMessageReactionExtension',
+  getMultipleMessageReactionExtension
 );
