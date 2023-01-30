@@ -7,7 +7,13 @@ import {
   deleteAndUpdateMessageReactionExtension as databaseDeleteAndUpdateMessageReactionExtension,
   getMultipleMessageReactionExtension as databaseGetMultipleMessageReactionExtension,
 } from '@/sqls/localChatLogReactionExtensions';
-import { converSqlExecResult, formatResponse, jsonDecode } from '@/utils';
+import {
+  converSqlExecResult,
+  convertObjectField,
+  convertToSnakeCaseObject,
+  formatResponse,
+  jsonDecode,
+} from '@/utils';
 import { getInstance } from './instance';
 
 export async function getMessageReactionExtension(
@@ -46,7 +52,11 @@ export async function insertMessageReactionExtension(
 
     databaseInsertMessageReactionExtension(
       db,
-      jsonDecode(messageReactionExtensionStr)
+      convertToSnakeCaseObject(
+        convertObjectField(jsonDecode(messageReactionExtensionStr), {
+          clientMsgID: 'client_msg_id',
+        })
+      )
     );
 
     const modifiedCount = db.getRowsModified();
@@ -122,17 +132,17 @@ export async function deleteAndUpdateMessageReactionExtension(
 }
 
 export async function getMultipleMessageReactionExtension(
-  msgIDList: string[]
+  msgIDListStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
     const execResult = databaseGetMultipleMessageReactionExtension(
       db,
-      msgIDList
+      jsonDecode(msgIDListStr)
     );
 
-    return formatResponse(execResult);
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
   } catch (error) {
     console.error(error);
 

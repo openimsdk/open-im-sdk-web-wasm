@@ -73,7 +73,7 @@ export function deleteSuperGroup(
 ): QueryExecResult[] {
   return db.exec(
     `
-        delete from local_super_groups where local_groups.group_id = '${groupID}';
+        delete from local_super_groups where group_id = '${groupID}';
     `
   );
 }

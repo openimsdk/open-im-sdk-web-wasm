@@ -152,6 +152,7 @@ class SDK extends Emitter {
       ws_addr: params.wsAddress,
       log_level: params.logLevel || 6,
       is_compression: params.isCompression ?? true,
+      is_external_extensions: params.isExternalExtensions ?? false,
     };
     window.initSDK(operationID, JSON.stringify(config));
 

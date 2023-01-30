@@ -65,11 +65,17 @@ export async function superGroupGetMultipleMessage(
 
     const execResult = databaseSuperGroupGetMultipleMessage(
       db,
-      groupID,
-      messageIds
+      messageIds,
+      groupID
     );
 
-    return formatResponse(converSqlExecResult(execResult[0]));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
   } catch (e) {
     console.error(e);
 

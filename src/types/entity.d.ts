@@ -14,6 +14,7 @@ type IMConfig = {
   ws_addr: string;
   log_level: number;
   is_compression?: boolean;
+  is_external_extensions?: boolean;
 };
 
 type OfflinePush = {
