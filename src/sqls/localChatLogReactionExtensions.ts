@@ -65,7 +65,7 @@ export function getAndUpdateMessageReactionExtension(
       .into('local_chat_log_reaction_extensions')
       .setFields({
         client_msg_id: clientMsgID,
-        local_reaction_extensions: jsonEncode(valueMap),
+        local_reaction_extensions: btoa(jsonEncode(valueMap)),
       })
       .toString();
 
@@ -76,8 +76,8 @@ export function getAndUpdateMessageReactionExtension(
     // update partial of local_reaction_extensions
     const oldValue =
       jsonDecode((selectResult[0].values[0][0] ?? '') as string) ?? {};
-    for (const clientMsgId in valueMap) {
-      oldValue[clientMsgId] = valueMap[clientMsgId];
+    for (const typeKey in valueMap) {
+      oldValue[typeKey] = valueMap[typeKey];
     }
     const updateSql = squel
       .update()
