@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import squel from 'squel';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { jsonDecode, jsonEncode } from '@/utils';
