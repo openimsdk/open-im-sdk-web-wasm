@@ -83,3 +83,19 @@ type AdvancedMsgParams = {
   text: string;
   messageEntityList?: MessageEntity[];
 };
+
+export {
+  LoginParam,
+  GetOneConversationParams,
+  GetAdvancedHistoryMsgParams,
+  GetHistoryMsgParams,
+  MarkC2CParams,
+  MarkNotiParams,
+  GetGroupMemberParams,
+  SendMsgParams,
+  ImageMsgParams,
+  CustomMsgParams,
+  QuoteMsgParams,
+  AdvancedQuoteMsgParams,
+  AdvancedMsgParams,
+};
