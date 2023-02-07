@@ -2,6 +2,9 @@ import { CbEvents } from '../constant';
 
 type DatabaseApi = (...args: any[]) => Promise<any>;
 
+export * from './entity';
+export * from './params';
+
 declare global {
   interface Window {
     // registered by js to provide database api

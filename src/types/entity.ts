@@ -41,3 +41,5 @@ type PicBaseInfo = {
   height: number;
   url: string;
 };
+
+export { WsResponse, IMConfig, OfflinePush, MessageEntity, PicBaseInfo };

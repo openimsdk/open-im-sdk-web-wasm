@@ -85,19 +85,6 @@ type AdvancedMsgParams = {
   messageEntityList?: MessageEntity[];
 };
 
-type MessageRevoked = {
-  revokerID: string;
-  revokerRole: number;
-  clientMsgID: string;
-  revokerNickname: string;
-  revokeTime: number;
-  sourceMessageSendTime: number;
-  sourceMessageSendID: string;
-  sourceMessageSenderNickname: string;
-  sessionType: number;
-  seq: number;
-};
-
 type KeyValue = {
   typeKey: string;
   value: string;
@@ -126,8 +113,6 @@ type SetMessageReactionExtensionsParams = {
   reactionExtensionListStr: string;
 };
 
-type SetMessageReactionExtensionsParam = Array<KeyValue>;
-
 type DeleteMessageReactionExtensionsParams = {
   messageStr: string;
   reactionExtensionKeyListStr: string;
@@ -149,8 +134,6 @@ type SetMessageReactionExtensionsCallback = {
   errMsg?: string;
 };
 
-type DeleteMessageReactionExtensionsParams = Array<string>;
-
 type SetMessageReactionExtensionsReq = {
   operationID: string;
   clientMsgID: string;
@@ -165,9 +148,9 @@ type SetMessageReactionExtensionsReq = {
 type DeleteMessageReactionExtensionsReq = {
   operationID: string;
   sourceID: string;
-  sessionType: numberstring;
+  sessionType: number;
   clientMsgID: string;
-  msgFirstModifyTime: numberstring;
+  msgFirstModifyTime: number;
   reactionExtensionList: Array<KeyValue>;
 };
 
@@ -189,15 +172,44 @@ type AddMessageReactionExtensionsReq = {
   operationID: string;
   clientMsgID: string;
   sourceID: string;
-  sessionType: int32;
+  sessionType: number;
   reactionExtensionList: Record<string, KeyValue>;
-  isReact: bool; //`json:"isReact,omitempty"`
-  isExternalExtensions: bool; //`json:"isExternalExtensions,omitempty"`
-  msgFirstModifyTime: int64; //`json:"msgFirstModifyTime,omitempty"`
+  isReact: boolean; //`json:"isReact,omitempty"`
+  isExternalExtensions: boolean; //`json:"isExternalExtensions,omitempty"`
+  msgFirstModifyTime: number; //`json:"msgFirstModifyTime,omitempty"`
 };
 
 type AddMessageReactionExtensionsParams = {
   messageStr: string;
   reactionExtensionListStr: string;
 };
-AddMessageReactionExtensionsParam = Array<KeyValue>;
+
+type AddMessageReactionExtensionsParam = Array<KeyValue>;
+
+export {
+  LoginParam,
+  GetOneConversationParams,
+  GetAdvancedHistoryMsgParams,
+  GetHistoryMsgParams,
+  MarkC2CParams,
+  MarkNotiParams,
+  GetGroupMemberParams,
+  SendMsgParams,
+  ImageMsgParams,
+  CustomMsgParams,
+  QuoteMsgParams,
+  AdvancedQuoteMsgParams,
+  AdvancedMsgParams,
+  MessageReaction,
+  modifyGroupMessageReactionParams,
+  SetMessageReactionExtensionsParams,
+  GetMessageListReactionExtensionsParams,
+  GetMessageListSomeReactionExtensionsParams,
+  SetMessageReactionExtensionsCallback,
+  SetMessageReactionExtensionsReq,
+  DeleteMessageReactionExtensionsReq,
+  GetMessageListReactionExtensionsReq,
+  AddMessageReactionExtensionsReq,
+  AddMessageReactionExtensionsParams,
+  AddMessageReactionExtensionsParam,
+};
