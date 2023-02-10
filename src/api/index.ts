@@ -324,6 +324,9 @@ export function initDatabaseAPI(): void {
   );
   window.superGroupUpdateMsgSenderFaceURLAndSenderNickname =
     registeMethodOnWindow('superGroupUpdateMsgSenderFaceURLAndSenderNickname');
+  window.superGroupSearchAllMessageByContentType = registeMethodOnWindow(
+    'superGroupSearchAllMessageByContentType'
+  );
 
   // debug
   window.exec = registeMethodOnWindow('exec');

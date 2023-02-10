@@ -377,6 +377,12 @@ export type MemberNameParams = {
   GroupMemberNickname: string;
 };
 
+export type MemberExParams = {
+  groupID: string;
+  userID: string;
+  ex: string;
+};
+
 export type GetSubDepParams = {
   departmentID: string;
   offset: number;

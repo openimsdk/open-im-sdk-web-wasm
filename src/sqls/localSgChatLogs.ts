@@ -440,3 +440,17 @@ export function superGroupUpdateMsgSenderFaceURLAndSenderNickname(
     `
   );
 }
+
+export function superGroupSearchAllMessageByContentType(
+  db: Database,
+  groupID: string,
+  contentType: number
+): QueryExecResult[] {
+  _initSuperGroupTable(db, groupID);
+
+  return db.exec(
+    `
+    SELECT * FROM local_sg_chat_logs_${groupID} WHERE content_type = ${contentType}
+    `
+  );
+}

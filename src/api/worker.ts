@@ -100,6 +100,7 @@ import {
   superGroupUpdateMessageStatusBySourceID,
   superGroupUpdateColumnsMessage,
   superGroupUpdateMsgSenderFaceURLAndSenderNickname,
+  superGroupSearchAllMessageByContentType,
 
   // black
   getBlackList,
@@ -345,6 +346,10 @@ rpc.registerMethod(
 rpc.registerMethod(
   'superGroupUpdateMsgSenderFaceURLAndSenderNickname',
   superGroupUpdateMsgSenderFaceURLAndSenderNickname
+);
+rpc.registerMethod(
+  'superGroupSearchAllMessageByContentType',
+  superGroupSearchAllMessageByContentType
 );
 
 // black

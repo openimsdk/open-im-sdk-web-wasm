@@ -103,6 +103,7 @@ declare global {
     superGroupUpdateGroupMessageHasRead: DatabaseApi;
     superGroupGetMsgSeqByClientMsgID: DatabaseApi;
     superGroupUpdateMsgSenderFaceURLAndSenderNickname: DatabaseApi;
+    superGroupSearchAllMessageByContentType: DatabaseApi;
     getRowsModified: DatabaseApi;
 
     // black
@@ -592,6 +593,10 @@ declare global {
       groupID: string,
       userID: string,
       GroupMemberNickname: string
+    ) => Promise<string>;
+    setGroupMemberInfo: (
+      operationID: string,
+      groupBaseInfo: string
     ) => Promise<string>;
     joinGroup: (
       operationID: string,

@@ -37,6 +37,7 @@ import {
   LoginParam,
   MarkC2CParams,
   MarkNotiParams,
+  MemberExParams,
   MemberNameParams,
   MergerMsgParams,
   PartialUserItem,
@@ -156,7 +157,7 @@ class SDK extends Emitter {
       // return response as WsResponse;
     });
   }
-  async login(params: LoginParam, operationID = uuidv4()) {
+  login = async (params: LoginParam, operationID = uuidv4()) => {
     console.info(
       `SDK => (invoked by js) run login with args ${JSON.stringify({
         params,
@@ -187,7 +188,7 @@ class SDK extends Emitter {
     window.initSDK(operationID, JSON.stringify(config));
 
     return await window.login(operationID, params.userID, params.token);
-  }
+  };
   logout = (operationID = uuidv4()) => {
     return this._invoker('logout', window.logout, [operationID]);
   };
@@ -420,16 +421,16 @@ class SDK extends Emitter {
     return this._invoker('exportDB', window.exportDB, [operationID]);
   }
 
-  getHistoryMessageListReverse(
+  getHistoryMessageListReverse = (
     params: GetHistoryMsgParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'getHistoryMessageListReverse',
       window.getHistoryMessageListReverse,
       [operationID, JSON.stringify(params)]
     );
-  }
+  };
 
   revokeMessage = (params: string, operationID = uuidv4()) => {
     return this._invoker('revokeMessage', window.revokeMessage, [
@@ -591,10 +592,10 @@ class SDK extends Emitter {
     );
   };
 
-  createVideoMessageFromFullPath(
+  createVideoMessageFromFullPath = (
     data: VideoMsgFullParams,
     operationID = uuidv4()
-  ) {
+  ) => {
     return this._invoker(
       'createVideoMessageFromFullPath ',
       window.createVideoMessageFromFullPath,
@@ -610,7 +611,7 @@ class SDK extends Emitter {
         return data[0];
       }
     );
-  }
+  };
 
   createMergerMessage = (data: MergerMsgParams, operationID = uuidv4()) => {
     return this._invoker(
@@ -1062,6 +1063,12 @@ class SDK extends Emitter {
       window.setGroupMemberNickname,
       [operationID, data.groupID, data.userID, data.GroupMemberNickname]
     );
+  };
+  setGroupMemberInfo = (data: MemberExParams, operationID = uuidv4()) => {
+    return this._invoker('setGroupMemberInfo ', window.setGroupMemberInfo, [
+      operationID,
+      JSON.stringify(data),
+    ]);
   };
   joinGroup = (data: JoinGroupParams, operationID = uuidv4()) => {
     return this._invoker('joinGroup ', window.joinGroup, [

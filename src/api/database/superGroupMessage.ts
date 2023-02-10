@@ -20,6 +20,7 @@ import {
   superGroupUpdateGroupMessageHasRead as databaseSuperGroupUpdateGroupMessageHasRead,
   superGroupGetMsgSeqByClientMsgID as databaseSuperGroupGetMsgSeqByClientMsgID,
   superGroupUpdateMsgSenderFaceURLAndSenderNickname as databaseSuperGroupUpdateMsgSenderFaceURLAndSenderNickname,
+  superGroupSearchAllMessageByContentType as databaseSuperGroupSearchAllMessageByContentType,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -613,6 +614,33 @@ export async function superGroupUpdateMsgSenderFaceURLAndSenderNickname(
     }
 
     return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupSearchAllMessageByContentType(
+  groupID: string,
+  contentType: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSuperGroupSearchAllMessageByContentType(
+      db,
+      groupID,
+      contentType
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+    );
   } catch (e) {
     console.error(e);
 
