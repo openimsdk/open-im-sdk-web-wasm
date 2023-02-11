@@ -8,16 +8,22 @@ import {
   AdvancedMsgParams,
   AdvancedQuoteMsgParams,
   CustomMsgParams,
+  DeleteMessageReactionExtensionsParams,
   GetAdvancedHistoryMsgParams,
   GetGroupMemberParams,
   GetHistoryMsgParams,
+  GetMessageListReactionExtensionsParams,
+  GetMessageListSomeReactionExtensionsParams,
   GetOneConversationParams,
   ImageMsgParams,
   LoginParam,
   MarkC2CParams,
   MarkNotiParams,
+  modifyGroupMessageReactionParams,
   QuoteMsgParams,
   SendMsgParams,
+  SetMessageReactionExtensionsParams,
+  AddMessageReactionExtensionsParams,
 } from '../types/params';
 
 import { IMConfig, WsResponse } from '../types/entity';
@@ -146,6 +152,7 @@ class SDK extends Emitter {
       ws_addr: params.wsAddress,
       log_level: params.logLevel || 6,
       is_compression: params.isCompression ?? true,
+      is_external_extensions: params.isExternalExtensions ?? false,
     };
     window.initSDK(operationID, JSON.stringify(config));
 
@@ -360,12 +367,84 @@ class SDK extends Emitter {
       data,
     ]);
   }
+
   async revokeMessage(params: string, operationID = uuidv4()) {
     return await this._invoker('revokeMessage', window.revokeMessage, [
       operationID,
       params,
     ]);
   }
+  async modifyGroupMessageReaction(
+    params: modifyGroupMessageReactionParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'modifyGroupMessageReaction',
+      window.modifyGroupMessageReaction,
+      [
+        operationID,
+        params.counter,
+        params.reactionType,
+        params.groupID,
+        params.msgID,
+      ]
+    );
+  }
+  async setMessageReactionExtensions(
+    params: SetMessageReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'setMessageReactionExtensions',
+      window.setMessageReactionExtensions,
+      [operationID, params.messageStr, params.reactionExtensionListStr]
+    );
+  }
+
+  async addMessageReactionExtensions(
+    params: AddMessageReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'addMessageReactionExtensions',
+      window.addMessageReactionExtensions,
+      [operationID, params.messageStr, params.reactionExtensionListStr]
+    );
+  }
+
+  async deleteMessageReactionExtensions(
+    params: DeleteMessageReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'deleteMessageReactionExtensions',
+      window.deleteMessageReactionExtensions,
+      [operationID, params.messageStr, params.reactionExtensionKeyListStr]
+    );
+  }
+
+  async getMessageListReactionExtensions(
+    params: GetMessageListReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getMessageListReactionExtensions',
+      window.getMessageListReactionExtensions,
+      [operationID, params.messageListStr]
+    );
+  }
+
+  async getMessageListSomeReactionExtensions(
+    params: GetMessageListSomeReactionExtensionsParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getMessageListSomeReactionExtensions',
+      window.getMessageListSomeReactionExtensions,
+      [operationID, params.messageListStr, params.reactionExtensionKeyListStr]
+    );
+  }
+
   async updateFcmToken(fcmToken: string, operationID = uuidv4()) {
     return await this._invoker('updateFcmToken', window.updateFcmToken, [
       operationID,

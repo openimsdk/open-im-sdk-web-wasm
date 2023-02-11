@@ -226,6 +226,23 @@ export function initDatabaseAPI(): void {
     'updateMessageStatusBySourceID'
   );
 
+  // reaction extensions
+  window.getMessageReactionExtension = registeMethodOnWindow(
+    'getMessageReactionExtension'
+  );
+  window.insertMessageReactionExtension = registeMethodOnWindow(
+    'insertMessageReactionExtension'
+  );
+  window.getAndUpdateMessageReactionExtension = registeMethodOnWindow(
+    'getAndUpdateMessageReactionExtension'
+  );
+  window.deleteAndUpdateMessageReactionExtension = registeMethodOnWindow(
+    'deleteAndUpdateMessageReactionExtension'
+  );
+  window.getMultipleMessageReactionExtension = registeMethodOnWindow(
+    'getMultipleMessageReactionExtension'
+  );
+
   // debug
   window.exec = registeMethodOnWindow('exec');
   window.getRowsModified = registeMethodOnWindow('getRowsModified');

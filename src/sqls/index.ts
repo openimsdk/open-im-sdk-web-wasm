@@ -4,3 +4,4 @@ export * from './localUsers';
 export * from './localSuperGroups';
 export * from './localConversationUnreadMessages';
 export * from './localSgChatLogs';
+export * from './localChatLogReactionExtensions';

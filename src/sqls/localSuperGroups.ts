@@ -84,7 +84,7 @@ export function getSuperGroupInfoByGroupID(
 ): QueryExecResult[] {
   return db.exec(
     `
-        select * from local_super_groups where group_id = '${groupID}'  LIMIT 1;
+        select * from local_super_groups where group_id = '${groupID}' LIMIT 1;
     `
   );
 }

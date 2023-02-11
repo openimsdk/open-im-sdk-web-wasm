@@ -8,6 +8,7 @@ type LoginParam = {
   wsAddress: string;
   logLevel?: number;
   isCompression?: boolean;
+  isExternalExtensions?: boolean;
 };
 
 type GetOneConversationParams = {
@@ -17,11 +18,11 @@ type GetOneConversationParams = {
 
 type GetAdvancedHistoryMsgParams = {
   userID: string;
-  groupID: string;
   lastMinSeq: number;
-  count: number;
-  startClientMsgID: string;
+  groupID: string;
   conversationID?: string;
+  startClientMsgID: string;
+  count: number;
 };
 
 type GetHistoryMsgParams = {
@@ -84,6 +85,107 @@ type AdvancedMsgParams = {
   messageEntityList?: MessageEntity[];
 };
 
+type KeyValue = {
+  typeKey: string;
+  value: string;
+  latestUpdateTime: number;
+};
+
+type MessageReaction = {
+  clientMsgID: string;
+  reactionType: number;
+  counter: number;
+  userID: string;
+  groupID: string;
+  sessionType: number;
+  info: string;
+};
+
+type modifyGroupMessageReactionParams = {
+  counter: number;
+  reactionType: number;
+  groupID: string;
+  msgID: string;
+};
+
+type SetMessageReactionExtensionsParams = {
+  messageStr: string;
+  reactionExtensionListStr: string;
+};
+
+type DeleteMessageReactionExtensionsParams = {
+  messageStr: string;
+  reactionExtensionKeyListStr: string;
+};
+
+type GetMessageListReactionExtensionsParams = {
+  messageListStr: string;
+};
+
+type GetMessageListSomeReactionExtensionsParams = {
+  messageListStr: string;
+  reactionExtensionKeyListStr: string;
+};
+
+type SetMessageReactionExtensionsCallback = {
+  key: string;
+  value: string;
+  errCode?: number;
+  errMsg?: string;
+};
+
+type SetMessageReactionExtensionsReq = {
+  operationID: string;
+  clientMsgID: string;
+  sourceID: string;
+  sessionType: number;
+  reactionExtensionList: Record<string, KeyValue>;
+  isReact: boolean;
+  isExternalExtensions: boolean;
+  msgFirstModifyTime: number;
+};
+
+type DeleteMessageReactionExtensionsReq = {
+  operationID: string;
+  sourceID: string;
+  sessionType: number;
+  clientMsgID: string;
+  msgFirstModifyTime: number;
+  reactionExtensionList: Array<KeyValue>;
+};
+
+type OperateMessageListReactionExtensionsReq = {
+  clientMsgID: string;
+  msgFirstModifyTime: number;
+};
+
+type GetMessageListReactionExtensionsReq = {
+  operationID: string;
+  sourceID: string;
+  sessionType: number;
+  isExternalExtensions: boolean;
+  typeKeyList: Array<string>;
+  messageReactionKeyList: Array<OperateMessageListReactionExtensionsReq>;
+};
+
+type AddMessageReactionExtensionsReq = {
+  operationID: string;
+  clientMsgID: string;
+  sourceID: string;
+  sessionType: number;
+  reactionExtensionList: Record<string, KeyValue>;
+  isReact: boolean; //`json:"isReact,omitempty"`
+  isExternalExtensions: boolean; //`json:"isExternalExtensions,omitempty"`
+  msgFirstModifyTime: number; //`json:"msgFirstModifyTime,omitempty"`
+};
+
+type AddMessageReactionExtensionsParams = {
+  messageStr: string;
+  reactionExtensionListStr: string;
+};
+
+type AddMessageReactionExtensionsParam = Array<KeyValue>;
+
 export {
   LoginParam,
   GetOneConversationParams,
@@ -98,4 +200,17 @@ export {
   QuoteMsgParams,
   AdvancedQuoteMsgParams,
   AdvancedMsgParams,
+  MessageReaction,
+  modifyGroupMessageReactionParams,
+  SetMessageReactionExtensionsParams,
+  DeleteMessageReactionExtensionsParams,
+  GetMessageListReactionExtensionsParams,
+  GetMessageListSomeReactionExtensionsParams,
+  SetMessageReactionExtensionsCallback,
+  SetMessageReactionExtensionsReq,
+  DeleteMessageReactionExtensionsReq,
+  GetMessageListReactionExtensionsReq,
+  AddMessageReactionExtensionsReq,
+  AddMessageReactionExtensionsParams,
+  AddMessageReactionExtensionsParam,
 };

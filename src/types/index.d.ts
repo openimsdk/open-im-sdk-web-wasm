@@ -75,6 +75,12 @@ declare global {
     superGroupGetMessageList: DatabaseApi;
     getRowsModified: DatabaseApi;
     superGroupSearchAllMessageByContentType: DatabaseApi;
+    // reaction extension
+    getMessageReactionExtension: DatabaseApi;
+    insertMessageReactionExtension: DatabaseApi;
+    getAndUpdateMessageReactionExtension: DatabaseApi;
+    deleteAndUpdateMessageReactionExtension: DatabaseApi;
+    getMultipleMessageReactionExtension: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;
@@ -166,6 +172,43 @@ declare global {
     ) => Promise<string>;
     revokeMessage: (operationID: string, params: string) => Promise<string>;
     newRevokeMessage: (operationID: string, message: string) => Promise<string>;
+
+    modifyGroupMessageReaction: (
+      operationID: string,
+      counter: number,
+      reactionType: number,
+      groupID: string,
+      msgID: string
+    ) => Promise<string>;
+
+    setMessageReactionExtensions: (
+      operationID: string,
+      message: string,
+      reactionExtensionList: string
+    ) => Promise<string>;
+    addMessageReactionExtensions: (
+      operationID: string,
+      message: string,
+      reactionExtensionList: string
+    ) => Promise<string>;
+
+    deleteMessageReactionExtensions: (
+      operationID: string,
+      message: string,
+      reactionExtensionKeyList: string
+    ) => Promise<string>;
+
+    getMessageListReactionExtensions: (
+      operationID: string,
+      messageListStr: string
+    ) => Promise<string>;
+
+    getMessageListSomeReactionExtensions: (
+      operationID: string,
+      messageListStr: string,
+      reactionExtensionKeyListStr: string
+    ) => Promise<string>;
+
     updateFcmToken: (operationID: string, fcmToken: string) => Promise<string>;
     setAppBackgroundStatus: (
       operationID: string,

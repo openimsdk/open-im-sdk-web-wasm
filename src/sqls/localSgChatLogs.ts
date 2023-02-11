@@ -184,17 +184,16 @@ export function superGroupInsertMessage(
 
 export function superGroupGetMultipleMessage(
   db: Database,
-  groupID: string,
-  msgIDList: string[]
+  msgIDList: string[],
+  groupID: string
 ): QueryExecResult[] {
   _initSuperGroupTable(db, groupID);
 
   const values = msgIDList.map(v => `'${v}'`).join(',');
-  return db.exec(
-    `
-        select * from local_sg_chat_logs_${groupID} where client_msg_id in (${values}) order by send_time desc;
-    `
-  );
+
+  const sql = `select * from local_sg_chat_logs_${groupID} where client_msg_id in (${values}) order by send_time desc;`;
+
+  return db.exec(sql);
 }
 
 export function superGroupUpdateMessageTimeAndStatus(

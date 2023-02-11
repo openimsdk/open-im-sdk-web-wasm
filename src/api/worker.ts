@@ -67,6 +67,14 @@ import {
 
 import { getInstance } from './database/instance';
 
+import {
+  deleteAndUpdateMessageReactionExtension,
+  getAndUpdateMessageReactionExtension,
+  getMessageReactionExtension,
+  insertMessageReactionExtension,
+  getMultipleMessageReactionExtension,
+} from '@/api/database/reactionExtension';
+
 const ctx = self;
 const rpc = new RPC({
   event: new RPCMessageEvent({
@@ -211,3 +219,22 @@ rpc.registerMethod('exportDB', async () => {
     console.info('sql export error, return ', error);
   }
 });
+
+// reaction extensions
+rpc.registerMethod('getMessageReactionExtension', getMessageReactionExtension);
+rpc.registerMethod(
+  'insertMessageReactionExtension',
+  insertMessageReactionExtension
+);
+rpc.registerMethod(
+  'getAndUpdateMessageReactionExtension',
+  getAndUpdateMessageReactionExtension
+);
+rpc.registerMethod(
+  'deleteAndUpdateMessageReactionExtension',
+  deleteAndUpdateMessageReactionExtension
+);
+rpc.registerMethod(
+  'getMultipleMessageReactionExtension',
+  getMultipleMessageReactionExtension
+);
