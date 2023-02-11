@@ -203,6 +203,7 @@ export {
   MessageReaction,
   modifyGroupMessageReactionParams,
   SetMessageReactionExtensionsParams,
+  DeleteMessageReactionExtensionsParams,
   GetMessageListReactionExtensionsParams,
   GetMessageListSomeReactionExtensionsParams,
   SetMessageReactionExtensionsCallback,
