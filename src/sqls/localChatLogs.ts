@@ -87,9 +87,9 @@ export function getMultipleMessage(
 ): QueryExecResult[] {
   const values = msgIDList.map(v => `'${v}'`).join(',');
 
-  return db.exec(`
-      select * from local_sg_chat_logs where client_msg_id in (${values}) order by send_time desc;
-    `);
+  const sql = `select * from local_chat_logs where client_msg_id in (${values}) order by send_time desc;`;
+
+  return db.exec(sql);
 }
 
 export function getSendingMessageList(db: Database): QueryExecResult[] {
