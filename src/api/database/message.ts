@@ -22,6 +22,7 @@ import {
   convertObjectField,
   convertToSnakeCaseObject,
   formatResponse,
+  jsonDecode,
 } from '@/utils';
 import { getInstance } from './instance';
 
@@ -58,12 +59,15 @@ export async function getMessage(messageId: string): Promise<string> {
 }
 
 export async function getMultipleMessage(
-  messageIds: string[]
+  messageIdsStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMultipleMessage(db, messageIds);
+    const execResult = databaseGetMultipleMessage(
+      db,
+      jsonDecode(messageIdsStr, [])
+    );
 
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [
