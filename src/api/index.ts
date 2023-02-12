@@ -242,6 +242,12 @@ export function initDatabaseAPI(): void {
   window.getMultipleMessageReactionExtension = registeMethodOnWindow(
     'getMultipleMessageReactionExtension'
   );
+  window.updateMessageReactionExtension = registeMethodOnWindow(
+    'updateMessageReactionExtension'
+  );
+  window.deleteMessageReactionExtension = registeMethodOnWindow(
+    'deleteMessageReactionExtension'
+  );
 
   // debug
   window.exec = registeMethodOnWindow('exec');
