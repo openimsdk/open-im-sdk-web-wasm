@@ -129,8 +129,8 @@ export function deleteAndUpdateMessageReactionExtension(
     const updateSql = squel
       .update()
       .table('local_chat_log_reaction_extensions')
-      .set('local_reaction_extensions', jsonEncode(oldValue))
-      .where(`client_msg_id = ${clientMsgID}`)
+      .set('local_reaction_extensions', btoa(jsonEncode(oldValue)))
+      .where(`client_msg_id = '${clientMsgID}'`)
       .toString();
 
     db.exec(updateSql);
@@ -157,6 +157,38 @@ export function getMultipleMessageReactionExtension(
     .select()
     .from('local_chat_log_reaction_extensions')
     .where(`client_msg_id IN ("${msgIDList.join('","')}")`)
+    .toString();
+
+  return db.exec(sql);
+}
+
+export function deleteMessageReactionExtension(db: Database, msgId: string) {
+  if (!msgId) {
+    return [];
+  }
+  const sql = squel
+    .delete()
+    .from('local_chat_log_reaction_extensions')
+    .where(`client_msg_id='${msgId}'`)
+    .toString();
+
+  return db.exec(sql);
+}
+
+export function updateMessageReactionExtension(
+  db: Database,
+  msgId: string,
+  extensionsStr: string
+) {
+  if (!msgId || !extensionsStr) {
+    return [];
+  }
+
+  const sql = squel
+    .update()
+    .table('local_chat_log_reaction_extensions')
+    .set('local_reaction_extensions', btoa(jsonEncode(extensionsStr)))
+    .where(`client_msg_id='${msgId}'`)
     .toString();
 
   return db.exec(sql);

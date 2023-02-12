@@ -5,6 +5,8 @@ import {
   getAndUpdateMessageReactionExtension as databaseGetAndUpdateMessageReactionExtension,
   deleteAndUpdateMessageReactionExtension as databaseDeleteAndUpdateMessageReactionExtension,
   getMultipleMessageReactionExtension as databaseGetMultipleMessageReactionExtension,
+  deleteMessageReactionExtension as databaseDeleteMessageReactionExtension,
+  updateMessageReactionExtension as databaseUpdateMessageReactionExtension,
 } from '@/sqls/localChatLogReactionExtensions';
 import {
   converSqlExecResult,
@@ -138,7 +140,52 @@ export async function getMultipleMessageReactionExtension(
 
     const execResult = databaseGetMultipleMessageReactionExtension(
       db,
-      jsonDecode(msgIDListStr)
+      jsonDecode(msgIDListStr, [])
+    );
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
+  } catch (error) {
+    console.error(error);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(error)
+    );
+  }
+}
+
+export async function deleteMessageReactionExtension(
+  msgID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseDeleteMessageReactionExtension(db, msgID);
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
+  } catch (error) {
+    console.error(error);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(error)
+    );
+  }
+}
+
+export async function updateMessageReactionExtension(
+  msgId: string,
+  extensionsStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseUpdateMessageReactionExtension(
+      db,
+      msgId,
+      extensionsStr
     );
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
