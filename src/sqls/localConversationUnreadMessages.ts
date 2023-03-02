@@ -27,11 +27,14 @@ export function deleteConversationUnreadMessageList(
   conversationID: string,
   sendTime: number
 ): QueryExecResult[] {
-  return db.exec(
-    `
-        delete from local_conversation_unread_messages where conversation_id = '${conversationID}' and send_time <= ${sendTime};
-    `
-  );
+  const sql = squel
+    .delete()
+    .from('local_conversation_unread_messages')
+    .where(`conversation_id='${conversationID}'`)
+    .where(`send_time <= ${sendTime}`)
+    .toString();
+
+  return db.exec(sql);
 }
 
 export function batchInsertConversationUnreadMessageList(

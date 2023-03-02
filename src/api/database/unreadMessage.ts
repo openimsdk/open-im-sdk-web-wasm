@@ -14,13 +14,10 @@ export async function deleteConversationUnreadMessageList(
   try {
     const db = await getInstance();
 
-    const execResult = databaseDeleteConversationUnreadMessageList(
-      db,
-      conversationID,
-      sendTime
-    );
+    databaseDeleteConversationUnreadMessageList(db, conversationID, sendTime);
+    const modifedCount = db.getRowsModified();
 
-    return formatResponse(execResult[0]);
+    return formatResponse(modifedCount);
   } catch (e) {
     console.error(e);
 
