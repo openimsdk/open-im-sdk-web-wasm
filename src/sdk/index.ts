@@ -2,7 +2,7 @@ import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { WSEvent } from '../types';
-import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
+import { getGO, initializeWasm, getGoExitPromise } from './initialize';
 
 import {
   AdvancedMsgParams,
@@ -38,7 +38,7 @@ class SDK extends Emitter {
 
     initDatabaseAPI();
     this.wasmInitializedPromise = initializeWasm(url);
-    this.goExitPromise = getGoExitPromsie();
+    this.goExitPromise = getGoExitPromise();
 
     if (this.goExitPromise) {
       this.goExitPromise
@@ -257,7 +257,7 @@ class SDK extends Emitter {
       window.createTextMessage,
       [operationID, text],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -273,7 +273,7 @@ class SDK extends Emitter {
         JSON.stringify(params.snapshotPicture),
       ],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -284,7 +284,7 @@ class SDK extends Emitter {
       window.createCustomMessage,
       [operationID, params.data, params.extension, params.description],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -295,7 +295,7 @@ class SDK extends Emitter {
       window.createQuoteMessage,
       [operationID, params.text, params.message],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -314,7 +314,7 @@ class SDK extends Emitter {
         JSON.stringify(params.messageEntityList),
       ],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -328,7 +328,7 @@ class SDK extends Emitter {
       window.createAdvancedTextMessage,
       [operationID, params.text, JSON.stringify(params.messageEntityList)],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );

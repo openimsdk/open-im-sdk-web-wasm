@@ -9,7 +9,7 @@ import {
   updateMessage as databaseUpdateMessage,
   insertMessage as databaseAddMessage,
   batchInsertMessageList as databaseBatchInsertMessageList,
-  getMessageList as databaseGetMesageList,
+  getMessageList as databaseGetMessageList,
   getMessageListNoTime as databaseGetMessageListNoTime,
   searchAllMessageByContentType as databaseSearchAllMessageByContentType,
   getMsgSeqListByPeerUserID as databaseGetMsgSeqListByPeerUserID,
@@ -18,7 +18,7 @@ import {
   updateMessageStatusBySourceID as databaseUpdateMessageStatusBySourceID,
 } from '@/sqls';
 import {
-  converSqlExecResult,
+  convertSqlExecResult,
   convertObjectField,
   convertToSnakeCaseObject,
   formatResponse,
@@ -41,7 +41,7 @@ export async function getMessage(messageId: string): Promise<string> {
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -70,7 +70,7 @@ export async function getMultipleMessage(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -94,7 +94,7 @@ export async function getSendingMessageList(): Promise<string> {
     const execResult = databaseGetSendingMessageList(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -169,8 +169,8 @@ export async function updateMessage(
     ) as ClientMessage;
 
     const execResult = databaseUpdateMessage(db, clientMsgId, message);
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
+    const modified = db.getRowsModified();
+    if (modified === 0) {
       throw 'updateMessage no record updated';
     }
 
@@ -198,8 +198,8 @@ export async function updateColumnsMessage(
       clientMsgId,
       JSON.parse(messageStr) as ClientMessage
     );
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
+    const modified = db.getRowsModified();
+    if (modified === 0) {
       throw 'updateMessage no record updated';
     }
 
@@ -279,7 +279,7 @@ export async function getMessageListNoTime(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -307,7 +307,7 @@ export async function getMessageList(
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMesageList(
+    const execResult = databaseGetMessageList(
       db,
       sourceID,
       sessionType,
@@ -318,7 +318,7 @@ export async function getMessageList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -342,7 +342,7 @@ export async function searchAllMessageByContentType(
     const db = await getInstance();
     const execResult = databaseSearchAllMessageByContentType(db, contentType);
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -365,10 +365,10 @@ export async function getMsgSeqListByPeerUserID(
     const db = await getInstance();
 
     const execResult = databaseGetMsgSeqListByPeerUserID(db, userID);
-    const converedResult = converSqlExecResult(execResult[0], 'CamelCase');
+    const convertedResult = convertSqlExecResult(execResult[0], 'CamelCase');
 
     return formatResponse(
-      converedResult.map(item => {
+      convertedResult.map(item => {
         return item.seq;
       })
     );
@@ -391,10 +391,10 @@ export async function getMsgSeqListBySelfUserID(
 
     const execResult = databaseGetMsgSeqListBySelfUserID(db, userID);
 
-    const converedResult = converSqlExecResult(execResult[0], 'CamelCase');
+    const convertedResult = convertSqlExecResult(execResult[0], 'CamelCase');
 
     return formatResponse(
-      converedResult.map(item => {
+      convertedResult.map(item => {
         return item.seq;
       })
     );
@@ -414,10 +414,10 @@ export async function getMsgSeqListByGroupID(groupID: string): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetMsgSeqListByGroupID(db, groupID);
-    const converedResult = converSqlExecResult(execResult[0], 'CamelCase');
+    const convertedResult = convertSqlExecResult(execResult[0], 'CamelCase');
 
     return formatResponse(
-      converedResult.map(item => {
+      convertedResult.map(item => {
         return item.seq;
       })
     );
@@ -449,12 +449,12 @@ export async function updateMessageStatusBySourceID(
       loginUserID
     );
 
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
+    const modified = db.getRowsModified();
+    if (modified === 0) {
       // throw 'updateMessageStatusBySourceID no record updated';
     }
 
-    return formatResponse(modifed);
+    return formatResponse(modified);
   } catch (e) {
     console.error(e);
 

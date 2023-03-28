@@ -14,7 +14,7 @@ import {
   superGroupSearchAllMessageByContentType as databaseSuperGroupSearchAllMessageByContentType,
 } from '@/sqls';
 import {
-  converSqlExecResult,
+  convertSqlExecResult,
   convertToSnakeCaseObject,
   formatResponse,
 } from '@/utils';
@@ -38,7 +38,7 @@ export async function superGroupGetMessage(
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -70,7 +70,7 @@ export async function superGroupGetMultipleMessage(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -258,7 +258,7 @@ export async function superGroupGetMessageListNoTime(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -295,7 +295,7 @@ export async function superGroupGetMessageList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',
@@ -330,8 +330,8 @@ export async function superGroupUpdateColumnsMessage(
       message
     );
 
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
+    const modified = db.getRowsModified();
+    if (modified === 0) {
       throw 'superGroupUpdateColumnsMessage no record updated';
     }
 
@@ -361,7 +361,7 @@ export async function superGroupSearchAllMessageByContentType(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isRead',
         'isReact',
         'isExternalExtensions',

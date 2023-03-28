@@ -1,11 +1,11 @@
 import { wait } from '@/utils';
 
-let initiallized = false;
+let initialized = false;
 let go: Go;
 let goExitPromise: Promise<void> | undefined;
 
 export async function initializeWasm(url: string): Promise<Go | null> {
-  if (initiallized) {
+  if (initialized) {
     return null;
   }
 
@@ -33,13 +33,13 @@ export async function initializeWasm(url: string): Promise<Go | null> {
 }
 
 export function reset() {
-  initiallized = false;
+  initialized = false;
 }
 
 export function getGO() {
   return go;
 }
 
-export function getGoExitPromsie() {
+export function getGoExitPromise() {
   return goExitPromise;
 }
