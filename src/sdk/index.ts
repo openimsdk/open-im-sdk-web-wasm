@@ -38,20 +38,22 @@ class SDK extends Emitter {
 
     initDatabaseAPI();
     this.wasmInitializedPromise = initializeWasm(url);
-    this.goExitPromise = getGoExitPromise();
 
-    if (this.goExitPromise) {
-      this.goExitPromise
-        .then(() => {
-          console.info('SDK => wasm exist');
-        })
-        .catch(err => {
-          console.info('SDK => wasm with error ', err);
-        })
-        .finally(() => {
-          this.goExisted = true;
-        });
-    }
+    this.wasmInitializedPromise.then(() => {
+      this.goExitPromise = getGoExitPromise();
+      if (this.goExitPromise) {
+        this.goExitPromise
+          .then(() => {
+            console.info('SDK => wasm exist');
+          })
+          .catch(err => {
+            console.info('SDK => wasm with error ', err);
+          })
+          .finally(() => {
+            this.goExisted = true;
+          });
+      }
+    });
   }
 
   async _invoker(
@@ -361,6 +363,7 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(params)]
     );
   }
+
   async newRevokeMessage(data: string, operationID = uuidv4()) {
     return await this._invoker('newRevokeMessage ', window.newRevokeMessage, [
       operationID,
@@ -374,6 +377,7 @@ class SDK extends Emitter {
       params,
     ]);
   }
+
   async modifyGroupMessageReaction(
     params: modifyGroupMessageReactionParams,
     operationID = uuidv4()
@@ -390,6 +394,7 @@ class SDK extends Emitter {
       ]
     );
   }
+
   async setMessageReactionExtensions(
     params: SetMessageReactionExtensionsParams,
     operationID = uuidv4()
