@@ -2,7 +2,12 @@ import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { WSEvent } from '../types';
-import { getGO, initializeWasm, getGoExitPromise } from './initialize';
+import {
+  getGO,
+  initializeWasm,
+  getGoExitPromise,
+  resetWasm,
+} from './initialize';
 
 import {
   AdvancedMsgParams,
@@ -29,10 +34,39 @@ import {
 import { IMConfig, WsResponse } from '../types/entity';
 
 class SDK extends Emitter {
-  private wasmInitializedPromise: Promise<any>;
+  private wasmInitializedPromise: Promise<Go | null>;
   private goExitPromise: Promise<void> | undefined;
   private goExisted = false;
   private wasmResourceUrl = '/main.wasm';
+  private loginParam: LoginParam | undefined = undefined;
+
+  private wasmInitializedHandler = (val: Go | null) => {
+    val;
+    this.goExitPromise = getGoExitPromise();
+
+    if (this.loginParam) {
+      this.login(this.loginParam);
+    }
+
+    if (this.goExitPromise) {
+      this.goExitPromise
+        .then(() => {
+          this.goExisted = true;
+          console.info('SDK => wasm exit');
+          this.resetWasm();
+        })
+        .catch(err => {
+          console.info('SDK => wasm with error ', err);
+        });
+    }
+  };
+
+  private resetWasm() {
+    this.goExisted = false;
+
+    this.wasmInitializedPromise = resetWasm(this.wasmResourceUrl);
+    this.wasmInitializedPromise.then(this.wasmInitializedHandler);
+  }
 
   constructor(url: string) {
     super();
@@ -40,26 +74,10 @@ class SDK extends Emitter {
 
     initDatabaseAPI();
     this.wasmInitializedPromise = initializeWasm(this.wasmResourceUrl);
-
-    this.wasmInitializedPromise.then(() => {
-      this.goExitPromise = getGoExitPromise();
-
-      if (this.goExitPromise) {
-        this.goExitPromise
-          .then(() => {
-            console.info('SDK => wasm exit');
-          })
-          .catch(err => {
-            console.info('SDK => wasm with error ', err);
-          })
-          .finally(() => {
-            this.goExisted = true;
-          });
-      }
-    });
+    this.wasmInitializedPromise.then(this.wasmInitializedHandler);
   }
 
-  async _invoker(
+  private async _invoker(
     functionName: string,
     func: (...args: any[]) => Promise<any>,
     args: any[],
@@ -134,6 +152,7 @@ class SDK extends Emitter {
   }
 
   async login(params: LoginParam, operationID = uuidv4()) {
+    this.loginParam = params;
     console.info(
       `SDK => (invoked by js) run login with args ${JSON.stringify({
         params,
@@ -166,6 +185,7 @@ class SDK extends Emitter {
 
     return await window.login(operationID, params.userID, params.token);
   }
+
   async logout(operationID = uuidv4()) {
     return await this._invoker('logout', window.logout, [operationID]);
   }
