@@ -82,7 +82,7 @@ class SDK extends Emitter {
     );
 
     if (!getGO() || getGO().exited || this.goExisted) {
-      return { ...response, errMsg: 'wasm exist already, fail to run' };
+      throw 'wasm exist already, fail to run';
     }
 
     return func(...args)
