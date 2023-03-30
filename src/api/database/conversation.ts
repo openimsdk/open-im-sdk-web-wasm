@@ -11,6 +11,8 @@ import {
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
   getMultipleConversation as databaseGetMultipleConversation,
   resetConversation as databaseResetConversation,
+  setConversationDraft as databaseSetConversationDraft,
+  removeConversationDraft as databaseRemoveConversationDraft,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -278,6 +280,56 @@ export async function resetConversation(
     }
 
     return formatResponse('resetConversation updated');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function setConversationDraft(
+  conversationID: string,
+  draftText: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    databaseSetConversationDraft(db, conversationID, draftText);
+
+    const modified = db.getRowsModified();
+    if (modified === 0) {
+      throw 'setConversationDraft RowsAffected == 0, no update';
+    }
+
+    return formatResponse('SetConversationDraft failed');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function removeConversationDraft(
+  conversationID: string,
+  draftText: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    databaseRemoveConversationDraft(db, conversationID, draftText);
+
+    const modified = db.getRowsModified();
+    if (modified === 0) {
+      throw 'removeConversationDraft RowsAffected == 0, no update';
+    }
+
+    return formatResponse('RemoveConversationDraft failed');
   } catch (e) {
     console.error(e);
 

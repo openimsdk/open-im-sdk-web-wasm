@@ -142,6 +142,7 @@ export function getTotalUnreadMsgCount(db: Database): QueryExecResult[] {
     `
   );
 }
+
 export function resetConversation(
   db: Database,
   conversationID: string
@@ -155,4 +156,30 @@ export function resetConversation(
     draft_text_time=0
   WHERE conversation_id = "${conversationID}"
   `);
+}
+
+export function setConversationDraft(
+  db: Database,
+  conversationID: string,
+  draftText: string
+): QueryExecResult[] {
+  const nowTime = Date.now();
+
+  return db.exec(
+    `update local_conversations set draft_text=${draftText},draft_text_time=${nowTime},latest_msg_send_time=case when latest_msg_send_time=0 then ${nowTime} else latest_msg_send_time  end where conversation_id=${conversationID}`
+  );
+}
+export function removeConversationDraft(
+  db: Database,
+  conversationID: string,
+  draftText: string
+): QueryExecResult[] {
+  const sql = squel
+    .update()
+    .table('local_conversations')
+    .set('draft_text', draftText)
+    .set('draft_text_time', 0)
+    .where(`conversation_id=${conversationID}`)
+    .toString();
+  return db.exec(sql);
 }
