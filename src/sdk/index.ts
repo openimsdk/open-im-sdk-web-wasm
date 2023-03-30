@@ -24,6 +24,7 @@ import {
   SendMsgParams,
   SetMessageReactionExtensionsParams,
   AddMessageReactionExtensionsParams,
+  SetConversationDraftParam,
 } from '../types/params';
 
 import { IMConfig, WsResponse } from '../types/entity';
@@ -161,6 +162,7 @@ class SDK extends Emitter {
   async logout(operationID = uuidv4()) {
     return await this._invoker('logout', window.logout, [operationID]);
   }
+  // conversation
   async getAllConversationList(operationID = uuidv4()) {
     return await this._invoker(
       'getAllConversationList',
@@ -178,6 +180,17 @@ class SDK extends Emitter {
       [operationID, params.sessionType, params.sourceID]
     );
   }
+  async setConversationDraft(
+    params: SetConversationDraftParam,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getOneConversation',
+      window.setConversationDraft,
+      [operationID, params.conversationID, params.draftText]
+    );
+  }
+
   async getAdvancedHistoryMessageList(
     params: GetAdvancedHistoryMsgParams,
     operationID = uuidv4()

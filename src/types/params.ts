@@ -16,6 +16,11 @@ type GetOneConversationParams = {
   sessionType: number;
 };
 
+type SetConversationDraftParam = {
+  conversationID: string;
+  draftText: string;
+};
+
 type GetAdvancedHistoryMsgParams = {
   userID: string;
   lastMinSeq: number;
@@ -189,6 +194,7 @@ type AddMessageReactionExtensionsParam = Array<KeyValue>;
 export {
   LoginParam,
   GetOneConversationParams,
+  SetConversationDraftParam,
   GetAdvancedHistoryMsgParams,
   GetHistoryMsgParams,
   MarkC2CParams,

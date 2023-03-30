@@ -47,6 +47,8 @@ declare global {
       operationID: string
     ) => Promise<string | undefined>;
     resetConversation: DatabaseApi;
+    setConversationDraft: DatabaseApi;
+    removeConversationDraft: DatabaseApi;
 
     // users
     getLoginUser: DatabaseApi;
@@ -95,6 +97,11 @@ declare global {
       operationID: string,
       sessionType: number,
       sourceID: string
+    ) => Promise<string>;
+    setConversationDraft: (
+      operationID: string,
+      conversationID: number,
+      draftText: string
     ) => Promise<string>;
     getAdvancedHistoryMessageList: (
       operationID: string,
