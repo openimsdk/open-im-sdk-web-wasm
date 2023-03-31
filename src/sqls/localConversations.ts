@@ -166,7 +166,7 @@ export function setConversationDraft(
   const nowTime = Date.now();
 
   return db.exec(
-    `update local_conversations set draft_text=${draftText},draft_text_time=${nowTime},latest_msg_send_time=case when latest_msg_send_time=0 then ${nowTime} else latest_msg_send_time  end where conversation_id=${conversationID}`
+    `update local_conversations set draft_text='${draftText}',draft_text_time=${nowTime},latest_msg_send_time=case when latest_msg_send_time=0 then ${nowTime} else latest_msg_send_time  end where conversation_id='${conversationID}'`
   );
 }
 export function removeConversationDraft(

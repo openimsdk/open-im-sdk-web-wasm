@@ -304,12 +304,12 @@ export async function setConversationDraft(
       throw 'setConversationDraft RowsAffected == 0, no update';
     }
 
-    return formatResponse('SetConversationDraft failed');
+    return formatResponse('SetConversationDraft success');
   } catch (e) {
     console.error(e);
 
     return formatResponse(
-      undefined,
+      'SetConversationDraft failed',
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
     );
@@ -329,12 +329,12 @@ export async function removeConversationDraft(
       throw 'removeConversationDraft RowsAffected == 0, no update';
     }
 
-    return formatResponse('RemoveConversationDraft failed');
+    return formatResponse('RemoveConversationDraft success');
   } catch (e) {
     console.error(e);
 
     return formatResponse(
-      undefined,
+      'RemoveConversationDraft failed',
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
     );
