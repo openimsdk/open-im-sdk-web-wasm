@@ -185,7 +185,7 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) {
     return await this._invoker(
-      'getOneConversation',
+      'setConversationDraft',
       window.setConversationDraft,
       [operationID, params.conversationID, params.draftText]
     );
