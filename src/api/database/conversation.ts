@@ -322,6 +322,7 @@ export async function removeConversationDraft(
 ): Promise<string> {
   try {
     const db = await getInstance();
+    console.log('sql', db);
     databaseRemoveConversationDraft(db, conversationID, draftText);
 
     const modified = db.getRowsModified();

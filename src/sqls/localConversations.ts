@@ -179,7 +179,8 @@ export function removeConversationDraft(
     .table('local_conversations')
     .set('draft_text', draftText)
     .set('draft_text_time', 0)
-    .where(`conversation_id=${conversationID}`)
+    .where(`conversation_id='${conversationID}'`)
     .toString();
+
   return db.exec(sql);
 }
