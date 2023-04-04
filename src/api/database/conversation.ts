@@ -11,7 +11,7 @@ import {
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
   getMultipleConversation as databaseGetMultipleConversation,
   resetConversation as databaseResetConversation,
-  setConversationDraft as databaseSetConversationDraft,
+  setConversationDraftDB as databaseSetConversationDraftDB,
   removeConversationDraft as databaseRemoveConversationDraft,
 } from '@/sqls';
 import {
@@ -291,25 +291,25 @@ export async function resetConversation(
   }
 }
 
-export async function setConversationDraft(
+export async function setConversationDraftDB(
   conversationID: string,
   draftText: string
 ): Promise<string> {
   try {
     const db = await getInstance();
-    databaseSetConversationDraft(db, conversationID, draftText);
+    databaseSetConversationDraftDB(db, conversationID, draftText);
 
     const modified = db.getRowsModified();
     if (modified === 0) {
-      throw 'setConversationDraft RowsAffected == 0, no update';
+      throw 'setConversationDraftDB RowsAffected == 0, no update';
     }
 
-    return formatResponse('SetConversationDraft success');
+    return formatResponse('SetConversationDraftDB success');
   } catch (e) {
     console.error(e);
 
     return formatResponse(
-      'SetConversationDraft failed',
+      'SetConversationDraftDB failed',
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
     );

@@ -32,7 +32,7 @@ import {
   insertConversation,
   getTotalUnreadMsgCount,
   resetConversation,
-  setConversationDraft,
+  setConversationDraftDB,
   removeConversationDraft,
 
   // users
@@ -133,7 +133,7 @@ rpc.registerMethod('batchInsertConversationList', batchInsertConversationList);
 rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
 rpc.registerMethod('getTotalUnreadMsgCountDB', getTotalUnreadMsgCount);
 rpc.registerMethod('insertConversation', insertConversation);
-rpc.registerMethod('setConversationDraft', setConversationDraft);
+rpc.registerMethod('setConversationDraftDB', setConversationDraftDB);
 rpc.registerMethod('removeConversationDraft', removeConversationDraft);
 
 // users

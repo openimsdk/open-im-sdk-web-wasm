@@ -158,7 +158,7 @@ export function resetConversation(
   `);
 }
 
-export function setConversationDraft(
+export function setConversationDraftDB(
   db: Database,
   conversationID: string,
   draftText: string

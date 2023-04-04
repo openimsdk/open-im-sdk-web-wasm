@@ -47,7 +47,7 @@ declare global {
       operationID: string
     ) => Promise<string | undefined>;
     resetConversation: DatabaseApi;
-    setConversationDraft: DatabaseApi;
+    setConversationDraftDB: DatabaseApi;
     removeConversationDraft: DatabaseApi;
 
     // users
