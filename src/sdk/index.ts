@@ -209,6 +209,16 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(params)]
     );
   }
+  async getAdvancedHistoryMessageListReverse(
+    params: GetAdvancedHistoryMsgParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getAdvancedHistoryMessageListReverse',
+      window.getAdvancedHistoryMessageListReverse,
+      [operationID, JSON.stringify(params)]
+    );
+  }
   async getHistoryMessageList(
     params: GetHistoryMsgParams,
     operationID = uuidv4()

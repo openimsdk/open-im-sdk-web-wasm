@@ -107,6 +107,10 @@ declare global {
       operationID: string,
       getAdvancedHistoryMessageListParamsStr: string
     ) => Promise<string>;
+    getAdvancedHistoryMessageListReverse: (
+      operationID: string,
+      getAdvancedHistoryMessageListParamsStr: string
+    ) => Promise<string>;
     getHistoryMessageList: (
       operationID: string,
       getHistoryMsgParamsParamsStr: string
