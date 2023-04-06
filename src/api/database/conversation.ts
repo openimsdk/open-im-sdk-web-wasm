@@ -15,7 +15,7 @@ import {
   removeConversationDraft as databaseRemoveConversationDraft,
 } from '@/sqls';
 import {
-  converSqlExecResult,
+  convertSqlExecResult,
   convertObjectField,
   convertToSnakeCaseObject,
   formatResponse,
@@ -28,7 +28,7 @@ export async function getAllConversationList(): Promise<string> {
     const execResult = databaseGetAllConversationList(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
@@ -52,7 +52,7 @@ export async function getAllConversationListToSync(): Promise<string> {
     const execResult = databaseGetAllConversationListToSync(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
@@ -76,7 +76,7 @@ export async function getHiddenConversationList(): Promise<string> {
     const execResult = databaseGetHiddenConversationList(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
@@ -108,7 +108,7 @@ export async function getConversation(conversationID: string): Promise<string> {
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
@@ -135,7 +135,7 @@ export async function getMultipleConversation(
     const execResult = databaseGetMultipleConversation(db, idList);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
+      convertSqlExecResult(execResult[0], 'CamelCase', [
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
@@ -170,9 +170,9 @@ export async function updateColumnsConversation(
       conversationID,
       parsedConversation
     );
-    const modifed = db.getRowsModified();
+    const modified = db.getRowsModified();
 
-    if (modifed === 0) {
+    if (modified === 0) {
       throw 'updateColumnsConversation no record updated';
     }
 
@@ -274,8 +274,8 @@ export async function resetConversation(
     const db = await getInstance();
     databaseResetConversation(db, conversationID);
 
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
+    const modified = db.getRowsModified();
+    if (modified === 0) {
       throw 'resetConversation no record updated';
     }
 

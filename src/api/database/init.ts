@@ -30,7 +30,7 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultLocalSuperGroups = localSuperGroups(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
-    const execResultlocalChatLogReactionExtensions =
+    const execResultLocalChatLogReactionExtensions =
       localChatLogReactionExtensions(db);
 
     results.push(
@@ -40,7 +40,7 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResultLocalUsers,
         execResultLocalSuperGroups,
         execResultLocalConversationUnreadMessages,
-        execResultlocalChatLogReactionExtensions,
+        execResultLocalChatLogReactionExtensions,
       ]
     );
 

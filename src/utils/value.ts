@@ -7,7 +7,7 @@ import {
   convertCamelCaseToSnakeCase,
 } from './key';
 
-export function converSqlExecResult(
+export function convertSqlExecResult(
   record: QueryExecResult,
   keyType: KeyType = 'CamelCase',
   booleanKeys: string[] = []

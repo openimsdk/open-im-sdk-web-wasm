@@ -9,7 +9,7 @@ import {
 } from '@/sqls';
 import {
   formatResponse,
-  converSqlExecResult,
+  convertSqlExecResult,
   convertToSnakeCaseObject,
   convertObjectField,
 } from '@/utils';
@@ -21,7 +21,7 @@ export async function getJoinedSuperGroupList(): Promise<string> {
 
     const execResult = databaseGetJoinedSuperGroupList(db);
 
-    return formatResponse(converSqlExecResult(execResult[0]));
+    return formatResponse(convertSqlExecResult(execResult[0]));
   } catch (e) {
     console.error(e);
 
@@ -38,7 +38,7 @@ export async function getJoinedSuperGroupIDList(): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetJoinedSuperGroupList(db);
-    const records = converSqlExecResult(execResult[0]);
+    const records = convertSqlExecResult(execResult[0]);
     const groupIds = records.map(r => r.groupID);
 
     return formatResponse(groupIds);
@@ -69,7 +69,7 @@ export async function getSuperGroupInfoByGroupID(
       );
     }
 
-    return formatResponse(converSqlExecResult(execResult[0])[0]);
+    return formatResponse(convertSqlExecResult(execResult[0])[0]);
   } catch (e) {
     console.error(e);
 
