@@ -40,8 +40,8 @@ class SDK extends Emitter {
   private wasmResourceUrl = '/main.wasm';
   private loginParam: LoginParam | undefined = undefined;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private wasmInitializedHandler = (val: Go | null) => {
-    val;
     this.goExitPromise = getGoExitPromise();
 
     if (this.loginParam) {
