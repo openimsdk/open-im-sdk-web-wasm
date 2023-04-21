@@ -285,7 +285,7 @@ export function setConversationDraft(
   const nowDate = new Date().getTime();
   return db.exec(`
   update local_conversations
-    set draft_text="${draftText}",
+    set draft_text='${draftText}',
     draft_text_time=${nowDate},
     latest_msg_send_time=case when latest_msg_send_time = 0 then ${nowDate} else latest_msg_send_time end
     where conversation_id = "${conversationID}"

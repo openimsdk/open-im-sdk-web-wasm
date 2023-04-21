@@ -53,6 +53,10 @@ export enum CbEvents {
   ONINVITEEACCEPTEDBYOTHERDEVICE = 'OnInviteeAcceptedByOtherDevice',
   ONINVITEEREJECTEDBYOTHERDEVICE = 'OnInviteeRejectedByOtherDevice',
   ONORGANIZATIONUPDATED = 'OnOrganizationUpdated',
+  ONSTREAMCHANGE = 'OnStreamChange',
+  ONROOMPARTICIPANTCONNECTED = 'OnRoomParticipantConnected',
+  ONROOMPARTICIPANTDISCONNECTED = 'OnRoomParticipantDisconnected',
+  ONRECEIVECUSTOMSIGNAL = 'OnReceiveCustomSignal',
 }
 
 export enum RequestFunc {

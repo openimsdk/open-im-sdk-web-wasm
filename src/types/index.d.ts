@@ -754,6 +754,31 @@ declare global {
       custom: string,
       roomID: string
     ) => Promise<string>;
+    signalingCreateMeeting: (
+      operationID: string,
+      data: string
+    ) => Promise<string>;
+    signalingJoinMeeting: (
+      operationID: string,
+      data: string
+    ) => Promise<string>;
+    signalingUpdateMeetingInfo: (
+      operationID: string,
+      data: string
+    ) => Promise<string>;
+    signalingCloseRoom: (
+      operationID: string,
+      roomID: string
+    ) => Promise<string>;
+    signalingGetMeetings: (operationID: string) => Promise<string>;
+    signalingOperateStream: (
+      operationID: string,
+      streamType: string,
+      roomID: string,
+      userID?: string,
+      mute: boolean,
+      muteAll: boolean
+    ) => Promise<string>;
 
     // debug
     exec: (sql: string) => Promise<any>;

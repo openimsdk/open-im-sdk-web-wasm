@@ -13,6 +13,7 @@ import {
   ChangeGroupMemberMuteParams,
   ChangeGroupMuteParams,
   CreateGroupParams,
+  CreateMeetingParams,
   CustomMsgParams,
   CustomSignalParams,
   FaceMessageParams,
@@ -33,10 +34,12 @@ import {
   InviteGroupParams,
   isRecvParams,
   JoinGroupParams,
+  JoinMeetingParams,
   LocationMsgParams,
   LoginParam,
   MarkC2CParams,
   MarkNotiParams,
+  MeetingOperateStreamParams,
   MemberExParams,
   MemberNameParams,
   MergerMsgParams,
@@ -61,6 +64,7 @@ import {
   SplitParams,
   TransferGroupParams,
   TypingUpdateParams,
+  UpdateMeetingParams,
   VideoMsgFullParams,
   VideoMsgParams,
 } from '../types/params';
@@ -1262,6 +1266,60 @@ class SDK extends Emitter {
       'signalingSendCustomSignal ',
       window.signalingSendCustomSignal,
       [operationID, data.customInfo, data.roomID]
+    );
+  };
+  signalingCreateMeeting = (
+    data: CreateMeetingParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker(
+      'signalingCreateMeeting ',
+      window.signalingCreateMeeting,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  signalingJoinMeeting = (data: JoinMeetingParams, operationID = uuidv4()) => {
+    return this._invoker('signalingJoinMeeting ', window.signalingJoinMeeting, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  signalingUpdateMeetingInfo = (
+    data: UpdateMeetingParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker(
+      'signalingUpdateMeetingInfo ',
+      window.signalingUpdateMeetingInfo,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  signalingCloseRoom = (roomID: string, operationID = uuidv4()) => {
+    return this._invoker('signalingCloseRoom ', window.signalingCloseRoom, [
+      operationID,
+      roomID,
+    ]);
+  };
+  signalingGetMeetings = (operationID = uuidv4()) => {
+    return this._invoker('signalingGetMeetings ', window.signalingGetMeetings, [
+      operationID,
+    ]);
+  };
+  signalingOperateStream = (
+    data: MeetingOperateStreamParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker(
+      'signalingOperateStream ',
+      window.signalingOperateStream,
+      [
+        operationID,
+        data.streamType,
+        data.roomID,
+        data.userID,
+        data.mute,
+        data.muteAll,
+      ]
     );
   };
 }

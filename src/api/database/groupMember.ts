@@ -152,7 +152,11 @@ export async function getGroupAdminID(groupID: string): Promise<string> {
 
     const execResult = databaseGetGroupAdminID(db, groupID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase').map(
+        member => member.userID
+      )
+    );
   } catch (e) {
     console.error(e);
 
