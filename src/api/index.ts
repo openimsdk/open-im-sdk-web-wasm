@@ -1,4 +1,4 @@
-import { initBackend } from 'open-absurd-sql/dist/indexeddb-main-thread';
+import { initBackend } from 'absurd-sql-optimized/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
 

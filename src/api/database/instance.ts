@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import initSqlJs, { Database, SqlJsStatic } from '@jlongster/sql.js';
-import { SQLiteFS } from 'open-absurd-sql';
-import IndexedDBBackend from 'open-absurd-sql/dist/indexeddb-backend';
+import { SQLiteFS } from 'absurd-sql-optimized';
+import IndexedDBBackend from 'absurd-sql-optimized/dist/indexeddb-backend';
 
 (self as any).$RefreshReg$ = () => {};
 (self as any).$RefreshSig$ = () => () => {};
