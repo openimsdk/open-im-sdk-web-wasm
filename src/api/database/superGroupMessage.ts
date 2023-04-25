@@ -47,7 +47,11 @@ export async function superGroupGetMessage(
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])[0]
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])[0]
     );
   } catch (e) {
     console.error(e);
@@ -75,7 +79,11 @@ export async function superGroupGetMultipleMessage(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -304,7 +312,11 @@ export async function superGroupGetMessageListNoTime(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -337,7 +349,11 @@ export async function superGroupGetMessageList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -396,7 +412,11 @@ export async function superGroupSearchMessageByKeyword(
       count
     );
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -433,7 +453,11 @@ export async function superGroupSearchMessageByContentType(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -468,7 +492,11 @@ export async function superGroupSearchMessageByContentTypeAndKeyword(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -521,7 +549,11 @@ export async function superGroupGetSendingMessageList(
     const execResult = databaseSuperGroupGetSendingMessageList(db, groupID);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -639,7 +671,11 @@ export async function superGroupSearchAllMessageByContentType(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);

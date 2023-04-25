@@ -33,6 +33,9 @@ export function localSgChatLogs(
         'content_type' integer,
         'content' varchar(1000),
         'is_read' numeric,
+        'is_react' numeric,
+        'is_external_extensions' numeric,
+        'msg_first_modify_time' integer,
         'status' integer,
         'seq' integer default 0,
         'send_time' integer,
@@ -212,7 +215,7 @@ export function superGroupGetMessageList(
         where
             recv_id = "${groupID}"
             and status <= 3
-            and send_time <= ${startTime}
+            and send_time < ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    

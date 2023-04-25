@@ -57,7 +57,11 @@ export async function getMessage(messageId: string): Promise<string> {
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])[0]
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])[0]
     );
   } catch (e) {
     console.error(e);
@@ -79,7 +83,11 @@ export async function getMultipleMessage(
     const execResult = databaseGetMultipleMessage(db, JSON.parse(messageIDStr));
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -99,7 +107,11 @@ export async function getSendingMessageList(): Promise<string> {
     const execResult = databaseGetSendingMessageList(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -279,7 +291,11 @@ export async function getMessageListNoTime(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -314,7 +330,11 @@ export async function getMessageList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -469,7 +489,11 @@ export async function searchMessageByKeyword(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -506,7 +530,11 @@ export async function searchMessageByContentType(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -539,7 +567,11 @@ export async function searchMessageByContentTypeAndKeyword(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', ['isRead'])
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
     );
   } catch (e) {
     console.error(e);
