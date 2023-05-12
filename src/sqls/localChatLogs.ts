@@ -75,6 +75,31 @@ export function localChatLogs(db: Database): QueryExecResult[] {
   return result;
 }
 
+export function localErrChatLogs(db: Database): QueryExecResult[] {
+  return db.exec(`
+      create table if not exists 'local_err_chat_logs' (
+        "seq" integer,
+        "client_msg_id" char(64),
+        "server_msg_id" char(64),
+        "send_id" char(64),
+        "recv_id" char(64),
+        "sender_platform_id" integer,
+        "sender_nick_name" varchar(255),
+        "sender_face_url" varchar(255),
+        "session_type" integer,
+        "msg_from" integer,
+        "content_type" integer,
+        "content" varchar(1000),
+        "is_read" numeric,
+        "status" integer,
+        "send_time" integer,
+        "create_time" integer,
+        "attached_info" varchar(1024),
+        "ex" varchar(1024),
+        primary key ('seq'))
+    `);
+}
+
 export function getMessage(db: Database, messageId: string): QueryExecResult[] {
   return db.exec(`
       select * from 'local_chat_logs' where client_msg_id='${messageId}'
@@ -279,4 +304,12 @@ export function updateMessageStatusBySourceID(
         AND ${condition};
     `
   );
+}
+
+export function getAbnormalMsgSeq(db: Database) {
+  return db.exec("SELECT IFNULL(max(seq), 0) FROM 'local_err_chat_logs'");
+}
+
+export function getAbnormalMsgSeqList(db: Database) {
+  return db.exec("SELECT 'seq' FROM 'local_err_chat_logs'");
 }

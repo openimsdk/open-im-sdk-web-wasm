@@ -22,6 +22,7 @@ export function localConversations(db: Database): QueryExecResult[] {
             'draft_text_time' integer,
             'is_pinned' numeric,
             'is_private_chat' numeric,
+            'burn_duration' integer default 30,
             'is_not_in_group' numeric,
             'update_unread_count_time' integer,
             'attached_info' varchar(1024),

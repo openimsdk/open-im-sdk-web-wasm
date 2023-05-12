@@ -7,7 +7,7 @@ import {
 } from '@/sqls';
 import {
   formatResponse,
-  converSqlExecResult,
+  convertSqlExecResult,
   convertToSnakeCaseObject,
   convertObjectField,
 } from '@/utils';
@@ -27,7 +27,7 @@ export async function getLoginUser(userID: string): Promise<string> {
       );
     }
 
-    return formatResponse(converSqlExecResult(execResult[0])[0]);
+    return formatResponse(convertSqlExecResult(execResult[0])[0]);
   } catch (e) {
     console.error(e);
 
@@ -68,9 +68,9 @@ export async function updateLoginUserByMap(
     const db = await getInstance();
 
     const execResult = databaseUpdateLoginUserByMap(db, userID, userInfoObj);
-    const modifed = db.getRowsModified();
+    const modified = db.getRowsModified();
 
-    if (modifed === 0) {
+    if (modified === 0) {
       console.error('updateLoginUserByMap no record updated');
     }
 

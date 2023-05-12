@@ -19,6 +19,8 @@ import {
   getMsgSeqListBySelfUserID,
   getMsgSeqListByGroupID,
   updateMessageStatusBySourceID,
+  getAbnormalMsgSeq,
+  getAbnormalMsgSeqList,
 
   // conversation
   getAllConversationList,
@@ -63,6 +65,27 @@ import {
   superGroupGetMessageList,
   superGroupUpdateColumnsMessage,
   superGroupSearchAllMessageByContentType,
+  getSuperGroupAbnormalMsgSeq,
+  superGroupGetAlreadyExistSeqList,
+  superBatchInsertExceptionMsg,
+
+  // group request
+  getSendGroupApplication,
+  getAdminGroupApplication,
+
+  // blacks
+  getBlackList,
+
+  // group
+  getJoinedGroupList,
+  getJoinedWorkingGroupIDList,
+
+  // friend request
+  getRecvFriendApplication,
+  getSendFriendApplication,
+
+  // friend
+  getAllFriendList,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -115,7 +138,8 @@ rpc.registerMethod(
   'updateMessageStatusBySourceID',
   updateMessageStatusBySourceID
 );
-
+rpc.registerMethod('getAbnormalMsgSeq', getAbnormalMsgSeq);
+rpc.registerMethod('getAbnormalMsgSeqList', getAbnormalMsgSeqList);
 // conversation
 rpc.registerMethod('getAllConversationList', getAllConversationList);
 rpc.registerMethod(
@@ -184,6 +208,15 @@ rpc.registerMethod(
   'superGroupSearchAllMessageByContentType',
   superGroupSearchAllMessageByContentType
 );
+rpc.registerMethod('getSuperGroupAbnormalMsgSeq', getSuperGroupAbnormalMsgSeq);
+rpc.registerMethod(
+  'superGroupGetAlreadyExistSeqList',
+  superGroupGetAlreadyExistSeqList
+);
+rpc.registerMethod(
+  'superBatchInsertExceptionMsg',
+  superBatchInsertExceptionMsg
+);
 
 rpc.registerMethod('exec', async (sql: string) => {
   const db = await getInstance();
@@ -248,3 +281,21 @@ rpc.registerMethod(
   'updateMessageReactionExtension',
   updateMessageReactionExtension
 );
+
+// group request
+rpc.registerMethod('getSendGroupApplication', getSendGroupApplication);
+rpc.registerMethod('getAdminGroupApplication', getAdminGroupApplication);
+
+// blacks
+rpc.registerMethod('getBlackList', getBlackList);
+
+// group
+rpc.registerMethod('getJoinedGroupList', getJoinedGroupList);
+rpc.registerMethod('getJoinedWorkingGroupIDList', getJoinedWorkingGroupIDList);
+
+// friend request
+rpc.registerMethod('getRecvFriendApplication', getRecvFriendApplication);
+rpc.registerMethod('getSendFriendApplication', getSendFriendApplication);
+
+// friend
+rpc.registerMethod('getAllFriendList', getAllFriendList);

@@ -42,7 +42,7 @@ export function getInstance(filePath?: string): Promise<Database> {
   }
 
   if (!filePath) {
-    throw new Error('must speciefic database file');
+    throw new Error('must specific database file');
   }
 
   instance = new Promise<Database>((resolve, reject) => {

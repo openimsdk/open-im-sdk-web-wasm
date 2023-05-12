@@ -2,7 +2,12 @@ import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { WSEvent } from '../types';
-import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
+import {
+  getGO,
+  initializeWasm,
+  getGoExitPromise,
+  resetWasm,
+} from './initialize';
 
 import {
   AdvancedMsgParams,
@@ -29,32 +34,50 @@ import {
 import { IMConfig, WsResponse } from '../types/entity';
 
 class SDK extends Emitter {
-  private wasmInitializedPromise: Promise<any>;
+  private wasmInitializedPromise: Promise<Go | null>;
   private goExitPromise: Promise<void> | undefined;
   private goExisted = false;
+  private wasmResourceUrl = '/main.wasm';
+  private loginParam: LoginParam | undefined = undefined;
 
-  constructor(url = '/main.wasm') {
-    super();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private wasmInitializedHandler = (val: Go | null) => {
+    this.goExitPromise = getGoExitPromise();
 
-    initDatabaseAPI();
-    this.wasmInitializedPromise = initializeWasm(url);
-    this.goExitPromise = getGoExitPromsie();
+    if (this.loginParam) {
+      this.login(this.loginParam);
+    }
 
     if (this.goExitPromise) {
       this.goExitPromise
         .then(() => {
-          console.info('SDK => wasm exist');
+          this.goExisted = true;
+          console.info('SDK => wasm exit');
+          this.resetWasm();
         })
         .catch(err => {
           console.info('SDK => wasm with error ', err);
-        })
-        .finally(() => {
-          this.goExisted = true;
         });
     }
+  };
+
+  private resetWasm() {
+    this.goExisted = false;
+
+    this.wasmInitializedPromise = resetWasm(this.wasmResourceUrl);
+    this.wasmInitializedPromise.then(this.wasmInitializedHandler);
   }
 
-  async _invoker(
+  constructor(url: string) {
+    super();
+    this.wasmResourceUrl = url;
+
+    initDatabaseAPI();
+    this.wasmInitializedPromise = initializeWasm(this.wasmResourceUrl);
+    this.wasmInitializedPromise.then(this.wasmInitializedHandler);
+  }
+
+  private async _invoker(
     functionName: string,
     func: (...args: any[]) => Promise<any>,
     args: any[],
@@ -67,6 +90,7 @@ class SDK extends Emitter {
       errCode: 0,
       errMsg: '',
     } as WsResponse;
+
     console.info(
       `%cSDK =>%c [OperationID:${
         args[0]
@@ -78,6 +102,7 @@ class SDK extends Emitter {
     if (!getGO() || getGO().exited || this.goExisted) {
       throw 'wasm exist already, fail to run';
     }
+
     return func(...args)
       .then((data: any) => {
         if (processor) {
@@ -99,7 +124,7 @@ class SDK extends Emitter {
             args[0]
           }] (invoked by js) run ${functionName} with response ${JSON.stringify(
             response
-          )}%c`,
+          )}`,
           'font-size:14px; background:#82C115;',
           ''
         );
@@ -113,12 +138,13 @@ class SDK extends Emitter {
         };
 
         console.info(
-          `SDK => [OperationID:${
+          `%cSDK =>%c [OperationID:${
             args[0]
           }] (invoked by js) run ${functionName} with error ${JSON.stringify(
             error
           )}`,
-          'font-size:14px; background:#EE4245;'
+          'font-size:14px; background:#EE4245;',
+          ''
         );
 
         return response;
@@ -126,6 +152,7 @@ class SDK extends Emitter {
   }
 
   async login(params: LoginParam, operationID = uuidv4()) {
+    this.loginParam = params;
     console.info(
       `SDK => (invoked by js) run login with args ${JSON.stringify({
         params,
@@ -158,6 +185,7 @@ class SDK extends Emitter {
 
     return await window.login(operationID, params.userID, params.token);
   }
+
   async logout(operationID = uuidv4()) {
     return await this._invoker('logout', window.logout, [operationID]);
   }
@@ -185,6 +213,16 @@ class SDK extends Emitter {
     return await this._invoker(
       'getAdvancedHistoryMessageList',
       window.getAdvancedHistoryMessageList,
+      [operationID, JSON.stringify(params)]
+    );
+  }
+  async getAdvancedHistoryMessageListReverse(
+    params: GetAdvancedHistoryMsgParams,
+    operationID = uuidv4()
+  ) {
+    return await this._invoker(
+      'getAdvancedHistoryMessageListReverse',
+      window.getAdvancedHistoryMessageListReverse,
       [operationID, JSON.stringify(params)]
     );
   }
@@ -257,7 +295,7 @@ class SDK extends Emitter {
       window.createTextMessage,
       [operationID, text],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -273,7 +311,7 @@ class SDK extends Emitter {
         JSON.stringify(params.snapshotPicture),
       ],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -284,7 +322,7 @@ class SDK extends Emitter {
       window.createCustomMessage,
       [operationID, params.data, params.extension, params.description],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -295,7 +333,7 @@ class SDK extends Emitter {
       window.createQuoteMessage,
       [operationID, params.text, params.message],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -314,7 +352,7 @@ class SDK extends Emitter {
         JSON.stringify(params.messageEntityList),
       ],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -328,7 +366,7 @@ class SDK extends Emitter {
       window.createAdvancedTextMessage,
       [operationID, params.text, JSON.stringify(params.messageEntityList)],
       data => {
-        // compitable with old version sdk
+        // compatible with old version sdk
         return data[0];
       }
     );
@@ -361,6 +399,7 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(params)]
     );
   }
+
   async newRevokeMessage(data: string, operationID = uuidv4()) {
     return await this._invoker('newRevokeMessage ', window.newRevokeMessage, [
       operationID,
@@ -374,6 +413,7 @@ class SDK extends Emitter {
       params,
     ]);
   }
+
   async modifyGroupMessageReaction(
     params: modifyGroupMessageReactionParams,
     operationID = uuidv4()
@@ -390,6 +430,7 @@ class SDK extends Emitter {
       ]
     );
   }
+
   async setMessageReactionExtensions(
     params: SetMessageReactionExtensionsParams,
     operationID = uuidv4()

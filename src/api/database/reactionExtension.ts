@@ -9,7 +9,7 @@ import {
   updateMessageReactionExtension as databaseUpdateMessageReactionExtension,
 } from '@/sqls/localChatLogReactionExtensions';
 import {
-  converSqlExecResult,
+  convertSqlExecResult,
   convertObjectField,
   convertToSnakeCaseObject,
   formatResponse,
@@ -33,7 +33,7 @@ export async function getMessageReactionExtension(
       );
     }
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase')[0]);
+    return formatResponse(convertSqlExecResult(execResult[0], 'CamelCase')[0]);
   } catch (e) {
     console.error(e);
 
@@ -143,7 +143,7 @@ export async function getMultipleMessageReactionExtension(
       jsonDecode(msgIDListStr, [])
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
+    return formatResponse(convertSqlExecResult(execResult[0], 'CamelCase', []));
   } catch (error) {
     console.error(error);
 
@@ -163,7 +163,7 @@ export async function deleteMessageReactionExtension(
 
     const execResult = databaseDeleteMessageReactionExtension(db, msgID);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
+    return formatResponse(convertSqlExecResult(execResult[0], 'CamelCase', []));
   } catch (error) {
     console.error(error);
 
@@ -188,7 +188,7 @@ export async function updateMessageReactionExtension(
       extensionsStr
     );
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
+    return formatResponse(convertSqlExecResult(execResult[0], 'CamelCase', []));
   } catch (error) {
     console.error(error);
 
