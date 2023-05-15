@@ -34,8 +34,9 @@ export async function initializeWasm(url: string): Promise<Go | null> {
   return go;
 }
 
-export function reset() {
+export function resetWasm(url: string) {
   initialized = false;
+  return initializeWasm(url);
 }
 
 export function getGO() {
