@@ -4,7 +4,7 @@ import { Database, QueryExecResult } from '@jlongster/sql.js';
 export type ClientUser = { [key: string]: unknown };
 
 export function localUsers(db: Database): QueryExecResult[] {
-  return db.exec(
+  db.exec(
     `
       create table if not exists 'local_users' (
             'user_id' varchar(64),
@@ -24,6 +24,29 @@ export function localUsers(db: Database): QueryExecResult[] {
         )
     `
   );
+
+  // has no column burn_duration
+
+  const tableInfo = db.exec('PRAGMA table_info(local_users)');
+  if (tableInfo.length <= 0) {
+    return tableInfo;
+  }
+
+  // check column for old version
+  const hasColumnBirthTime = tableInfo[0].values.find(
+    v => v[1] === 'birth_time'
+  );
+
+  const result: QueryExecResult[] = [];
+  if (!hasColumnBirthTime) {
+    result.push(
+      ...db.exec(`
+          alter table local_users add birth_time datetime;
+      `)
+    );
+  }
+
+  return result;
 }
 
 export function getLoginUser(db: Database, userID: string): QueryExecResult[] {
