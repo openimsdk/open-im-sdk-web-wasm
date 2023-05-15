@@ -156,6 +156,9 @@ export function initDatabaseAPI(): void {
     'getTotalUnreadMsgCount'
   );
   window.resetConversation = registerMethodOnWindow('resetConversation');
+  window.getMultipleConversationDB = registerMethodOnWindow(
+    'getMultipleConversationDB'
+  );
 
   // users
   window.getLoginUser = registerMethodOnWindow('getLoginUser');

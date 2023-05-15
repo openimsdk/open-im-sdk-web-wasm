@@ -12,6 +12,7 @@ declare global {
     // [functionName: string]: (...args: any[]) => Promise<any>;
 
     initDB: DatabaseApi;
+    close: DatabaseApi;
     // message
     getMessage: DatabaseApi;
     getMultipleMessage: DatabaseApi;
@@ -49,6 +50,7 @@ declare global {
       operationID: string
     ) => Promise<string | undefined>;
     resetConversation: DatabaseApi;
+    getMultipleConversationDB: DatabaseApi;
 
     // users
     getLoginUser: DatabaseApi;

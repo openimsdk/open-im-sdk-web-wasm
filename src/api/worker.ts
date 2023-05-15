@@ -34,6 +34,7 @@ import {
   insertConversation,
   getTotalUnreadMsgCount,
   resetConversation,
+  getMultipleConversationDB,
 
   // users
   getLoginUser,
@@ -155,6 +156,7 @@ rpc.registerMethod('batchInsertConversationList', batchInsertConversationList);
 rpc.registerMethod('getTotalUnreadMsgCount', getTotalUnreadMsgCount);
 rpc.registerMethod('getTotalUnreadMsgCountDB', getTotalUnreadMsgCount);
 rpc.registerMethod('insertConversation', insertConversation);
+rpc.registerMethod('getMultipleConversationDB', getMultipleConversationDB);
 
 // users
 rpc.registerMethod('getLoginUser', getLoginUser);

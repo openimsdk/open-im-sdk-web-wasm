@@ -157,3 +157,13 @@ export function resetConversation(
   WHERE conversation_id = "${conversationID}"
   `);
 }
+
+export function getMultipleConversationDB(
+  db: Database,
+  conversationIDList: string[]
+): QueryExecResult[] {
+  return db.exec(`
+    SELECT * FROM local_conversations
+    WHERE conversation_id IN ("${conversationIDList.join('","')}")
+  `);
+}
