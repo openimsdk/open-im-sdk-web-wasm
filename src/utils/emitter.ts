@@ -2,10 +2,10 @@ import { WSEvent } from '../types';
 import { CbEvents } from '../constant';
 
 interface Events {
-  [key: string]: Cbfn[];
+  [key: string]: CbFn[];
 }
 
-type Cbfn = (data: WSEvent) => void;
+type CbFn = (data: WSEvent) => void;
 
 class Emitter {
   private events: Events;
@@ -24,7 +24,7 @@ class Emitter {
     return this;
   }
 
-  on(event: CbEvents, fn: Cbfn) {
+  on(event: CbEvents, fn: CbFn) {
     if (this.events[event]) {
       this.events[event].push(fn);
     } else {
@@ -34,7 +34,7 @@ class Emitter {
     return this;
   }
 
-  off(event: CbEvents, fn: Cbfn) {
+  off(event: CbEvents, fn: CbFn) {
     if (event && typeof fn === 'function' && this.events[event]) {
       const listeners = this.events[event];
       if (!listeners || listeners.length === 0) {

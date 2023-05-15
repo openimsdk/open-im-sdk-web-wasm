@@ -1,11 +1,11 @@
 import { wait } from '@/utils';
 
-let initiallized = false;
+let initialized = false;
 let go: Go;
 let goExitPromise: Promise<void> | undefined;
 
 export async function initializeWasm(url: string): Promise<Go | null> {
-  if (initiallized) {
+  if (initialized) {
     return null;
   }
 
@@ -14,16 +14,18 @@ export async function initializeWasm(url: string): Promise<Go | null> {
   }
 
   go = new Go();
+
   if ('instantiateStreaming' in WebAssembly) {
     const wasm = await WebAssembly.instantiateStreaming(
       fetch(url),
       go.importObject
     );
-    go.run(wasm.instance);
+    goExitPromise = go.run(wasm.instance);
   } else {
     const bytes = await fetch(url).then(resp => resp.arrayBuffer());
 
     const wasm = await WebAssembly.instantiate(bytes, go.importObject);
+
     goExitPromise = go.run(wasm.instance);
   }
 
@@ -33,13 +35,13 @@ export async function initializeWasm(url: string): Promise<Go | null> {
 }
 
 export function reset() {
-  initiallized = false;
+  initialized = false;
 }
 
 export function getGO() {
   return go;
 }
 
-export function getGoExitPromsie() {
+export function getGoExitPromise() {
   return goExitPromise;
 }

@@ -91,6 +91,7 @@ export enum RequestFunc {
   SENDMESSAGENOTOSS = 'SendMessageNotOss',
   GETHISTORYMESSAGELIST = 'GetHistoryMessageList',
   GETADVANCEDHISTORYMESSAGELIST = 'GetAdvancedHistoryMessageList',
+  GETADVANCEDHISTORYMESSAGELISTREVERSE = 'GetAdvancedHistoryMessageListReverse',
   GETHISTORYMESSAGELISTREVERSE = 'GetHistoryMessageListReverse',
   REVOKEMESSAGE = 'RevokeMessage',
   SETONECONVERSATIONPRIVATECHAT = 'SetOneConversationPrivateChat',

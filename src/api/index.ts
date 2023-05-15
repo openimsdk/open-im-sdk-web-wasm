@@ -52,8 +52,8 @@ function catchErrorHandle(error: unknown) {
   throw error;
 }
 
-function registeMethodOnWindow(name: string) {
-  console.info(`=> (database api) registe ${name}`);
+function registerMethodOnWindow(name: string) {
+  console.info(`=> (database api) register ${name}`);
 
   return async (...args: unknown[]) => {
     if (!rpc || !worker) {
@@ -90,168 +90,170 @@ export function initDatabaseAPI(): void {
     return;
   }
 
-  window.initDB = registeMethodOnWindow('initDB');
-  window.close = registeMethodOnWindow('close');
+  window.initDB = registerMethodOnWindow('initDB');
+  window.close = registerMethodOnWindow('close');
 
   // message
-  window.getMessage = registeMethodOnWindow('getMessage');
-  window.getMultipleMessage = registeMethodOnWindow('getMultipleMessage');
-  window.getSendingMessageList = registeMethodOnWindow('getSendingMessageList');
-  window.getNormalMsgSeq = registeMethodOnWindow('getNormalMsgSeq');
-  window.updateMessageTimeAndStatus = registeMethodOnWindow(
+  window.getMessage = registerMethodOnWindow('getMessage');
+  window.getMultipleMessage = registerMethodOnWindow('getMultipleMessage');
+  window.getSendingMessageList = registerMethodOnWindow(
+    'getSendingMessageList'
+  );
+  window.getNormalMsgSeq = registerMethodOnWindow('getNormalMsgSeq');
+  window.updateMessageTimeAndStatus = registerMethodOnWindow(
     'updateMessageTimeAndStatus'
   );
-  window.updateMessage = registeMethodOnWindow('updateMessage');
-  window.updateColumnsMessage = registeMethodOnWindow('updateColumnsMessage');
-  window.insertMessage = registeMethodOnWindow('insertMessage');
-  window.batchInsertMessageList = registeMethodOnWindow(
+  window.updateMessage = registerMethodOnWindow('updateMessage');
+  window.updateColumnsMessage = registerMethodOnWindow('updateColumnsMessage');
+  window.insertMessage = registerMethodOnWindow('insertMessage');
+  window.batchInsertMessageList = registerMethodOnWindow(
     'batchInsertMessageList'
   );
-  window.getMessageList = registeMethodOnWindow('getMessageList');
-  window.getMessageListNoTime = registeMethodOnWindow('getMessageListNoTime');
-  window.searchAllMessageByContentType = registeMethodOnWindow(
+  window.getMessageList = registerMethodOnWindow('getMessageList');
+  window.getMessageListNoTime = registerMethodOnWindow('getMessageListNoTime');
+  window.searchAllMessageByContentType = registerMethodOnWindow(
     'searchAllMessageByContentType'
   );
 
   // conversation
-  window.getAllConversationListDB = registeMethodOnWindow(
+  window.getAllConversationListDB = registerMethodOnWindow(
     'getAllConversationList'
   );
-  window.getAllConversationListToSync = registeMethodOnWindow(
+  window.getAllConversationListToSync = registerMethodOnWindow(
     'getAllConversationListToSync'
   );
-  window.getHiddenConversationList = registeMethodOnWindow(
+  window.getHiddenConversationList = registerMethodOnWindow(
     'getHiddenConversationList'
   );
-  window.getConversation = registeMethodOnWindow('getConversation');
-  window.getMultipleConversation = registeMethodOnWindow(
+  window.getConversation = registerMethodOnWindow('getConversation');
+  window.getMultipleConversation = registerMethodOnWindow(
     'getMultipleConversation'
   );
-  window.updateColumnsConversation = registeMethodOnWindow(
+  window.updateColumnsConversation = registerMethodOnWindow(
     'updateColumnsConversation'
   );
-  window.updateConversation = registeMethodOnWindow(
+  window.updateConversation = registerMethodOnWindow(
     'updateColumnsConversation'
   );
-  window.updateConversationForSync = registeMethodOnWindow(
+  window.updateConversationForSync = registerMethodOnWindow(
     'updateColumnsConversation'
   );
-  window.decrConversationUnreadCount = registeMethodOnWindow(
+  window.decrConversationUnreadCount = registerMethodOnWindow(
     'decrConversationUnreadCount'
   );
-  window.batchInsertConversationList = registeMethodOnWindow(
+  window.batchInsertConversationList = registerMethodOnWindow(
     'batchInsertConversationList'
   );
-  window.insertConversation = registeMethodOnWindow('insertConversation');
-  window.getTotalUnreadMsgCountDB = registeMethodOnWindow(
+  window.insertConversation = registerMethodOnWindow('insertConversation');
+  window.getTotalUnreadMsgCountDB = registerMethodOnWindow(
     'getTotalUnreadMsgCountDB'
   );
-  window.getTotalUnreadMsgCount = registeMethodOnWindow(
+  window.getTotalUnreadMsgCount = registerMethodOnWindow(
     'getTotalUnreadMsgCount'
   );
-  window.resetConversation = registeMethodOnWindow('resetConversation');
+  window.resetConversation = registerMethodOnWindow('resetConversation');
 
   // users
-  window.getLoginUser = registeMethodOnWindow('getLoginUser');
-  window.insertLoginUser = registeMethodOnWindow('insertLoginUser');
-  window.updateLoginUserByMap = registeMethodOnWindow('updateLoginUserByMap');
+  window.getLoginUser = registerMethodOnWindow('getLoginUser');
+  window.insertLoginUser = registerMethodOnWindow('insertLoginUser');
+  window.updateLoginUserByMap = registerMethodOnWindow('updateLoginUserByMap');
 
   // super groups
-  window.getJoinedSuperGroupList = registeMethodOnWindow(
+  window.getJoinedSuperGroupList = registerMethodOnWindow(
     'getJoinedSuperGroupList'
   );
-  window.getJoinedSuperGroupIDList = registeMethodOnWindow(
+  window.getJoinedSuperGroupIDList = registerMethodOnWindow(
     'getJoinedSuperGroupIDList'
   );
-  window.getSuperGroupInfoByGroupID = registeMethodOnWindow(
+  window.getSuperGroupInfoByGroupID = registerMethodOnWindow(
     'getSuperGroupInfoByGroupID'
   );
-  window.deleteSuperGroup = registeMethodOnWindow('deleteSuperGroup');
-  window.insertSuperGroup = registeMethodOnWindow('insertSuperGroup');
-  window.updateSuperGroup = registeMethodOnWindow('updateSuperGroup');
+  window.deleteSuperGroup = registerMethodOnWindow('deleteSuperGroup');
+  window.insertSuperGroup = registerMethodOnWindow('insertSuperGroup');
+  window.updateSuperGroup = registerMethodOnWindow('updateSuperGroup');
 
   // unread messages
-  window.deleteConversationUnreadMessageList = registeMethodOnWindow(
+  window.deleteConversationUnreadMessageList = registerMethodOnWindow(
     'deleteConversationUnreadMessageList'
   );
-  window.batchInsertConversationUnreadMessageList = registeMethodOnWindow(
+  window.batchInsertConversationUnreadMessageList = registerMethodOnWindow(
     'batchInsertConversationUnreadMessageList'
   );
 
   // super group messages
-  window.superGroupGetMessage = registeMethodOnWindow('superGroupGetMessage');
-  window.superGroupGetMultipleMessage = registeMethodOnWindow(
+  window.superGroupGetMessage = registerMethodOnWindow('superGroupGetMessage');
+  window.superGroupGetMultipleMessage = registerMethodOnWindow(
     'superGroupGetMultipleMessage'
   );
-  window.superGroupGetNormalMinSeq = registeMethodOnWindow(
+  window.superGroupGetNormalMinSeq = registerMethodOnWindow(
     'superGroupGetNormalMinSeq'
   );
-  window.getSuperGroupNormalMsgSeq = registeMethodOnWindow(
+  window.getSuperGroupNormalMsgSeq = registerMethodOnWindow(
     'getSuperGroupNormalMsgSeq'
   );
-  window.superGroupUpdateMessageTimeAndStatus = registeMethodOnWindow(
+  window.superGroupUpdateMessageTimeAndStatus = registerMethodOnWindow(
     'superGroupUpdateMessageTimeAndStatus'
   );
-  window.superGroupUpdateMessage = registeMethodOnWindow(
+  window.superGroupUpdateMessage = registerMethodOnWindow(
     'superGroupUpdateMessage'
   );
-  window.superGroupInsertMessage = registeMethodOnWindow(
+  window.superGroupInsertMessage = registerMethodOnWindow(
     'superGroupInsertMessage'
   );
-  window.superGroupUpdateColumnsMessage = registeMethodOnWindow(
+  window.superGroupUpdateColumnsMessage = registerMethodOnWindow(
     'superGroupUpdateColumnsMessage'
   );
-  window.superGroupBatchInsertMessageList = registeMethodOnWindow(
+  window.superGroupBatchInsertMessageList = registerMethodOnWindow(
     'superGroupBatchInsertMessageList'
   );
-  window.superGroupGetMessageListNoTime = registeMethodOnWindow(
+  window.superGroupGetMessageListNoTime = registerMethodOnWindow(
     'superGroupGetMessageListNoTime'
   );
-  window.superGroupGetMessageList = registeMethodOnWindow(
+  window.superGroupGetMessageList = registerMethodOnWindow(
     'superGroupGetMessageList'
   );
-  window.superGroupSearchAllMessageByContentType = registeMethodOnWindow(
+  window.superGroupSearchAllMessageByContentType = registerMethodOnWindow(
     'superGroupSearchAllMessageByContentType'
   );
-  window.getMsgSeqListByPeerUserID = registeMethodOnWindow(
+  window.getMsgSeqListByPeerUserID = registerMethodOnWindow(
     'getMsgSeqListByPeerUserID'
   );
-  window.getMsgSeqListBySelfUserID = registeMethodOnWindow(
+  window.getMsgSeqListBySelfUserID = registerMethodOnWindow(
     'getMsgSeqListBySelfUserID'
   );
-  window.getMsgSeqListByGroupID = registeMethodOnWindow(
+  window.getMsgSeqListByGroupID = registerMethodOnWindow(
     'getMsgSeqListByGroupID'
   );
-  window.updateMessageStatusBySourceID = registeMethodOnWindow(
+  window.updateMessageStatusBySourceID = registerMethodOnWindow(
     'updateMessageStatusBySourceID'
   );
 
   // reaction extensions
-  window.getMessageReactionExtension = registeMethodOnWindow(
+  window.getMessageReactionExtension = registerMethodOnWindow(
     'getMessageReactionExtension'
   );
-  window.insertMessageReactionExtension = registeMethodOnWindow(
+  window.insertMessageReactionExtension = registerMethodOnWindow(
     'insertMessageReactionExtension'
   );
-  window.getAndUpdateMessageReactionExtension = registeMethodOnWindow(
+  window.getAndUpdateMessageReactionExtension = registerMethodOnWindow(
     'getAndUpdateMessageReactionExtension'
   );
-  window.deleteAndUpdateMessageReactionExtension = registeMethodOnWindow(
+  window.deleteAndUpdateMessageReactionExtension = registerMethodOnWindow(
     'deleteAndUpdateMessageReactionExtension'
   );
-  window.getMultipleMessageReactionExtension = registeMethodOnWindow(
+  window.getMultipleMessageReactionExtension = registerMethodOnWindow(
     'getMultipleMessageReactionExtension'
   );
-  window.updateMessageReactionExtension = registeMethodOnWindow(
+  window.updateMessageReactionExtension = registerMethodOnWindow(
     'updateMessageReactionExtension'
   );
-  window.deleteMessageReactionExtension = registeMethodOnWindow(
+  window.deleteMessageReactionExtension = registerMethodOnWindow(
     'deleteMessageReactionExtension'
   );
 
   // debug
-  window.exec = registeMethodOnWindow('exec');
-  window.getRowsModified = registeMethodOnWindow('getRowsModified');
+  window.exec = registerMethodOnWindow('exec');
+  window.getRowsModified = registerMethodOnWindow('getRowsModified');
   window.exportDB = async () => {
     if (!rpc || !worker) {
       initWorker();
