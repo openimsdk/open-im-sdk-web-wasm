@@ -396,7 +396,7 @@ export async function superGroupGetAlreadyExistSeqList(
       _lostSeqList
     );
 
-    return formatResponse(execResult[0]?.values[0]);
+    return formatResponse(execResult[0]?.values.flat() ?? []);
   } catch (e) {
     console.error(e);
 
