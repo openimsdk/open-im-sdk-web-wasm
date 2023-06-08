@@ -4,7 +4,7 @@ import { Database, QueryExecResult } from '@jlongster/sql.js';
 export type ClientConversation = { [key: string]: any };
 
 export function localConversations(db: Database): QueryExecResult[] {
-  return db.exec(
+  db.exec(
     `
       create table if not exists 'local_conversations' (
             'conversation_id' char(128),
@@ -22,6 +22,7 @@ export function localConversations(db: Database): QueryExecResult[] {
             'draft_text_time' integer,
             'is_pinned' numeric,
             'is_private_chat' numeric,
+            'burn_duration' integer default 30,
             'is_not_in_group' numeric,
             'update_unread_count_time' integer,
             'attached_info' varchar(1024),
@@ -30,6 +31,29 @@ export function localConversations(db: Database): QueryExecResult[] {
         )
     `
   );
+
+  // has no column burn_duration
+
+  const tableInfo = db.exec('PRAGMA table_info(local_conversations)');
+  if (tableInfo.length <= 0) {
+    return tableInfo;
+  }
+
+  // check column for old version
+  const hasColumnBurnDuration = tableInfo[0].values.find(
+    v => v[1] === 'burn_duration'
+  );
+
+  const result: QueryExecResult[] = [];
+  if (!hasColumnBurnDuration) {
+    result.push(
+      ...db.exec(`
+        alter table local_conversations add burn_duration numeric DEFAULT 30;
+    `)
+    );
+  }
+
+  return result;
 }
 
 export function getAllConversationList(db: Database): QueryExecResult[] {
@@ -154,5 +178,15 @@ export function resetConversation(
     draft_text="",
     draft_text_time=0
   WHERE conversation_id = "${conversationID}"
+  `);
+}
+
+export function getMultipleConversationDB(
+  db: Database,
+  conversationIDList: string[]
+): QueryExecResult[] {
+  return db.exec(`
+    SELECT * FROM local_conversations
+    WHERE conversation_id IN ("${conversationIDList.join('","')}")
   `);
 }

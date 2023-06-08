@@ -11,12 +11,14 @@ import {
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
   getMultipleConversation as databaseGetMultipleConversation,
   resetConversation as databaseResetConversation,
+  getMultipleConversationDB as databaseGetMultipleConversationDB,
 } from '@/sqls';
 import {
   convertSqlExecResult,
   convertObjectField,
   convertToSnakeCaseObject,
   formatResponse,
+  jsonDecode,
 } from '@/utils';
 import { getInstance } from './instance';
 
@@ -278,6 +280,34 @@ export async function resetConversation(
     }
 
     return formatResponse('resetConversation updated');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMultipleConversationDB(
+  conversationIDListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const execResult = databaseGetMultipleConversationDB(
+      db,
+      jsonDecode(conversationIDListStr, [])
+    );
+
+    return formatResponse(
+      convertSqlExecResult(execResult[0], 'CamelCase', [
+        'isPinned',
+        'isPrivateChat',
+        'isNotInGroup',
+      ])
+    );
   } catch (e) {
     console.error(e);
 

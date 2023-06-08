@@ -4,7 +4,7 @@ import initSqlJs, { Database, SqlJsStatic } from '@jlongster/sql.js';
 import { SQLiteFS } from 'open-absurd-sql';
 import IndexedDBBackend from 'open-absurd-sql/dist/indexeddb-backend';
 
-let instance: Promise<Database> | undefined;
+let _instance: Promise<Database> | undefined;
 let SQL: SqlJsStatic | undefined;
 
 async function InitializeDB(filePath: string) {
@@ -37,29 +37,31 @@ async function InitializeDB(filePath: string) {
 }
 
 export function getInstance(filePath?: string): Promise<Database> {
-  if (instance) {
-    return instance;
+  if (_instance) {
+    return _instance;
   }
 
   if (!filePath) {
     throw new Error('must specific database file');
   }
 
-  instance = new Promise<Database>((resolve, reject) => {
+  _instance = new Promise<Database>((resolve, reject) => {
     const db = InitializeDB(filePath);
     db.then(res => resolve(res)).catch(err => reject(err));
   });
+  console.log(`!!! instance set new val about ${filePath}`);
 
-  return instance;
+  return _instance;
 }
 
 export async function resetInstance() {
-  if (!instance) {
+  if (!_instance) {
     return;
   }
 
-  const db = await instance;
+  const db = await _instance;
 
   db.close();
-  instance = undefined;
+  _instance = undefined;
+  console.log('!!! instance set undefined');
 }

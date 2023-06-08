@@ -3,5 +3,5 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["indexeddb", "jlongster"]
+  "cSpell.words": ["datetime", "indexeddb", "jlongster"]
 }

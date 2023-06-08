@@ -114,6 +114,10 @@ export function initDatabaseAPI(): void {
   window.searchAllMessageByContentType = registerMethodOnWindow(
     'searchAllMessageByContentType'
   );
+  window.getAbnormalMsgSeq = registerMethodOnWindow('getAbnormalMsgSeq');
+  window.getAbnormalMsgSeqList = registerMethodOnWindow(
+    'getAbnormalMsgSeqList'
+  );
 
   // conversation
   window.getAllConversationListDB = registerMethodOnWindow(
@@ -152,6 +156,9 @@ export function initDatabaseAPI(): void {
     'getTotalUnreadMsgCount'
   );
   window.resetConversation = registerMethodOnWindow('resetConversation');
+  window.getMultipleConversationDB = registerMethodOnWindow(
+    'getMultipleConversationDB'
+  );
 
   // users
   window.getLoginUser = registerMethodOnWindow('getLoginUser');
@@ -171,6 +178,9 @@ export function initDatabaseAPI(): void {
   window.deleteSuperGroup = registerMethodOnWindow('deleteSuperGroup');
   window.insertSuperGroup = registerMethodOnWindow('insertSuperGroup');
   window.updateSuperGroup = registerMethodOnWindow('updateSuperGroup');
+  window.getJoinedWorkingGroupIDList = registerMethodOnWindow(
+    'getJoinedWorkingGroupIDList'
+  );
 
   // unread messages
   window.deleteConversationUnreadMessageList = registerMethodOnWindow(
@@ -227,6 +237,18 @@ export function initDatabaseAPI(): void {
   window.updateMessageStatusBySourceID = registerMethodOnWindow(
     'updateMessageStatusBySourceID'
   );
+  window.superGroupGetAlreadyExistSeqList = registerMethodOnWindow(
+    'superGroupGetAlreadyExistSeqList'
+  );
+
+  // super group error chat logs
+  window.getSuperGroupAbnormalMsgSeq = registerMethodOnWindow(
+    'getSuperGroupAbnormalMsgSeq'
+  );
+
+  window.superBatchInsertExceptionMsg = registerMethodOnWindow(
+    'superBatchInsertExceptionMsg'
+  );
 
   // reaction extensions
   window.getMessageReactionExtension = registerMethodOnWindow(
@@ -250,6 +272,31 @@ export function initDatabaseAPI(): void {
   window.deleteMessageReactionExtension = registerMethodOnWindow(
     'deleteMessageReactionExtension'
   );
+
+  // group request
+  window.getSendGroupApplication = registerMethodOnWindow(
+    'getSendGroupApplication'
+  );
+  window.getAdminGroupApplication = registerMethodOnWindow(
+    'getAdminGroupApplication'
+  );
+
+  // blacks
+  window.getBlackListDB = registerMethodOnWindow('getBlackList');
+
+  // group
+  window.getJoinedGroupListDB = registerMethodOnWindow('getJoinedGroupList');
+
+  // friend request
+  window.getRecvFriendApplication = registerMethodOnWindow(
+    'getRecvFriendApplication'
+  );
+  window.getSendFriendApplication = registerMethodOnWindow(
+    'getSendFriendApplication'
+  );
+
+  // friend
+  window.getAllFriendList = registerMethodOnWindow('getAllFriendList');
 
   // debug
   window.exec = registerMethodOnWindow('exec');

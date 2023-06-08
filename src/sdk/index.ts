@@ -32,6 +32,7 @@ import {
 } from '../types/params';
 
 import { IMConfig, WsResponse } from '../types/entity';
+import { logBoxStyleValue } from '@/utils';
 
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<Go | null>;
@@ -95,7 +96,7 @@ class SDK extends Emitter {
       `%cSDK =>%c [OperationID:${
         args[0]
       }] (invoked by js) run ${functionName} with args ${JSON.stringify(args)}`,
-      'font-size:14px; background:#7CAEFF;',
+      'font-size:14px; background:#7CAEFF; border-radius:4px; padding-inline:4px;',
       ''
     );
 
@@ -112,7 +113,7 @@ class SDK extends Emitter {
             }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
               data
             )}`,
-            'font-size:14px; background:#FFDC19;',
+            logBoxStyleValue('#FFDC19'),
             ''
           );
           data = processor(data);
@@ -125,7 +126,7 @@ class SDK extends Emitter {
           }] (invoked by js) run ${functionName} with response ${JSON.stringify(
             response
           )}`,
-          'font-size:14px; background:#82C115;',
+          logBoxStyleValue('#82C115'),
           ''
         );
 
@@ -143,7 +144,7 @@ class SDK extends Emitter {
           }] (invoked by js) run ${functionName} with error ${JSON.stringify(
             error
           )}`,
-          'font-size:14px; background:#EE4245;',
+          logBoxStyleValue('#EE4245'),
           ''
         );
 
@@ -164,7 +165,13 @@ class SDK extends Emitter {
     await this.wasmInitializedPromise;
     window.commonEventFunc(event => {
       try {
-        console.info('SDK => received event ', event);
+        console.info(
+          `%cSDK =>%c received event %c${event}%c `,
+          logBoxStyleValue('#282828', '#ffffff'),
+          '',
+          'color: #4f2398;',
+          ''
+        );
         const parsed = JSON.parse(event) as WSEvent;
 
         this.emit(parsed.event, parsed);

@@ -4,15 +4,30 @@ import { MessageStatus, MessageType } from '@/constant';
 
 export type ClientSuperGroupMessage = { [key: string]: any };
 
-const GroupTableMap: Record<string, boolean> = {};
+const GroupTableMap: Map<string, boolean> = new Map();
+const GroupErrChatLogsMap: Map<string, boolean> = new Map();
+
+export function resetMap() {
+  GroupTableMap.clear();
+  GroupErrChatLogsMap.clear();
+}
 
 function _initSuperGroupTable(db: Database, groupID: string) {
-  if (GroupTableMap[groupID]) {
+  if (GroupTableMap.get(groupID)) {
     return;
   }
 
   localSgChatLogs(db, groupID);
-  GroupTableMap[groupID] = true;
+  GroupTableMap.set(groupID, true);
+}
+
+function _initSuperGroupErrLogsTable(db: Database, groupID: string) {
+  if (GroupTableMap.get(groupID)) {
+    return;
+  }
+
+  localSgErrChatLogs(db, groupID);
+  GroupTableMap.set(groupID, true);
 }
 
 export function localSgChatLogs(
@@ -90,6 +105,34 @@ export function localSgChatLogs(
   }
 
   return result;
+}
+
+export function localSgErrChatLogs(db: Database, groupID: string) {
+  return db.exec(
+    `
+      create table if not exists local_sg_err_chat_logs_${groupID} (
+        "seq" integer,
+        "client_msg_id" char(64),
+        "server_msg_id" char(64),
+        "send_id" char(64),
+        "recv_id" char(64),
+        "sender_platform_id" integer,
+        "sender_nick_name" varchar(255),
+        "sender_face_url" varchar(255),
+        "session_type" integer,
+        "msg_from" integer,
+        "content_type" integer,
+        "content" varchar(1000),
+        "is_read" numeric,
+        "status" integer,
+        "send_time" integer,
+        "create_time" integer,
+        "attached_info" varchar(1024),
+        "ex" varchar(1024),
+
+        primary key ('seq'))
+    `
+  );
 }
 
 export function getSuperGroupNormalMsgSeq(
@@ -288,4 +331,41 @@ export function superGroupSearchAllMessageByContentType(
             content_type = ${contentType};
     `
   );
+}
+
+export function superGroupGetAlreadyExistSeqList(
+  db: Database,
+  groupID: string,
+  lostSeqList: string[]
+) {
+  _initSuperGroupTable(db, groupID);
+  const values = lostSeqList.map(v => `'${v}'`).join(',');
+
+  const sql = `select seq from local_sg_chat_logs_${groupID} where seq in (${values})`;
+
+  return db.exec(sql);
+}
+
+export function getSuperGroupAbnormalMsgSeq(db: Database, groupID: string) {
+  _initSuperGroupErrLogsTable(db, groupID);
+
+  return db.exec(
+    `SELECT IFNULL(max(seq), 0) FROM local_sg_err_chat_logs_${groupID}`
+  );
+}
+
+export function superBatchInsertExceptionMsg(
+  db: Database,
+  errMessageList: ClientSuperGroupMessage[],
+  groupID: string
+) {
+  _initSuperGroupErrLogsTable(db, groupID);
+
+  const sql = squel
+    .insert()
+    .into(`local_sg_err_chat_logs_${groupID}`)
+    .setFieldsRows(errMessageList)
+    .toString();
+
+  return db.exec(sql);
 }

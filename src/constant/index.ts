@@ -2,6 +2,7 @@ export const DatabaseErrorCode = {
   ErrorInit: 10001,
   ErrorNoRecord: 10002,
   ErrorDBTimeout: 10003,
+  ErrorDBNoBatch: 10004,
 };
 
 export enum CbEvents {

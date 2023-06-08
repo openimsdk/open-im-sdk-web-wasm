@@ -12,6 +12,7 @@ declare global {
     // [functionName: string]: (...args: any[]) => Promise<any>;
 
     initDB: DatabaseApi;
+    close: DatabaseApi;
     // message
     getMessage: DatabaseApi;
     getMultipleMessage: DatabaseApi;
@@ -29,6 +30,8 @@ declare global {
     getMsgSeqListBySelfUserID: (userID: string) => Promise<string | undefined>;
     getMsgSeqListByGroupID: (groupID: string) => Promise<string | undefined>;
     updateMessageStatusBySourceID: DatabaseApi;
+    getAbnormalMsgSeq: DatabaseApi;
+    getAbnormalMsgSeqList: DatabaseApi;
 
     // conversation
     getAllConversationListDB: DatabaseApi;
@@ -47,6 +50,7 @@ declare global {
       operationID: string
     ) => Promise<string | undefined>;
     resetConversation: DatabaseApi;
+    getMultipleConversationDB: DatabaseApi;
 
     // users
     getLoginUser: DatabaseApi;
@@ -75,6 +79,10 @@ declare global {
     superGroupGetMessageList: DatabaseApi;
     getRowsModified: DatabaseApi;
     superGroupSearchAllMessageByContentType: DatabaseApi;
+    getSuperGroupAbnormalMsgSeq: DatabaseApi;
+    superGroupGetAlreadyExistSeqList: DatabaseApi;
+    superBatchInsertExceptionMsg: DatabaseApi;
+
     // reaction extension
     getMessageReactionExtension: DatabaseApi;
     insertMessageReactionExtension: DatabaseApi;
@@ -83,6 +91,24 @@ declare global {
     getMultipleMessageReactionExtension: DatabaseApi;
     deleteMessageReactionExtension: DatabaseApi;
     updateMessageReactionExtension: DatabaseApi;
+
+    // group request
+    getSendGroupApplication: DatabaseApi;
+    getAdminGroupApplication: DatabaseApi;
+
+    // blacks
+    getBlackListDB: DatabaseApi;
+
+    // group
+    getJoinedGroupListDB: DatabaseApi;
+    getJoinedWorkingGroupIDList: DatabaseApi;
+
+    // friend request
+    getRecvFriendApplication: DatabaseApi;
+    getSendFriendApplication: DatabaseApi;
+
+    // friend
+    getAllFriendList: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;
@@ -224,6 +250,7 @@ declare global {
     exec: (sql: string) => Promise<any>;
     exportDB: () => Promise<string>; //return Uint8Array
   }
+
   class Go {
     exited: boolean;
     importObject: WebAssembly.Imports;

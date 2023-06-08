@@ -16,6 +16,8 @@ import {
   getMsgSeqListBySelfUserID as databaseGetMsgSeqListBySelfUserID,
   getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
   updateMessageStatusBySourceID as databaseUpdateMessageStatusBySourceID,
+  getAbnormalMsgSeq as databaseGetAbnormalMsgSeq,
+  getAbnormalMsgSeqList as databaseGetAbnormalMsgSeqList,
 } from '@/sqls';
 import {
   convertSqlExecResult,
@@ -462,6 +464,42 @@ export async function updateMessageStatusBySourceID(
       undefined,
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
+    );
+  }
+}
+
+export async function getAbnormalMsgSeq(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetAbnormalMsgSeq(db);
+
+    return formatResponse(execResult[0]?.values?.[0]?.[0]);
+  } catch (error) {
+    console.error(error);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(error)
+    );
+  }
+}
+
+export async function getAbnormalMsgSeqList(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetAbnormalMsgSeqList(db);
+
+    return formatResponse(execResult);
+  } catch (error) {
+    console.error(error);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(error)
     );
   }
 }

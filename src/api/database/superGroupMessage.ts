@@ -12,11 +12,15 @@ import {
   superGroupGetMessageListNoTime as databaseSuperGroupGetMessageListNoTime,
   superGroupGetMessageList as databaseSuperGroupGetMessageList,
   superGroupSearchAllMessageByContentType as databaseSuperGroupSearchAllMessageByContentType,
+  getSuperGroupAbnormalMsgSeq as databaseGetSuperGroupAbnormalMsgSeq,
+  superGroupGetAlreadyExistSeqList as databaseSuperGroupGetAlreadyExistSeqList,
+  superBatchInsertExceptionMsg as databaseSuperBatchInsertExceptionMsg,
 } from '@/sqls';
 import {
   convertSqlExecResult,
   convertToSnakeCaseObject,
   formatResponse,
+  jsonDecode,
 } from '@/utils';
 import { getInstance } from './instance';
 
@@ -373,6 +377,81 @@ export async function superGroupSearchAllMessageByContentType(
     return formatResponse(
       undefined,
       DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superGroupGetAlreadyExistSeqList(
+  groupID: string,
+  lostSeqListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const _lostSeqList = jsonDecode(lostSeqListStr, []);
+
+    const execResult = databaseSuperGroupGetAlreadyExistSeqList(
+      db,
+      groupID,
+      _lostSeqList
+    );
+
+    return formatResponse(execResult[0]?.values.flat() ?? []);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getSuperGroupAbnormalMsgSeq(
+  groupID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetSuperGroupAbnormalMsgSeq(db, groupID);
+
+    return formatResponse(execResult[0]?.values[0]?.[0]);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function superBatchInsertExceptionMsg(
+  errMsgListStr: string,
+  groupID: string
+): Promise<string> {
+  try {
+    const errMessageList = (
+      JSON.parse(errMsgListStr) as ClientSuperGroupMessage[]
+    ).map((v: Record<string, unknown>) => convertToSnakeCaseObject(v));
+
+    const db = await getInstance();
+    databaseSuperBatchInsertExceptionMsg(db, errMessageList, groupID);
+
+    const modified = db.getRowsModified();
+    if (modified === 0) {
+      throw 'superBatchInsertExceptionMsg no record insert';
+    }
+
+    return formatResponse(0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      'ErrorDBNoBatch',
+      DatabaseErrorCode.ErrorDBNoBatch,
       JSON.stringify(e)
     );
   }
