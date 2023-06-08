@@ -13,6 +13,7 @@ import {
   localFriendRequest,
   localErrChatLogs,
   localFriends,
+  resetMap,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
@@ -83,6 +84,8 @@ export async function close() {
   console.info('=> (database api) invoke close');
 
   try {
+    resetMap();
+
     await resetInstance();
 
     return formatResponse('');
