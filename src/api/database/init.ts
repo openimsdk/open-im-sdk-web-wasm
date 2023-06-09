@@ -1,5 +1,6 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
+  resetMap,
   localChatLogs,
   localConversations,
   localUsers,
@@ -62,6 +63,8 @@ export async function close() {
   console.info('=> (database api) invoke close');
 
   try {
+    resetMap();
+
     await resetInstance();
 
     return formatResponse('');

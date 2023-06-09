@@ -4,15 +4,19 @@ import { MessageStatus, MessageType } from '@/constant';
 
 export type ClientSuperGroupMessage = { [key: string]: any };
 
-const GroupTableMap: Record<string, boolean> = {};
+const GroupTableMap: Map<string, boolean> = new Map();
+
+export function resetMap() {
+  GroupTableMap.clear();
+}
 
 function _initSuperGroupTable(db: Database, groupID: string) {
-  if (GroupTableMap[groupID]) {
+  if (GroupTableMap.get(groupID)) {
     return;
   }
 
   localSgChatLogs(db, groupID);
-  GroupTableMap[groupID] = true;
+  GroupTableMap.set(groupID, true);
 }
 
 export function localSgChatLogs(
