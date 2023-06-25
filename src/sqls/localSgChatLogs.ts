@@ -215,7 +215,7 @@ export function superGroupGetMessageList(
         where
             recv_id = "${groupID}"
             and status <= 3
-            and send_time < ${startTime}
+            and send_time ${isReverse ? '>' : '<'} ${startTime}
             and session_type = ${sessionType}
         order by send_time ${isReverse ? 'asc' : 'desc'}
         limit ${count};    
