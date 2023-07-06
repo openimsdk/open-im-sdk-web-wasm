@@ -21,6 +21,7 @@ async function InitializeDB(filePath: string) {
   }
 
   const path = `/sql/${filePath}`;
+
   const db = new SQL.Database(path, { filename: true });
 
   if (typeof SharedArrayBuffer === 'undefined') {

@@ -1,44 +1,35 @@
-export enum OptType {
+export enum MessageReceiveOptType {
   Nomal = 0,
-  Mute = 1,
-  WithoutNotify = 2,
+  NotReceive = 1,
+  NotNotify = 2,
 }
-
 export enum AllowType {
-  Allowed,
-  NotAllowed,
+  Allowed = 0,
+  NotAllowed = 1,
 }
-
 export enum GroupType {
-  NomalGroup,
-  SuperGroup,
-  WorkingGroup,
+  WorkingGroup = 2,
 }
-
 export enum GroupJoinSource {
   Invitation = 2,
   Search = 3,
   QrCode = 4,
 }
-
-export enum GroupRole {
-  Nomal = 1,
-  Owner = 2,
-  Admin = 3,
+export enum GroupMemberRole {
+  Nomal = 20,
+  Admin = 60,
+  Owner = 100,
 }
-
 export enum GroupVerificationType {
-  ApplyNeedInviteNot,
-  AllNeed,
-  AllNot,
+  ApplyNeedInviteNot = 0,
+  AllNeed = 1,
+  AllNot = 2,
 }
-
 export enum MessageStatus {
   Sending = 1,
   Succeed = 2,
   Failed = 3,
 }
-
 export enum Platform {
   iOS = 1,
   Android = 2,
@@ -46,73 +37,87 @@ export enum Platform {
   MacOSX = 4,
   Web = 5,
   Linux = 7,
-  Admin = 8,
+  AndroidPad = 8,
+  iPad = 9,
 }
-
+export enum LogLevel {
+  Debug = 5,
+  Info = 4,
+  Warn = 3,
+  Error = 2,
+  Fatal = 1,
+  Panic = 0,
+}
+export enum ApplicationHandleResult {
+  Unprocessed = 0,
+  Agree = 1,
+  Reject = -1,
+}
 export enum MessageType {
-  TEXTMESSAGE = 101,
-  PICTUREMESSAGE = 102,
-  VOICEMESSAGE = 103,
-  VIDEOMESSAGE = 104,
-  FILEMESSAGE = 105,
-  ATTEXTMESSAGE = 106,
-  MERGERMESSAGE = 107,
-  CARDMESSAGE = 108,
-  LOCATIONMESSAGE = 109,
-  CUSTOMMESSAGE = 110,
-  REVOKEMESSAGE = 111,
-  HASREADRECEIPTMESSAGE = 112,
-  TYPINGMESSAGE = 113,
-  QUOTEMESSAGE = 114,
-  FACEMESSAGE = 115,
-  ADVANCEREVOKEMESSAGE = 118,
-  FRIENDAPPLICATIONAPPROVED = 1201,
-  FRIENDAPPLICATIONREJECTED = 1202,
-  FRIENDAPPLICATIONADDED = 1203,
-  FRIENDADDED = 1204,
-  FRIENDDELETED = 1205,
-  FRIENDREMARKSET = 1206,
-  BLACKADDED = 1207,
-  BLACKDELETED = 1208,
-  SELFINFOUPDATED = 1303,
-  NOTIFICATION = 1400,
-  GROUPCREATED = 1501,
-  GROUPINFOUPDATED = 1502,
-  JOINGROUPAPPLICATIONADDED = 1503,
-  MEMBERQUIT = 1504,
-  GROUPAPPLICATIONACCEPTED = 1505,
-  GROUPAPPLICATIONREJECTED = 1506,
-  GROUPOWNERTRANSFERRED = 1507,
-  MEMBERKICKED = 1508,
-  MEMBERINVITED = 1509,
-  MEMBERENTER = 1510,
-  GROUPDISMISSED = 1511,
-  GROUPMEMBERMUTED = 1512,
-  GROUPMEMBERCANCELMUTED = 1513,
-  GROUPMUTED = 1514,
-  GROUPCANCELMUTED = 1515,
-  GROUPMEMBERINFOUPDATED = 1516,
-  BURNMESSAGECHANGE = 1701,
-}
+  TextMessage = 101,
+  PictureMessage = 102,
+  VoiceMessage = 103,
+  VideoMessage = 104,
+  FileMessage = 105,
+  AtTextMessage = 106,
+  MergeMessage = 107,
+  CardMessage = 108,
+  LocationMessage = 109,
+  CustomMessage = 110,
+  TypingMessage = 113,
+  QuoteMessage = 114,
+  FaceMessage = 115,
+  FriendAdded = 1201,
+  OANotification = 1400,
 
+  GroupCreated = 1501,
+  GroupInfoUpdated = 1502,
+  MemberQuit = 1504,
+  GroupOwnerTransferred = 1507,
+  MemberKicked = 1508,
+  MemberInvited = 1509,
+  MemberEnter = 1510,
+  GroupDismissed = 1511,
+  GroupMemberMuted = 1512,
+  GroupMemberCancelMuted = 1513,
+  GroupMuted = 1514,
+  GroupCancelMuted = 1515,
+  GroupMemberInfoUpdated = 1516,
+  GroupMemberToAdmin = 1517,
+  GroupAdminToNomal = 1518,
+  GroupAnnouncementUpdated = 1519,
+  GroupNameUpdated = 1520,
+  BurnMessageChange = 1701,
+
+  // notification
+  RevokeMessage = 2101,
+  HasReadReceiptMessage = 2150,
+  GroupHasReadReceipt = 2155,
+}
 export enum SessionType {
   Single = 1,
   Group = 2,
-  SuperGroup = 3,
+  WorkingGroup = 3,
   Notification = 4,
 }
-
 export enum GroupStatus {
   Nomal = 0,
   Baned = 1,
   Dismissed = 2,
   Muted = 3,
 }
-
 export enum GroupAtType {
   AtNormal = 0,
   AtMe = 1,
   AtAll = 2,
   AtAllAtMe = 3,
   AtGroupNotice = 4,
+}
+export enum GroupMemberFilter {
+  All = 0,
+  Owner = 1,
+  Admin = 2,
+  Nomal = 3,
+  AdminAndNomal = 4,
+  AdminAndOwner = 5,
 }

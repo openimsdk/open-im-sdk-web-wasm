@@ -3,7 +3,7 @@ import {
   ClientUser,
   getLoginUser as databaseGetLoginUser,
   insertLoginUser as databaseInsertLoginUser,
-  updateLoginUserByMap as databaseUpdateLoginUserByMap,
+  updateLoginUser as databaseUpdateLoginUser,
 } from '@/sqls';
 import {
   formatResponse,
@@ -64,14 +64,14 @@ export async function insertLoginUser(userStr: string): Promise<string> {
   }
 }
 
-export async function updateLoginUserByMap(
-  userID: string,
-  user: ClientUser
-): Promise<string> {
+export async function updateLoginUser(userStr: string): Promise<string> {
   try {
     const db = await getInstance();
+    const user = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(userStr), { nickname: 'name' })
+    ) as ClientUser;
 
-    const execResult = databaseUpdateLoginUserByMap(db, userID, user);
+    const execResult = databaseUpdateLoginUser(db, user);
 
     return formatResponse(execResult);
   } catch (e) {

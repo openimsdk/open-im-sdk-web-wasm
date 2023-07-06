@@ -4,7 +4,6 @@ import {
   localFriends,
   localGroups,
   localFriendRequests,
-  localChatLogs,
   localErrChatLogs,
   localGroupRequests,
   localAdminGroupRequests,
@@ -14,6 +13,7 @@ import {
   localConversationUnreadMessages,
   localGroupMembers,
   tempCacheLocalChatLogs,
+  localNotification,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
@@ -32,7 +32,6 @@ export async function init(userId: string, dir: string): Promise<string> {
 
     const db = await getInstance(`${dir}${userId}.sqlite`);
     const results: QueryExecResult[][] = [];
-    const execResultLocalChatLogs = localChatLogs(db);
     const execResultLocalConversations = localConversations(db);
     const execResultLocalUsers = localUsers(db);
     const execResultLocalBlack = locaBlacks(db);
@@ -45,12 +44,12 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultlocaFendRequest = localFriendRequests(db);
     const execResultLocalSuperGroups = localSuperGroups(db);
     const execResultTempCacheLocalChatLogs = tempCacheLocalChatLogs(db);
+    const execResultlocalNotification = localNotification(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
 
     results.push(
       ...[
-        execResultLocalChatLogs,
         execResultLocalConversations,
         execResultLocalUsers,
         execResultLocalSuperGroups,
@@ -64,6 +63,7 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResuLocalGroupRequest,
         execResuLocalAdminGroupRequest,
         execResultTempCacheLocalChatLogs,
+        execResultlocalNotification,
       ]
     );
 

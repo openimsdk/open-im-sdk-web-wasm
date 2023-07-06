@@ -4,35 +4,35 @@ import {
   PicBaseInfo,
   AtUsersInfoItem,
   GroupInitInfo,
-  Member,
-  RtcInvite,
-  FullUserItem,
   MessageItem,
+  SelfUserInfo,
 } from './entity';
 import {
-  OptType,
   AllowType,
   GroupJoinSource,
-  GroupRole,
   GroupVerificationType,
   MessageType,
+  MessageReceiveOptType,
+  GroupMemberRole,
+  GroupMemberFilter,
 } from './enum';
 
-export type LoginParam = {
+export type InitAndLoginConfig = {
   userID: string;
   token: string;
   platformID: number;
-  apiAddress: string;
-  wsAddress: string;
+  apiAddr: string;
+  wsAddr: string;
   logLevel?: number;
-  isNeedEncryption?: boolean;
+  isLogStandardOutput?: boolean;
+  isExternalExtensions?: boolean;
+  tryParse?: boolean;
 };
 
 export type GetOneConversationParams = {
   sourceID: string;
   sessionType: number;
 };
-
 export type GetAdvancedHistoryMsgParams = {
   userID: string;
   groupID: string;
@@ -41,7 +41,6 @@ export type GetAdvancedHistoryMsgParams = {
   startClientMsgID: string;
   conversationID?: string;
 };
-
 export type GetHistoryMsgParams = {
   userID: string;
   groupID: string;
@@ -49,24 +48,16 @@ export type GetHistoryMsgParams = {
   startClientMsgID: string;
   conversationID?: string;
 };
-
-export type MarkC2CParams = {
-  userID: string;
-  msgIDList: string[];
-};
-
 export type MarkNotiParams = {
   conversationID: string;
   msgIDList: string[];
 };
-
 export type GetGroupMemberParams = {
   groupID: string;
-  filter: number;
+  filter: GroupMemberFilter;
   offset: number;
   count: number;
 };
-
 export type SendMsgParams = {
   recvID: string;
   groupID: string;
@@ -75,13 +66,16 @@ export type SendMsgParams = {
   fileArrayBuffer?: ArrayBuffer;
   snpFileArrayBuffer?: ArrayBuffer;
 };
-
+export type SetMessageLocalExParams = {
+  conversationID: string;
+  clientMsgID: string;
+  localEx: string;
+};
 export type ImageMsgParams = {
   sourcePicture: PicBaseInfo;
   bigPicture: PicBaseInfo;
   snapshotPicture: PicBaseInfo;
 };
-
 export type VideoMsgParams = {
   videoPath: string;
   duration: number;
@@ -97,132 +91,100 @@ export type VideoMsgParams = {
   snapshotHeight: number;
   snapShotType?: string;
 };
-
 export type VideoMsgFullParams = {
   videoFullPath: string;
   videoType: string;
   duration: number;
   snapshotFullPath: string;
 };
-
 export type CustomMsgParams = {
   data: string;
   extension: string;
   description: string;
 };
-
 export type QuoteMsgParams = {
   text: string;
   message: string;
 };
-
 export type AdvancedQuoteMsgParams = {
   text: string;
   message: string;
   messageEntityList?: MessageEntity[];
 };
-
 export type AdvancedMsgParams = {
   text: string;
   messageEntityList?: MessageEntity[];
 };
-
 export type SetPrvParams = {
   conversationID: string;
   isPrivate: boolean;
 };
-
 export type SplitConversationParams = {
   offset: number;
   count: number;
 };
-
 export type SetDraftParams = {
   conversationID: string;
   draftText: string;
 };
-
 export type PinCveParams = {
   conversationID: string;
   isPinned: boolean;
 };
-
 export type IsRecvParams = {
   conversationIDList: string[];
-  opt: OptType;
+  opt: MessageReceiveOptType;
 };
-
 export type UpdateMemberNameParams = {
   groupID: string;
   userID: string;
   GroupMemberNickname: string;
 };
-
 export type GroupBaseInfo = Partial<Omit<GroupInitInfo, 'groupType'>>;
-
 export type JoinGroupParams = {
   groupID: string;
   reqMsg: string;
   joinSource: GroupJoinSource;
 };
-
 export type SearchGroupParams = {
   keywordList: string[];
   isSearchGroupID: boolean;
   isSearchGroupName: boolean;
 };
-
 export type ChangeGroupMuteParams = {
   groupID: string;
   isMute: boolean;
 };
-
 export type ChangeGroupMemberMuteParams = {
   groupID: string;
   userID: string;
   mutedSeconds: number;
 };
-
 export type TransferGroupParams = {
   groupID: string;
   newOwnerUserID: string;
 };
-
 export type AccessGroupParams = {
   groupID: string;
   fromUserID: string;
   handleMsg: string;
 };
-
 export type SetGroupRoleParams = {
   groupID: string;
   userID: string;
-  roleLevel: GroupRole;
+  roleLevel: GroupMemberRole;
 };
-
 export type SetGroupVerificationParams = {
   verification: GroupVerificationType;
   groupID: string;
 };
-
-export type RtcActionParams = {
-  opUserID: string;
-  invitation: RtcInvite;
-};
-
 export type setPrvParams = {
   conversationID: string;
   isPrivate: boolean;
 };
-
 export type setBurnDurationParams = {
   conversationID: string;
   burnDuration: number;
-};
-
-export type LoginParams = {
-  userID: string;
-  token: string;
 };
 export type AtMsgParams = {
   text: string;
@@ -230,7 +192,6 @@ export type AtMsgParams = {
   atUsersInfo?: AtUsersInfoItem[];
   message?: string;
 };
-
 export type SoundMsgParams = {
   uuid: string;
   soundPath: string;
@@ -239,7 +200,6 @@ export type SoundMsgParams = {
   duration: number;
   soundType?: string;
 };
-
 export type FileMsgParams = {
   filePath: string;
   fileName: string;
@@ -248,34 +208,28 @@ export type FileMsgParams = {
   fileSize: number;
   fileType?: string;
 };
-
 export type FileMsgFullParams = {
   fileFullPath: string;
   fileName: string;
 };
-
 export type SouondMsgFullParams = {
   soundPath: string;
   duration: number;
 };
-
 export type MergerMsgParams = {
   messageList: MessageItem[];
   title: string;
   summaryList: string[];
 };
-
 export type FaceMessageParams = {
   index: number;
   data: string;
 };
-
 export type LocationMsgParams = {
   description: string;
   longitude: number;
   latitude: number;
 };
-
 export type GroupMsgReadParams = {
   groupID: string;
   msgIDList: string[];
@@ -285,18 +239,19 @@ export type InsertSingleMsgParams = {
   recvID: string;
   sendID: string;
 };
-
 export type InsertGroupMsgParams = {
   message: string;
   groupID: string;
   sendID: string;
 };
-
+export type AccessMessageParams = {
+  conversationID: string;
+  clientMsgID: string;
+};
 export type TypingUpdateParams = {
   recvID: string;
   msgTip: string;
 };
-
 export type SplitParams = {
   offset: number;
   count: number;
@@ -306,8 +261,8 @@ export type GetOneCveParams = {
   sessionType: number;
 };
 export type isRecvParams = {
-  conversationIDList: string[];
-  opt: OptType;
+  conversationID: string;
+  opt: MessageReceiveOptType;
 };
 export type SearchLocalParams = {
   conversationID: string;
@@ -364,88 +319,28 @@ export type SetMemberAuthParams = {
   groupID: string;
 };
 export type CreateGroupParams = {
-  groupBaseInfo: GroupInitInfo;
-  memberList: Member[];
+  memberUserIDs: string[];
+  groupInfo: GroupInitInfo;
+  adminUserIDs: string[];
 };
-export type GroupInfoParams = {
+export type GroupInfoParams = Partial<GroupInitInfo> & {
   groupID: string;
-  groupInfo: GroupBaseInfo;
+  needVerification: GroupVerificationType;
+  lookMemberInfo: AllowType;
+  applyMemberFriend: AllowType;
 };
 export type MemberNameParams = {
   groupID: string;
   userID: string;
-  GroupMemberNickname: string;
+  groupMemberNickname: string;
 };
-
 export type MemberExParams = {
   groupID: string;
   userID: string;
   ex: string;
 };
-
-export type GetSubDepParams = {
-  departmentID: string;
-  offset: number;
-  count: number;
-};
-
 export type FindMessageParams = {
   conversationID: string;
   clientMsgIDList: string[];
 };
-
-export type PartialUserItem = Partial<Omit<FullUserItem, 'userID'>> & {
-  userID: string;
-};
-
-export type CustomSignalParams = {
-  roomID: string;
-  customInfo: string;
-};
-
-export type CreateMeetingParams = {
-  meetingName: string;
-  meetingHostUserID: string;
-  startTime: number;
-  meetingDuration: number;
-  inviteeUserIDList: string[];
-};
-
-export type JoinMeetingParams = {
-  meetingID: string;
-  meetingName: string;
-  participantNickname: string;
-};
-
-export type UpdateMeetingParams = {
-  roomID: string;
-  meetingName: string;
-  startTime: number;
-  endTime: number;
-  participantCanUnmuteSelf: boolean;
-  participantCanEnableVideo: boolean;
-  onlyHostInviteUser: boolean;
-  onlyHostShareScreen: boolean;
-  joinDisableMicrophone: boolean;
-  joinDisableVideo: boolean;
-  isMuteAllVideo: boolean;
-  isMuteAllMicrophone: boolean;
-  addCanScreenUserIDList: string[];
-  reduceCanScreenUserIDList: string[];
-  addDisableMicrophoneUserIDList: string[];
-  reduceDisableMicrophoneUserIDList: string[];
-  addDisableVideoUserIDList: string[];
-  reduceDisableVideoUserIDList: string[];
-  addPinedUserIDList: string[];
-  reducePinedUserIDList: string[];
-  addBeWatchedUserIDList: string[];
-  reduceBeWatchedUserIDList: string[];
-};
-
-export type MeetingOperateStreamParams = {
-  streamType: string;
-  roomID: string;
-  userID?: string;
-  mute: boolean;
-  muteAll: boolean;
-};
+export type PartialUserItem = Partial<SelfUserInfo>;

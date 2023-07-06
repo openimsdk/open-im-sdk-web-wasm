@@ -4,6 +4,7 @@ import {
   deleteFriend as databasedeleteFriend,
   updateFriend as databaseupdateFriend,
   getAllFriendList as databaseGetAllFriendList,
+  getPageFriendList as databaseGetPageFriendList,
   searchFriendList as databasesearchFriendList,
   getFriendInfoByFriendUserID as databaseGetFriendInfoByFriendUserID,
   getFriendInfoList as databaseGetFriendInfoList,
@@ -91,6 +92,38 @@ export async function getAllFriendList(loginUserID: string): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetAllFriendList(db, loginUserID);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        name: 'nickname',
+        friend_user_id: 'userID',
+      })
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getPageFriendList(
+  offset: number,
+  count: number,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetPageFriendList(
+      db,
+      offset,
+      count,
+      loginUserID
+    );
 
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [], {

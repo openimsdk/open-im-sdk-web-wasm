@@ -27,6 +27,9 @@ export function localConversations(db: Database): QueryExecResult[] {
             'update_unread_count_time' integer,
             'attached_info' varchar(1024),
             'ex' varchar(1024),
+            'max_seq' integer,
+            'min_seq' integer,
+            'has_read_seq' integer,
             primary key ('conversation_id')
         )
     `
@@ -56,6 +59,24 @@ export function getAllConversationListToSync(db: Database): QueryExecResult[] {
   return db.exec(
     `
         select * from local_conversations;
+    `
+  );
+}
+
+export function getAllSingleConversationIDList(
+  db: Database
+): QueryExecResult[] {
+  return db.exec(
+    `
+        select conversation_id from local_conversations where conversation_type = 1;
+    `
+  );
+}
+
+export function getAllConversationIDList(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+        select conversation_id from local_conversations;
     `
   );
 }
@@ -157,12 +178,16 @@ export function decrConversationUnreadCount(
     `select unread_count from local_conversations where conversation_id = '${conversationID}'`
   );
 
-  if (Number(current[0].values[0]) >= 0) {
-    return db.exec('commit');
-  } else {
-    db.exec('rollback');
-    throw 'decrConversationUnreadCount rollback for unread_count < 0 after exec';
+  if (Number(current[0].values[0]) < 0) {
+    db.exec(
+      `
+          update local_conversations set 
+              unread_count=unread_count-${0} 
+          where conversation_id = '${conversationID}';
+      `
+    );
   }
+  return db.exec('commit');
 }
 
 export function batchInsertConversationList(
@@ -337,6 +362,14 @@ export function setMultipleConversationRecvMsgOpt(
     UPDATE local_conversations
     SET recv_msg_opt=${opt}
     WHERE conversation_id IN (${values})
+    `
+  );
+}
+
+export function getAllConversations(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+    SELECT * FROM local_conversations
     `
   );
 }

@@ -5,9 +5,10 @@ import {
   updateGroup as databaseupdateGroup,
   getJoinedGroupList as databaseGetJoinedGroupList,
   getGroupInfoByGroupID as databaseGetGroupInfoByGroupID,
+  getGroupMemberAllGroupIDs as databaseGetGroupMemberAllGroupIDs,
   getAllGroupInfoByGroupIDOrGroupName as databaseGetAllGroupInfoByGroupIDOrGroupName,
-  subtractMemberCount as databasesubtractMemberCount,
-  addMemberCount as databaseaddMemberCount,
+  subtractMemberCount as databaseSubtractMemberCount,
+  addMemberCount as databaseAddMemberCount,
   LocalGroup,
 } from '@/sqls';
 import {
@@ -166,7 +167,7 @@ export async function subtractMemberCount(groupID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    databasesubtractMemberCount(db, groupID);
+    databaseSubtractMemberCount(db, groupID);
 
     return formatResponse('');
   } catch (e) {
@@ -184,7 +185,7 @@ export async function addMemberCount(groupID: string): Promise<string> {
   try {
     const db = await getInstance();
 
-    databaseaddMemberCount(db, groupID);
+    databaseAddMemberCount(db, groupID);
 
     return formatResponse('');
   } catch (e) {
@@ -238,6 +239,25 @@ export async function getJoinedWorkingGroupList(): Promise<string> {
     );
 
     return formatResponse(JSON.stringify(filterList));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getGroupMemberAllGroupIDs(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetGroupMemberAllGroupIDs(db);
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase').map(item => item.groupID)
+    );
   } catch (e) {
     console.error(e);
 

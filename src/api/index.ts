@@ -78,16 +78,16 @@ function registeMethodOnWindow(name: string, realName?: string) {
     }
 
     try {
-      // console.info(
-      //   `=> (invoked by go wasm) run ${
-      //     realName ?? name
-      //   } method with args ${JSON.stringify(args)}`
-      // );
+      console.info(
+        `=> (invoked by go wasm) run ${
+          realName ?? name
+        } method with args ${JSON.stringify(args)}`
+      );
       const response = await rpc.invoke(name, ...args, { timeout: 5000000 });
-      // console.info(
-      //   `=> (invoked by go wasm) run ${realName ?? name} method with response `,
-      //   JSON.stringify(response)
-      // );
+      console.info(
+        `=> (invoked by go wasm) run ${realName ?? name} method with response `,
+        JSON.stringify(response)
+      );
 
       return JSON.stringify(response);
     } catch (error: unknown) {
@@ -175,7 +175,42 @@ export function initDatabaseAPI(): void {
   window.updateMessageStatusBySourceID = registeMethodOnWindow(
     'updateMessageStatusBySourceID'
   );
-
+  window.getAlreadyExistSeqList = registeMethodOnWindow(
+    'getAlreadyExistSeqList'
+  );
+  window.getMessageBySeq = registeMethodOnWindow('getMessageBySeq');
+  window.getMessagesByClientMsgIDs = registeMethodOnWindow(
+    'getMessagesByClientMsgIDs'
+  );
+  window.getMessagesBySeqs = registeMethodOnWindow('getMessagesBySeqs');
+  window.getConversationNormalMsgSeq = registeMethodOnWindow(
+    'getConversationNormalMsgSeq'
+  );
+  window.getConversationPeerNormalMsgSeq = registeMethodOnWindow(
+    'getConversationPeerNormalMsgSeq'
+  );
+  window.deleteConversationAllMessages = registeMethodOnWindow(
+    'deleteConversationAllMessages'
+  );
+  window.markDeleteConversationAllMessages = registeMethodOnWindow(
+    'markDeleteConversationAllMessages'
+  );
+  window.getUnreadMessage = registeMethodOnWindow('getUnreadMessage');
+  window.markConversationMessageAsReadBySeqs = registeMethodOnWindow(
+    'markConversationMessageAsReadBySeqs'
+  );
+  window.markConversationMessageAsReadDB = registeMethodOnWindow(
+    'markConversationMessageAsRead'
+  );
+  window.deleteConversationMsgs = registeMethodOnWindow(
+    'deleteConversationMsgs'
+  );
+  window.markConversationAllMessageAsRead = registeMethodOnWindow(
+    'markConversationAllMessageAsRead'
+  );
+  window.searchAllMessageByContentType = registeMethodOnWindow(
+    'searchAllMessageByContentType'
+  );
   // conversation
   window.getAllConversationListDB = registeMethodOnWindow(
     'getAllConversationList'
@@ -238,11 +273,18 @@ export function initDatabaseAPI(): void {
   window.setMultipleConversationRecvMsgOpt = registeMethodOnWindow(
     'setMultipleConversationRecvMsgOpt'
   );
+  window.getAllSingleConversationIDList = registeMethodOnWindow(
+    'getAllSingleConversationIDList'
+  );
+  window.getAllConversationIDList = registeMethodOnWindow(
+    'getAllConversationIDList'
+  );
+  window.getAllConversations = registeMethodOnWindow('getAllConversations');
 
   // users
   window.getLoginUser = registeMethodOnWindow('getLoginUser');
   window.insertLoginUser = registeMethodOnWindow('insertLoginUser');
-  window.updateLoginUserByMap = registeMethodOnWindow('updateLoginUserByMap');
+  window.updateLoginUser = registeMethodOnWindow('updateLoginUser');
 
   // super groups
   window.getJoinedSuperGroupList = registeMethodOnWindow(
@@ -390,6 +432,7 @@ export function initDatabaseAPI(): void {
     'getFriendInfoByFriendUserID'
   );
   window.getFriendInfoList = registeMethodOnWindow('getFriendInfoList');
+  window.getPageFriendList = registeMethodOnWindow('getPageFriendList');
 
   // groups
   window.insertGroup = registeMethodOnWindow('insertGroup');
@@ -407,6 +450,9 @@ export function initDatabaseAPI(): void {
   );
   window.getJoinedWorkingGroupList = registeMethodOnWindow(
     'getJoinedWorkingGroupList'
+  );
+  window.getGroupMemberAllGroupIDs = registeMethodOnWindow(
+    'getGroupMemberAllGroupIDs'
   );
 
   // groupRequest
@@ -448,7 +494,7 @@ export function initDatabaseAPI(): void {
   window.getGroupMemberListSplit = registeMethodOnWindow(
     'getGroupMemberListSplit'
   );
-  window.getGroupMemberOwnerAndAdmin = registeMethodOnWindow(
+  window.getGroupMemberOwnerAndAdminDB = registeMethodOnWindow(
     'getGroupMemberOwnerAndAdmin'
   );
   window.getGroupMemberOwner = registeMethodOnWindow('getGroupMemberOwner');
@@ -483,6 +529,12 @@ export function initDatabaseAPI(): void {
   window.InsertTempCacheMessage = registeMethodOnWindow(
     'InsertTempCacheMessage'
   );
+
+  // notification
+  window.getNotificationAllSeqs = registeMethodOnWindow(
+    'getNotificationAllSeqs'
+  );
+  window.setNotificationSeq = registeMethodOnWindow('setNotificationSeq');
 }
 
 export const workerPromise = rpc?.connect(5000);

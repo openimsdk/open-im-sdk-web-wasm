@@ -42,6 +42,20 @@ declare global {
     updateSingleMessageHasRead: DatabaseApi;
     updateGroupMessageHasRead: DatabaseApi;
     updateMessageStatusBySourceID: DatabaseApi;
+    getAlreadyExistSeqList: DatabaseApi;
+    getMessageBySeq: DatabaseApi;
+    getMessagesByClientMsgIDs: DatabaseApi;
+    getMessagesBySeqs: DatabaseApi;
+    getConversationNormalMsgSeq: DatabaseApi;
+    getConversationPeerNormalMsgSeq: DatabaseApi;
+    deleteConversationAllMessages: DatabaseApi;
+    markDeleteConversationAllMessages: DatabaseApi;
+    getUnreadMessage: DatabaseApi;
+    markConversationMessageAsReadBySeqs: DatabaseApi;
+    markConversationMessageAsReadDB: DatabaseApi;
+    deleteConversationMsgs: DatabaseApi;
+    markConversationAllMessageAsRead: DatabaseApi;
+    searchAllMessageByContentType: DatabaseApi;
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;
@@ -69,10 +83,13 @@ declare global {
     setConversationDraftDB: DatabaseApi;
     setMultipleConversationRecvMsgOpt: DatabaseApi;
     unPinConversation: DatabaseApi;
+    getAllSingleConversationIDList: DatabaseApi;
+    getAllConversationIDList: DatabaseApi;
+    getAllConversations: DatabaseApi;
     // users
     getLoginUser: DatabaseApi;
     insertLoginUser: DatabaseApi;
-    updateLoginUserByMap: DatabaseApi;
+    updateLoginUser: DatabaseApi;
     getJoinedSuperGroupList: DatabaseApi;
     getJoinedSuperGroupIDList: DatabaseApi;
     getSuperGroupInfoByGroupID: DatabaseApi;
@@ -131,6 +148,7 @@ declare global {
     searchFriendList: DatabaseApi;
     getFriendInfoByFriendUserID: DatabaseApi;
     getFriendInfoList: DatabaseApi;
+    getPageFriendList: DatabaseApi;
 
     // groups
     insertGroup: DatabaseApi;
@@ -143,6 +161,7 @@ declare global {
     addMemberCount: DatabaseApi;
     getJoinedWorkingGroupIDList: DatabaseApi;
     getJoinedWorkingGroupList: DatabaseApi;
+    getGroupMemberAllGroupIDs: DatabaseApi;
 
     // groupRequest
     insertGroupRequest: DatabaseApi;
@@ -163,7 +182,7 @@ declare global {
     getGroupAdminID: DatabaseApi;
     getGroupMemberListByGroupID: DatabaseApi;
     getGroupMemberListSplit: DatabaseApi;
-    getGroupMemberOwnerAndAdmin: DatabaseApi;
+    getGroupMemberOwnerAndAdminDB: DatabaseApi;
     getGroupMemberOwner: DatabaseApi;
     getGroupMemberListSplitByJoinTimeFilter: DatabaseApi;
     getGroupOwnerAndAdminByGroupID: DatabaseApi;
@@ -179,6 +198,10 @@ declare global {
     // temp chche logs
     batchInsertTempCacheMessageList: DatabaseApi;
     InsertTempCacheMessage: DatabaseApi;
+
+    // notification
+    getNotificationAllSeqs: DatabaseApi;
+    setNotificationSeq: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;
@@ -196,21 +219,27 @@ declare global {
       operationID: string,
       getAdvancedHistoryMessageListParamsStr: string
     ) => Promise<string>;
+    getAdvancedHistoryMessageListReverse: (
+      operationID: string,
+      getAdvancedHistoryMessageListReverseParamsStr: string
+    ) => Promise<string>;
     getHistoryMessageList: (
       operationID: string,
       getHistoryMsgParamsParamsStr: string
     ) => Promise<string>;
-    getGroupsInfo: (operationID: string, params: string) => Promise<string>;
-    deleteConversationFromLocalAndSvr: (
+    getSpecifiedGroupsInfo: (
+      operationID: string,
+      params: string
+    ) => Promise<string>;
+    deleteConversationAndDeleteAllMsg: (
       operationID: string,
       conversationID: string
     ) => Promise<string>;
-    markC2CMessageAsRead: (
+    markConversationMessageAsRead: (
       operationID: string,
-      userID: string,
-      msgIDListStr: string
+      conversationID: string
     ) => Promise<string>;
-    markMessageAsReadByConID: (
+    markMessagesAsReadByMsgID: (
       operationID: string,
       conversationID: string,
       msgIDListStr: string
@@ -273,22 +302,36 @@ declare global {
       groupID: string,
       offlinePushInfoStr: string
     ) => Promise<string>;
+    setMessageLocalEx: (
+      operationID: string,
+      conversationID: string,
+      clientMsgID: string,
+      localEx: string
+    ) => Promise<string>;
     getHistoryMessageListReverse: (
       operationID: string,
       getMessageOptions: string
     ) => Promise<string>;
-    revokeMessage: (operationID: string, params: string) => Promise<string>;
-    setOneConversationPrivateChat: (
+    revokeMessage: (
+      operationID: string,
+      conversationID: string,
+      clientMsgID: string
+    ) => Promise<string>;
+    setConversationPrivateChat: (
       operationID: string,
       conversationID: string,
       isPrivate: boolean
     ) => Promise<string>;
-    setOneConversationBurnDuration: (
+    setConversationBurnDuration: (
       operationID: string,
       conversationID: string,
       burnDuration: number
     ) => Promise<string>;
     getLoginStatus: (operationID: string) => Promise<string>;
+    setAppBackgroundStatus: (
+      isBackground: boolean,
+      operationID: string
+    ) => Promise<string>;
     iLogin: (
       operationID: string,
       token: string,
@@ -384,24 +427,17 @@ declare global {
     ) => Promise<string>;
     deleteMessageFromLocalStorage: (
       operationID: string,
-      message: string
+      conversationID: string,
+      clientMsgID: string
     ) => Promise<string>;
-    deleteMessageFromLocalAndSvr: (
+    deleteMessage: (
       operationID: string,
-      message: string
+      conversationID: string,
+      clientMsgID: string
     ) => Promise<string>;
     deleteAllConversationFromLocal: (operationID: string) => Promise<string>;
     deleteAllMsgFromLocal: (operationID: string) => Promise<string>;
     deleteAllMsgFromLocalAndSvr: (operationID: string) => Promise<string>;
-    markGroupMessageHasRead: (
-      operationID: string,
-      groupID: string
-    ) => Promise<string>;
-    markGroupMessageAsRead: (
-      operationID: string,
-      groupID: string,
-      msgIDList: string[]
-    ) => Promise<string>;
     insertSingleMessageToLocalStorage: (
       operationID: string,
       message: string,
@@ -423,21 +459,9 @@ declare global {
       operationID: string,
       conversationID: string
     ) => Promise<string>;
-    clearC2CHistoryMessage: (
+    clearConversationAndDeleteAllMsg: (
       operationID: string,
       userID: string
-    ) => Promise<string>;
-    clearC2CHistoryMessageFromLocalAndSvr: (
-      operationID: string,
-      userID: string
-    ) => Promise<string>;
-    clearGroupHistoryMessage: (
-      operationID: string,
-      groupID: string
-    ) => Promise<string>;
-    clearGroupHistoryMessageFromLocalAndSvr: (
-      operationID: string,
-      groupID: string
     ) => Promise<string>;
     getConversationListSplit: (
       operationID: string,
@@ -474,7 +498,7 @@ declare global {
     ) => Promise<string>;
     setConversationRecvMessageOpt: (
       operationID: string,
-      conversationIDList: string[],
+      conversationID: string,
       opt: OptType
     ) => Promise<string>;
     searchLocalMessages: (
@@ -501,12 +525,16 @@ declare global {
       isSearchNickname: boolean,
       isSearchRemark: boolean
     ) => Promise<string>;
-    getDesignatedFriendsInfo: (
+    getSpecifiedFriendsInfo: (
       operationID: string,
       userIDList: string[]
     ) => Promise<string>;
-    getRecvFriendApplicationList: (operationID: string) => Promise<string>;
-    getSendFriendApplicationList: (operationID: string) => Promise<string>;
+    getFriendApplicationListAsRecipient: (
+      operationID: string
+    ) => Promise<string>;
+    getFriendApplicationListAsApplicant: (
+      operationID: string
+    ) => Promise<string>;
     getFriendList: (operationID: string) => Promise<string>;
     setFriendRemark: (
       operationID: string,
@@ -543,7 +571,8 @@ declare global {
       reason: string,
       userIDList: string[]
     ) => Promise<string>;
-    getGroupMembersInfo: (
+    isJoinGroup: (operationID: string, groupID: string) => Promise<string>;
+    getSpecifiedGroupMembersInfo: (
       operationID: string,
       groupID: string,
       reason: string,
@@ -628,8 +657,16 @@ declare global {
       groupID: string,
       newOwnerUserID: string
     ) => Promise<string>;
-    getSendGroupApplicationList: (operationID: string) => Promise<string>;
-    getRecvGroupApplicationList: (operationID: string) => Promise<string>;
+    getGroupMemberOwnerAndAdmin: (
+      operationID: string,
+      groupID: string
+    ) => Promise<string>;
+    getGroupApplicationListAsApplicant: (
+      operationID: string
+    ) => Promise<string>;
+    getGroupApplicationListAsRecipient: (
+      operationID: string
+    ) => Promise<string>;
     acceptGroupApplication: (
       operationID: string,
       groupID: string,
@@ -641,79 +678,6 @@ declare global {
       groupID: string,
       fromUserID: string,
       handleMsg: string
-    ) => Promise<string>;
-    signalingInvite: (
-      operationID: string,
-      inviterUserID: string,
-      inviteeUserIDList: string[],
-      groupID: string,
-      roomID: string,
-      timeout: number,
-      mediaType: string,
-      sessionType: number,
-      platformID: number
-    ) => Promise<string>;
-    signalingInviteInGroup: (
-      operationID: string,
-      inviterUserID: string,
-      inviteeUserIDList: string[],
-      groupID: string,
-      roomID: string,
-      timeout: number,
-      mediaType: string,
-      sessionType: number,
-      platformID: number
-    ) => Promise<string>;
-    signalingAccept: (
-      operationID: string,
-      opUserID: string,
-      invitation: RtcInvite
-    ) => Promise<string>;
-    signalingReject: (
-      operationID: string,
-      opUserID: string,
-      invitation: RtcInvite
-    ) => Promise<string>;
-    signalingCancel: (
-      operationID: string,
-      opUserID: string,
-      invitation: RtcInvite
-    ) => Promise<string>;
-    signalingHungUp: (
-      operationID: string,
-      opUserID: string,
-      invitation: RtcInvite
-    ) => Promise<string>;
-    getSubDepartment: (
-      operationID: string,
-      departmentID: string,
-      offset: number,
-      count: number
-    ) => Promise<string>;
-    getDepartmentMember: (
-      operationID: string,
-      operationID: string,
-      departmentID: string,
-      offset: number,
-      count: number
-    ) => Promise<string>;
-    getUserInDepartment: (
-      operationID: string,
-      userID: string
-    ) => Promise<string>;
-    getDepartmentMemberAndSubDepartment: (
-      operationID: string,
-      departmentID: string
-    ) => Promise<string>;
-    getDepartmentInfo: (
-      operationID: string,
-      departmentID: string
-    ) => Promise<string>;
-    searchOrganization: (
-      operationID: string,
-      input: SearchInputType,
-      offset: number,
-      count: number
     ) => Promise<string>;
     resetConversationGroupAtType: (
       operationID: string,
@@ -741,44 +705,7 @@ declare global {
       conversationID: string,
       clientMsgIDList: string[]
     ) => Promise<string>;
-    signalingGetRoomByGroupID: (
-      operationID: string,
-      groupID: string
-    ) => Promise<string>;
-    signalingGetTokenByRoomID: (
-      operationID: string,
-      roomID: string
-    ) => Promise<string>;
-    signalingSendCustomSignal: (
-      operationID: string,
-      custom: string,
-      roomID: string
-    ) => Promise<string>;
-    signalingCreateMeeting: (
-      operationID: string,
-      data: string
-    ) => Promise<string>;
-    signalingJoinMeeting: (
-      operationID: string,
-      data: string
-    ) => Promise<string>;
-    signalingUpdateMeetingInfo: (
-      operationID: string,
-      data: string
-    ) => Promise<string>;
-    signalingCloseRoom: (
-      operationID: string,
-      roomID: string
-    ) => Promise<string>;
-    signalingGetMeetings: (operationID: string) => Promise<string>;
-    signalingOperateStream: (
-      operationID: string,
-      streamType: string,
-      roomID: string,
-      userID?: string,
-      mute: boolean,
-      muteAll: boolean
-    ) => Promise<string>;
+    networkStatusChanged: (operationID: string) => Promise<string>;
 
     // debug
     exec: (sql: string) => Promise<any>;

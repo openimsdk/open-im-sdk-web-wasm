@@ -4,7 +4,6 @@ export * from './conversation';
 export * from './users';
 export * from './superGroup';
 export * from './unreadMessage';
-export * from './superGroupMessage';
 export * from './black';
 export * from './friend';
 export * from './friendRequest';

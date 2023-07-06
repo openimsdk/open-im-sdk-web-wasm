@@ -7,6 +7,8 @@ import {
   getAllConversationListToSync as databaseGetAllConversationListToSync,
   getConversation as databaseGetConversation,
   getHiddenConversationList as databaseGetHiddenConversationList,
+  getAllSingleConversationIDList as databaseGetAllSingleConversationIDList,
+  getAllConversationIDList as databaseGetAllConversationIDList,
   updateColumnsConversation as databaseUpdateColumnsConversation,
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
   getMultipleConversation as databaseGetMultipleConversation,
@@ -24,6 +26,7 @@ import {
   removeConversationDraft as databaseRemoveConversationDraft,
   unPinConversation as databaseUnPinConversation,
   setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
+  getAllConversations as databaseGetAllConversations,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -68,6 +71,50 @@ export async function getAllConversationListToSync(): Promise<string> {
         'isPrivateChat',
         'isNotInGroup',
       ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getAllSingleConversationIDList(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetAllSingleConversationIDList(db);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase').map(
+        item => item.conversationID
+      )
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getAllConversationIDList(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetAllConversationIDList(db);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase').map(
+        item => item.conversationID
+      )
     );
   } catch (e) {
     console.error(e);
@@ -621,6 +668,30 @@ export async function setMultipleConversationRecvMsgOpt(
     );
 
     return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getAllConversations(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetAllConversations(db);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isPinned',
+        'isPrivateChat',
+        'isNotInGroup',
+      ])
+    );
   } catch (e) {
     console.error(e);
 

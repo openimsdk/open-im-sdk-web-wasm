@@ -2,37 +2,35 @@ import { DatabaseErrorCode } from '@/constant';
 import {
   ClientMessage,
   getMessage as databaseGetMessage,
+  getAlreadyExistSeqList as databaseGetAlreadyExistSeqList,
+  getMessageBySeq as databaseGetMessageBySeq,
+  getMessagesByClientMsgIDs as databaseGetMessagesByClientMsgIDs,
+  getMessagesBySeqs as databaseGetMessagesBySeqs,
+  getMessageListNoTime as databaseGetMessageListNoTime,
+  getConversationNormalMsgSeq as databaseGetConversationNormalMsgSeq,
+  getConversationPeerNormalMsgSeq as databaseGetConversationPeerNormalMsgSeq,
   getMultipleMessage as databaseGetMultipleMessage,
   getSendingMessageList as databaseGetSendingMessageList,
-  getNormalMsgSeq as databaseGetNormalMsgSeq,
   updateMessageTimeAndStatus as databaseUpdateMessageTimeAndStatus,
   updateMessage as databaseUpdateMessage,
-  insertMessage as databaseAddMessage,
+  updateColumnsMessage as databaseUpdateColumnsMessage,
+  deleteConversationMsgs as databaseDeleteConversationMsgs,
+  markConversationAllMessageAsRead as databaseMarkConversationAllMessageAsRead,
+  searchAllMessageByContentType as databaseSearchAllMessageByContentType,
+  insertMessage as databaseInsertMessage,
   batchInsertMessageList as databaseBatchInsertMessageList,
   getMessageList as databaseGetMesageList,
-  getMessageListNoTime as databaseGetMessageListNoTime,
   messageIfExists as databaseMessageIfExists,
   isExistsInErrChatLogBySeq as databaseIsExistsInErrChatLogBySeq,
-  messageIfExistsBySeq as databaseMessageIfExistsBySeq,
-  getAbnormalMsgSeq as databaseGetAbnormalMsgSeq,
-  getAbnormalMsgSeqList as databaseGetAbnormalMsgSeqList,
-  batchInsertExceptionMsg as databaseBatchInsertExceptionMsg,
   searchMessageByKeyword as databaseSearchMessageByKeyword,
   searchMessageByContentType as databaseSearchMessageByContentType,
   searchMessageByContentTypeAndKeyword as databaseSearchMessageByContentTypeAndKeyword,
-  updateMsgSenderNickname as databaseUpdateMsgSenderNickname,
-  updateMsgSenderFaceURL as databaseUpdateMsgSenderFaceURL,
   updateMsgSenderFaceURLAndSenderNickname as databaseUpdateMsgSenderFaceURLAndSenderNickname,
-  getMsgSeqByClientMsgID as databaseGetMsgSeqByClientMsgID,
-  getMsgSeqListByGroupID as databaseGetMsgSeqListByGroupID,
-  getMsgSeqListByPeerUserID as databaseGetMsgSeqListByPeerUserID,
-  getMsgSeqListBySelfUserID as databaseGetMsgSeqListBySelfUserID,
-  deleteAllMessage as databaseDeleteAllMessage,
-  getAllUnDeleteMessageSeqList as databaseGetAllUnDeleteMessageSeqList,
-  updateSingleMessageHasRead as databaseUpdateSingleMessageHasRead,
-  updateGroupMessageHasRead as databaseUpdateGroupMessageHasRead,
-  updateMessageStatusBySourceID as databaseUpdateMessageStatusBySourceID,
-  // setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
+  deleteConversationAllMessages as databaseDeleteConversationAllMessages,
+  markDeleteConversationAllMessages as databaseMarkDeleteConversationAllMessages,
+  getUnreadMessage as databaseGetUnreadMessage,
+  markConversationMessageAsReadBySeqs as databaseMarkConversationMessageAsReadBySeqs,
+  markConversationMessageAsRead as databaseMarkConversationMessageAsRead,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -42,17 +40,20 @@ import {
 } from '@/utils';
 import { getInstance } from './instance';
 
-export async function getMessage(messageId: string): Promise<string> {
+export async function getMessage(
+  conversationID: string,
+  clientMsgID: string
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMessage(db, messageId);
+    const execResult = databaseGetMessage(db, conversationID, clientMsgID);
 
     if (execResult.length === 0) {
       return formatResponse(
         '',
         DatabaseErrorCode.ErrorNoRecord,
-        `no message with id ${messageId}`
+        `no message with id ${clientMsgID}`
       );
     }
 
@@ -74,13 +75,53 @@ export async function getMessage(messageId: string): Promise<string> {
   }
 }
 
-export async function getMultipleMessage(
-  messageIDStr: string
+export async function getAlreadyExistSeqList(
+  conversationID: string,
+  lostSeqListStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMultipleMessage(db, JSON.parse(messageIDStr));
+    const execResult = databaseGetAlreadyExistSeqList(
+      db,
+      conversationID,
+      JSON.parse(lostSeqListStr)
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])[0] ?? ''
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMessageList(
+  conversationID: string,
+  count: number,
+  startTime: number,
+  isReverse = false
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMesageList(
+      db,
+      conversationID,
+      count,
+      startTime,
+      isReverse
+    );
 
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [
@@ -100,11 +141,92 @@ export async function getMultipleMessage(
   }
 }
 
-export async function getSendingMessageList(): Promise<string> {
+export async function getMessageBySeq(
+  conversationID: string,
+  seq: number
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetSendingMessageList(db);
+    const execResult = databaseGetMessageBySeq(db, conversationID, seq);
+
+    if (execResult.length === 0) {
+      return formatResponse(
+        '',
+        DatabaseErrorCode.ErrorNoRecord,
+        `no message with seq ${seq}`
+      );
+    }
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])[0]
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMessagesByClientMsgIDs(
+  conversationID: string,
+  clientMsgIDListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMessagesByClientMsgIDs(
+      db,
+      conversationID,
+      JSON.parse(clientMsgIDListStr)
+    );
+
+    if (execResult.length === 0) {
+      return formatResponse(
+        '',
+        DatabaseErrorCode.ErrorNoRecord,
+        `no message with clientMsgIDListStr ${clientMsgIDListStr}`
+      );
+    }
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])[0]
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMessagesBySeqs(
+  conversationID: string,
+  seqListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetMessagesBySeqs(
+      db,
+      conversationID,
+      JSON.parse(seqListStr)
+    );
 
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [
@@ -124,13 +246,103 @@ export async function getSendingMessageList(): Promise<string> {
   }
 }
 
-export async function getNormalMsgSeq(): Promise<string> {
+export async function getMessageListNoTime(
+  conversationID: string,
+  count: number,
+  isReverse = false
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetNormalMsgSeq(db);
+    const execResult = databaseGetMessageListNoTime(
+      db,
+      conversationID,
+      count,
+      isReverse
+    );
 
-    return formatResponse(execResult[0]?.values[0]?.[0]);
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getConversationNormalMsgSeq(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetConversationNormalMsgSeq(db, conversationID);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase')[0]?.seq ?? 0
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getConversationPeerNormalMsgSeq(
+  conversationID: string,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetConversationPeerNormalMsgSeq(
+      db,
+      conversationID,
+      loginUserID
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase')[0]?.seq ?? 0
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getSendingMessageList(
+  conversationID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetSendingMessageList(db, conversationID);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
   } catch (e) {
     console.error(e);
 
@@ -143,6 +355,7 @@ export async function getNormalMsgSeq(): Promise<string> {
 }
 
 export async function updateMessageTimeAndStatus(
+  conversationID: string,
   clientMsgID: string,
   serverMsgID: string,
   sendTime: number,
@@ -153,11 +366,16 @@ export async function updateMessageTimeAndStatus(
 
     const execResult = databaseUpdateMessageTimeAndStatus(
       db,
+      conversationID,
       clientMsgID,
       serverMsgID,
       sendTime,
       status
     );
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateMessageTimeAndStatus no record updated';
+    }
 
     return formatResponse(execResult);
   } catch (e) {
@@ -172,7 +390,8 @@ export async function updateMessageTimeAndStatus(
 }
 
 export async function updateMessage(
-  clientMsgId: string,
+  conversationID: string,
+  clientMsgID: string,
   messageStr: string
 ): Promise<string> {
   try {
@@ -181,60 +400,16 @@ export async function updateMessage(
       convertObjectField(JSON.parse(messageStr))
     ) as ClientMessage;
 
-    const execResult = databaseUpdateMessage(db, clientMsgId, message);
+    const execResult = databaseUpdateMessage(
+      db,
+      conversationID,
+      clientMsgID,
+      message
+    );
     const modifed = db.getRowsModified();
     if (modifed === 0) {
       throw 'updateMessage no record updated';
     }
-
-    return formatResponse(execResult);
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function updateColumnsMessage(
-  clientMsgId: string,
-  messageStr: string
-): Promise<string> {
-  try {
-    const db = await getInstance();
-    const message = convertToSnakeCaseObject(
-      convertObjectField(JSON.parse(messageStr))
-    ) as ClientMessage;
-
-    const execResult = databaseUpdateMessage(db, clientMsgId, message);
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
-      throw 'updateMessage no record updated';
-    }
-
-    return formatResponse(execResult);
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function insertMessage(messageStr: string): Promise<string> {
-  try {
-    const db = await getInstance();
-    const message = convertToSnakeCaseObject(
-      JSON.parse(messageStr)
-    ) as ClientMessage;
-
-    const execResult = databaseAddMessage(db, message);
 
     return formatResponse(execResult);
   } catch (e) {
@@ -249,6 +424,7 @@ export async function insertMessage(messageStr: string): Promise<string> {
 }
 
 export async function batchInsertMessageList(
+  conversationID: string,
   messageListStr: string
 ): Promise<string> {
   try {
@@ -257,7 +433,11 @@ export async function batchInsertMessageList(
       (v: Record<string, unknown>) => convertToSnakeCaseObject(v)
     );
 
-    const execResult = databaseBatchInsertMessageList(db, messageList);
+    const execResult = databaseBatchInsertMessageList(
+      db,
+      conversationID,
+      messageList
+    );
 
     return formatResponse(execResult);
   } catch (e) {
@@ -271,23 +451,41 @@ export async function batchInsertMessageList(
   }
 }
 
-export async function getMessageListNoTime(
-  sourceID: string,
-  sessionType: number,
-  count: number,
-  isReverse = false,
-  loginUserID: string
+export async function insertMessage(
+  conversationID: string,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      JSON.parse(messageStr)
+    ) as ClientMessage;
+
+    const execResult = databaseInsertMessage(db, conversationID, message);
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getMultipleMessage(
+  conversationID: string,
+  messageIDStr: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMessageListNoTime(
+    const execResult = databaseGetMultipleMessage(
       db,
-      sourceID,
-      sessionType,
-      count,
-      isReverse,
-      loginUserID
+      conversationID,
+      JSON.parse(messageIDStr)
     );
 
     return formatResponse(
@@ -308,25 +506,29 @@ export async function getMessageListNoTime(
   }
 }
 
-export async function getMessageList(
-  sourceID: string,
-  sessionType: number,
-  count: number,
+export async function searchMessageByKeyword(
+  conversationID: string,
+  contentTypeStr: string,
+  keywordListStr: string,
+  keywordListMatchType: number,
   startTime: number,
-  isReverse = false,
-  loginUserID: string
+  endTime: number,
+  offset: number,
+  count: number
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMesageList(
+    const execResult = databaseSearchMessageByKeyword(
       db,
-      sourceID,
-      sessionType,
-      count,
+      conversationID,
+      JSON.parse(contentTypeStr),
+      JSON.parse(keywordListStr),
+      keywordListMatchType,
       startTime,
-      isReverse,
-      loginUserID
+      endTime,
+      offset,
+      count
     );
 
     return formatResponse(
@@ -347,11 +549,92 @@ export async function getMessageList(
   }
 }
 
-export async function messageIfExists(clientMsgID: string): Promise<string> {
+export async function searchMessageByContentType(
+  conversationID: string,
+  contentTypeStr: string,
+  startTime: number,
+  endTime: number,
+  offset: number,
+  count: number
+): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseMessageIfExists(db, clientMsgID);
+    const execResult = databaseSearchMessageByContentType(
+      db,
+      conversationID,
+      JSON.parse(contentTypeStr),
+      startTime,
+      endTime,
+      offset,
+      count
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function searchMessageByContentTypeAndKeyword(
+  conversationID: string,
+  contentTypeStr: string,
+  keywordListStr: string,
+  keywordListMatchType: number,
+  startTime: number,
+  endTime: number
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSearchMessageByContentTypeAndKeyword(
+      db,
+      conversationID,
+      JSON.parse(contentTypeStr),
+      JSON.parse(keywordListStr),
+      keywordListMatchType,
+      startTime,
+      endTime
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function messageIfExists(
+  conversationID: string,
+  clientMsgID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseMessageIfExists(db, conversationID, clientMsgID);
 
     return formatResponse(execResult.length !== 0);
   } catch (e) {
@@ -383,266 +666,21 @@ export async function isExistsInErrChatLogBySeq(seq: number): Promise<string> {
   }
 }
 
-export async function messageIfExistsBySeq(seq: number): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseMessageIfExistsBySeq(db, seq);
-
-    return formatResponse(execResult.length !== 0);
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function getAbnormalMsgSeq(): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseGetAbnormalMsgSeq(db);
-
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function getAbnormalMsgSeqList(): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseGetAbnormalMsgSeqList(db);
-
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function batchInsertExceptionMsg(
-  messageListStr: string
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const messageList = (JSON.parse(messageListStr) as ClientMessage[]).map(
-      (v: Record<string, unknown>) => convertToSnakeCaseObject(v)
-    );
-
-    const execResult = databaseBatchInsertExceptionMsg(db, messageList);
-
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function searchMessageByKeyword(
-  contentTypeStr: string,
-  keywordListStr: string,
-  keywordListMatchType: number,
-  sourceID: string,
-  startTime: number,
-  endTime: number,
-  sessionType: number,
-  offset: number,
-  count: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseSearchMessageByKeyword(
-      db,
-      JSON.parse(contentTypeStr),
-      JSON.parse(keywordListStr),
-      keywordListMatchType,
-      sourceID,
-      startTime,
-      endTime,
-      sessionType,
-      offset,
-      count
-    );
-
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
-        'isRead',
-        'isReact',
-        'isExternalExtensions',
-      ])
-    );
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function searchMessageByContentType(
-  contentTypeStr: string,
-  sourceID: string,
-  startTime: number,
-  endTime: number,
-  sessionType: number,
-  offset: number,
-  count: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseSearchMessageByContentType(
-      db,
-      JSON.parse(contentTypeStr),
-      sourceID,
-      startTime,
-      endTime,
-      sessionType,
-      offset,
-      count
-    );
-
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
-        'isRead',
-        'isReact',
-        'isExternalExtensions',
-      ])
-    );
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function searchMessageByContentTypeAndKeyword(
-  contentTypeStr: string,
-  keywordListStr: string,
-  keywordListMatchType: number,
-  startTime: number,
-  endTime: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseSearchMessageByContentTypeAndKeyword(
-      db,
-      JSON.parse(contentTypeStr),
-      JSON.parse(keywordListStr),
-      keywordListMatchType,
-      startTime,
-      endTime
-    );
-
-    return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [
-        'isRead',
-        'isReact',
-        'isExternalExtensions',
-      ])
-    );
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function updateMsgSenderNickname(
-  sendID: string,
-  nickname: string,
-  sessionType: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    databaseUpdateMsgSenderNickname(db, sendID, nickname, sessionType);
-
-    return formatResponse('');
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function updateMsgSenderFaceURL(
-  sendID: string,
-  faceURL: string,
-  sessionType: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    databaseUpdateMsgSenderFaceURL(db, sendID, faceURL, sessionType);
-
-    return formatResponse('');
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
 export async function updateMsgSenderFaceURLAndSenderNickname(
+  conversationID: string,
   sendID: string,
   faceURL: string,
-  nickname: string,
-  sessionType: number
+  nickname: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
     databaseUpdateMsgSenderFaceURLAndSenderNickname(
       db,
+      conversationID,
       sendID,
       faceURL,
-      nickname,
-      sessionType
+      nickname
     );
 
     return formatResponse('');
@@ -657,93 +695,13 @@ export async function updateMsgSenderFaceURLAndSenderNickname(
   }
 }
 
-export async function getMsgSeqByClientMsgID(
-  clientMsgID: string
+export async function deleteConversationAllMessages(
+  conversationID: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    const execResult = databaseGetMsgSeqByClientMsgID(db, clientMsgID);
-
-    return formatResponse(execResult[0]?.values[0]?.[0]);
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function getMsgSeqListByGroupID(groupID: string): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseGetMsgSeqListByGroupID(db, groupID);
-    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
-
-    return formatResponse(seqList.map(item => item.seq));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function getMsgSeqListByPeerUserID(
-  userID: string
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseGetMsgSeqListByPeerUserID(db, userID);
-    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
-
-    return formatResponse(seqList.map(item => item.seq));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function getMsgSeqListBySelfUserID(
-  userID: string
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseGetMsgSeqListBySelfUserID(db, userID);
-
-    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
-
-    return formatResponse(seqList.map(item => item.seq));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function deleteAllMessage(): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    databaseDeleteAllMessage(db);
+    databaseDeleteConversationAllMessages(db, conversationID);
 
     return formatResponse('');
   } catch (e) {
@@ -757,42 +715,13 @@ export async function deleteAllMessage(): Promise<string> {
   }
 }
 
-export async function getAllUnDeleteMessageSeqList(): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseGetAllUnDeleteMessageSeqList(db);
-    const seqList = converSqlExecResult(execResult[0], 'CamelCase');
-
-    return formatResponse(seqList.map(item => item.seq));
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function updateSingleMessageHasRead(
-  sendID: string,
-  clientMsgIDListStr: string
+export async function markDeleteConversationAllMessages(
+  conversationID: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    databaseUpdateSingleMessageHasRead(
-      db,
-      sendID,
-      JSON.parse(clientMsgIDListStr)
-    );
-
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
-      throw 'updateSingleMessageHasRead no record updated';
-    }
+    databaseMarkDeleteConversationAllMessages(db, conversationID);
 
     return formatResponse('');
   } catch (e) {
@@ -806,58 +735,195 @@ export async function updateSingleMessageHasRead(
   }
 }
 
-export async function updateGroupMessageHasRead(
-  clientMsgIDListStr: string,
-  sessionType: number
-): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    databaseUpdateGroupMessageHasRead(
-      db,
-      JSON.parse(clientMsgIDListStr),
-      sessionType
-    );
-
-    const modifed = db.getRowsModified();
-    if (modifed === 0) {
-      throw 'updateGroupMessageHasRead no record updated';
-    }
-
-    return formatResponse('');
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function updateMessageStatusBySourceID(
-  sourceID: string,
-  status: number,
-  sessionType: number,
+export async function getUnreadMessage(
+  conversationID: string,
   loginUserID: string
 ): Promise<string> {
   try {
     const db = await getInstance();
 
-    databaseUpdateMessageStatusBySourceID(
+    const execResult = databaseGetUnreadMessage(
       db,
-      sourceID,
-      status,
-      sessionType,
+      conversationID,
       loginUserID
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function markConversationMessageAsReadBySeqs(
+  conversationID: string,
+  seqListStr: string,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseMarkConversationMessageAsReadBySeqs(
+      db,
+      conversationID,
+      JSON.parse(seqListStr),
+      loginUserID
+    );
+
+    return formatResponse(db.getRowsModified());
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function markConversationMessageAsRead(
+  conversationID: string,
+  clientMsgIDListStr: string,
+  loginUserID: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseMarkConversationMessageAsRead(
+      db,
+      conversationID,
+      JSON.parse(clientMsgIDListStr),
+      loginUserID
+    );
+
+    return formatResponse(db.getRowsModified());
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateColumnsMessage(
+  conversationID: string,
+  clientMsgID: string,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(messageStr))
+    ) as ClientMessage;
+
+    const execResult = databaseUpdateColumnsMessage(
+      db,
+      conversationID,
+      clientMsgID,
+      message
     );
     const modifed = db.getRowsModified();
     if (modifed === 0) {
-      throw 'updateMessageStatusBySourceID no record updated';
+      throw 'updateMessage no record updated';
     }
 
-    return formatResponse('');
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteConversationMsgs(
+  conversationID: string,
+  clientMsgIDListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseDeleteConversationMsgs(
+      db,
+      conversationID,
+      JSON.parse(clientMsgIDListStr)
+    );
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function markConversationAllMessageAsRead(
+  conversationID: string,
+  clientMsgIDListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseMarkConversationAllMessageAsRead(
+      db,
+      conversationID,
+      JSON.parse(clientMsgIDListStr)
+    );
+
+    return formatResponse(db.getRowsModified());
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function searchAllMessageByContentType(
+  conversationID: string,
+  clientMsgIDListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSearchAllMessageByContentType(
+      db,
+      conversationID,
+      JSON.parse(clientMsgIDListStr)
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
   } catch (e) {
     console.error(e);
 

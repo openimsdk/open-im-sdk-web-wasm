@@ -139,20 +139,10 @@ export function addMemberCount(
   );
 }
 
-// export function getJoinedWorkingGroupIDList(db: Database): QueryExecResult[] {
-//   return db.exec(
-//     `
-//     select * from local_groups
-//     groupType = 2
-//     `
-//   );
-// }
-
-// export function getJoinedWorkingGroupList(db: Database): QueryExecResult[] {
-//   return db.exec(
-//     `
-//     select * from local_groups
-//     groupType = 2
-//     `
-//   );
-// }
+export function getGroupMemberAllGroupIDs(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+    select distinct group_id from local_group_members
+    `
+  );
+}

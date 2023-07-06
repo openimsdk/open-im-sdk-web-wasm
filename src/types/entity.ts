@@ -9,13 +9,12 @@ import {
   GroupVerificationType,
   AllowType,
   GroupJoinSource,
-  GroupRole,
-  OptType,
+  GroupMemberRole,
+  MessageReceiveOptType,
   GroupAtType,
+  LogLevel,
+  ApplicationHandleResult,
 } from './enum';
-
-// api
-
 export type WSEvent = {
   event: CbEvents;
   data: unknown;
@@ -23,23 +22,23 @@ export type WSEvent = {
   errMsg: string;
   operationID: string;
 };
-
-export type WsResponse = {
+export type WsResponse<T = string> = {
   event: RequestFunc;
   errCode: number;
   errMsg: string;
-  data: any;
+  data: T;
   operationID: string;
 };
-
 export type IMConfig = {
-  platform: number;
-  api_addr: string;
-  ws_addr: string;
-  log_level: number;
-  is_need_encryption: boolean;
+  platformID: Platform;
+  apiAddr: string;
+  wsAddr: string;
+  dataDir: string;
+  logLevel: LogLevel;
+  isLogStandardOutput: boolean;
+  logFilePath: string;
+  isExternalExtensions: boolean;
 };
-
 export type MessageEntity = {
   type: string;
   offset: number;
@@ -47,7 +46,6 @@ export type MessageEntity = {
   url?: string;
   info?: string;
 };
-
 export type PicBaseInfo = {
   uuid: string;
   type: string;
@@ -56,12 +54,10 @@ export type PicBaseInfo = {
   height: number;
   url: string;
 };
-
 export type AtUsersInfoItem = {
   atUserID: string;
   groupNickname: string;
 };
-
 export type GroupInitInfo = {
   groupType: GroupType;
   groupName: string;
@@ -70,23 +66,6 @@ export type GroupInitInfo = {
   faceURL?: string;
   ex?: string;
 };
-
-export type Member = {
-  userID: string;
-  roleLevel: number;
-};
-
-export type RtcInvite = {
-  inviterUserID: string;
-  inviteeUserIDList: string[];
-  groupID: string;
-  roomID: string;
-  timeout: number;
-  mediaType: string;
-  sessionType: number;
-  platformID: number;
-};
-
 export type GroupApplicationItem = {
   createTime: number;
   creatorUserID: string;
@@ -95,8 +74,8 @@ export type GroupApplicationItem = {
   groupFaceURL: string;
   groupID: string;
   groupName: string;
-  groupType: number;
-  handleResult: number;
+  groupType: GroupType;
+  handleResult: ApplicationHandleResult;
   handleUserID: string;
   handledMsg: string;
   handledTime: number;
@@ -107,11 +86,11 @@ export type GroupApplicationItem = {
   ownerUserID: string;
   reqMsg: string;
   reqTime: number;
-  status: number;
+  joinSource: GroupJoinSource;
+  status: GroupStatus;
   userFaceURL: string;
   userID: string;
 };
-
 export type FriendApplicationItem = {
   createTime: number;
   ex: string;
@@ -120,7 +99,7 @@ export type FriendApplicationItem = {
   fromNickname: string;
   fromUserID: string;
   handleMsg: string;
-  handleResult: number;
+  handleResult: ApplicationHandleResult;
   handleTime: number;
   handlerUserID: string;
   reqMsg: string;
@@ -129,13 +108,11 @@ export type FriendApplicationItem = {
   toNickname: string;
   toUserID: string;
 };
-
-export type TotalUserStruct = {
-  blackInfo: BlackItem | null;
-  friendInfo: FriendItem | null;
+export type FullUserItem = {
+  blackInfo: BlackUserItem | null;
+  friendInfo: FriendUserItem | null;
   publicInfo: PublicUserItem | null;
 };
-
 export type PublicUserItem = {
   gender: number;
   nickname: string;
@@ -143,25 +120,18 @@ export type PublicUserItem = {
   faceURL: string;
   ex: string;
 };
-
-export type FullUserItem = {
-  birth: number;
-  birthTime: string;
+export type SelfUserInfo = {
   createTime: number;
-  email: string;
   ex: string;
   faceURL: string;
-  gender: number;
   nickname: string;
-  phoneNumber: string;
   userID: string;
+  globalRecvMsgOpt: MessageReceiveOptType;
 };
-
-export type PartialUserItem = Partial<Omit<FullUserItem, 'userID'>> & {
+export type PartialUserInfo = {
   userID: string;
-};
-
-export type FriendItem = {
+} & Partial<Omit<SelfUserInfo, 'userID'>>;
+export type FriendUserItem = {
   addSource: number;
   birth: number;
   createTime: number;
@@ -176,13 +146,11 @@ export type FriendItem = {
   phoneNumber: string;
   remark: string;
 };
-
-export type FriendRelationItem = {
+export type FriendshipInfo = {
   result: number;
   userID: string;
 };
-
-export type BlackItem = {
+export type BlackUserItem = {
   addSource: number;
   userID: string;
   createTime: number;
@@ -193,7 +161,6 @@ export type BlackItem = {
   operatorUserID: string;
   ownerUserID: string;
 };
-
 export type GroupItem = {
   groupID: string;
   groupName: string;
@@ -207,19 +174,18 @@ export type GroupItem = {
   memberCount: number;
   status: GroupStatus;
   creatorUserID: string;
-  groupType: number;
+  groupType: GroupType;
   needVerification: GroupVerificationType;
   ex: string;
   applyMemberFriend: AllowType;
   lookMemberInfo: AllowType;
 };
-
 export type GroupMemberItem = {
   groupID: string;
   userID: string;
   nickname: string;
   faceURL: string;
-  roleLevel: GroupRole;
+  roleLevel: GroupMemberRole;
   muteEndTime: number;
   joinTime: number;
   joinSource: GroupJoinSource;
@@ -227,7 +193,6 @@ export type GroupMemberItem = {
   operatorUserID: string;
   ex: string;
 };
-
 export type ConversationItem = {
   conversationID: string;
   conversationType: SessionType;
@@ -235,7 +200,7 @@ export type ConversationItem = {
   groupID: string;
   showName: string;
   faceURL: string;
-  recvMsgOpt: OptType;
+  recvMsgOpt: MessageReceiveOptType;
   unreadCount: number;
   groupAtType: GroupAtType;
   latestMsg: string;
@@ -248,7 +213,6 @@ export type ConversationItem = {
   attachedInfo: string;
   ex: string;
 };
-
 export type MessageItem = {
   clientMsgID: string;
   serverMsgID: string;
@@ -259,7 +223,7 @@ export type MessageItem = {
   recvID: string;
   msgFrom: number;
   contentType: MessageType;
-  platformID: Platform;
+  senderPlatformID: Platform;
   senderNickname: string;
   senderFaceUrl: string;
   groupID: string;
@@ -267,46 +231,60 @@ export type MessageItem = {
   seq: number;
   isRead: boolean;
   status: MessageStatus;
+  isReact: boolean;
+  isExternalExtensions: boolean;
   offlinePush: OfflinePush;
   attachedInfo: string;
-  attachedInfoElem: AttachedInfoElem;
   ex: string;
+  localEx: string;
+  textElem: TextElem;
+  cardElem: CardElem;
   pictureElem: PictureElem;
   soundElem: SoundElem;
   videoElem: VideoElem;
   fileElem: FileElem;
-  faceElem: FaceElem;
   mergeElem: MergeElem;
-  atElem: AtElem;
+  atTextElem: AtTextElem;
+  faceElem: FaceElem;
   locationElem: LocationElem;
   customElem: CustomElem;
   quoteElem: QuoteElem;
   notificationElem: NotificationElem;
-  progress?: number;
-  downloadProgress?: number;
-  downloaded?: boolean;
-  errCode?: number;
+  advancedTextElem: AdvancedTextElem;
+  typingElem: TypingElem;
+  attachedInfoElem: AttachedInfoElem;
 };
-
-export type NotificationElem = {
-  detail: string;
-  defaultTips: string;
+export type TextElem = {
+  content: string;
 };
-
-export type AtElem = {
+export type CardElem = {
+  userID: string;
+  nickname: string;
+  faceURL: string;
+  ex: string;
+};
+export type AtTextElem = {
   text: string;
   atUserList: string[];
   atUsersInfo?: AtUsersInfoItem[];
-  quoteMessage?: string;
+  quoteMessage?: MessageItem;
   isAtSelf?: boolean;
 };
-
+export type NotificationElem = {
+  detail: string;
+};
+export type AdvancedTextElem = {
+  text: string;
+  messageEntityList: MessageEntity[];
+};
+export type TypingElem = {
+  msgTips: string;
+};
 export type CustomElem = {
   data: string;
   description: string;
   extension: string;
 };
-
 export type FileElem = {
   filePath: string;
   uuid: string;
@@ -314,24 +292,21 @@ export type FileElem = {
   fileName: string;
   fileSize: number;
 };
-
 export type FaceElem = {
   index: number;
   data: string;
 };
-
 export type LocationElem = {
   description: string;
   longitude: number;
   latitude: number;
 };
-
 export type MergeElem = {
   title: string;
   abstractList: string[];
   multiMessage: MessageItem[];
+  messageEntityList: MessageEntity[];
 };
-
 export type OfflinePush = {
   title: string;
   desc: string;
@@ -339,30 +314,33 @@ export type OfflinePush = {
   iOSPushSound: string;
   iOSBadgeCount: boolean;
 };
-
 export type PictureElem = {
   sourcePath: string;
   sourcePicture: Picture;
   bigPicture: Picture;
   snapshotPicture: Picture;
 };
-
 export type AttachedInfoElem = {
   groupHasReadInfo: GroupHasReadInfo;
   isPrivateChat: boolean;
   isEncryption: boolean;
+  inEncryptStatus: boolean;
   burnDuration: number;
   hasReadTime: number;
   notSenderNotificationPush: boolean;
   messageEntityList: MessageEntity[];
+  uploadProgress: UploadProgress;
 };
-
+export type UploadProgress = {
+  total: number;
+  save: number;
+  current: number;
+};
 export type GroupHasReadInfo = {
   hasReadCount: number;
   hasReadUserIDList: string[];
   groupMemberCount: number;
 };
-
 export type Picture = {
   uuid: string;
   type: string;
@@ -371,12 +349,10 @@ export type Picture = {
   height: number;
   url: string;
 };
-
 export type QuoteElem = {
   text: string;
   quoteMessage: MessageItem;
 };
-
 export type SoundElem = {
   uuid: string;
   soundPath: string;
@@ -384,7 +360,6 @@ export type SoundElem = {
   dataSize: number;
   duration: number;
 };
-
 export type VideoElem = {
   videoPath: string;
   videoUUID: string;
@@ -399,7 +374,6 @@ export type VideoElem = {
   snapshotWidth: number;
   snapshotHeight: number;
 };
-
 export type AdvancedRevokeContent = {
   clientMsgID: string;
   revokeTime: number;
