@@ -339,7 +339,7 @@ export function searchMessageByContentTypeAndKeyword(
             WHERE send_time between ${startTime} and ${finalEndTime} 
             AND status <=3 
             And content_type IN (${values}) 
-            AND 
+            ${subCondition}
       ORDER BY send_time DESC;
       `
   );
