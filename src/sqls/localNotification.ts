@@ -15,6 +15,16 @@ export function localNotification(db: Database): QueryExecResult[] {
   );
 }
 
+export function insertNotificationSeq(
+  db: Database,
+  conversationID: string,
+  seq: number
+): QueryExecResult[] {
+  return db.exec(
+    `INSERT INTO local_notification_seqs (conversation_id, seq) VALUES ("${conversationID}", ${seq});`
+  );
+}
+
 export function setNotificationSeq(
   db: Database,
   conversationID: string,

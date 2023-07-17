@@ -1,5 +1,6 @@
 import { DatabaseErrorCode } from '@/constant';
 import {
+  insertNotificationSeq as databaseInsertNotificationSeq,
   setNotificationSeq as databaseSetNotificationSeq,
   getNotificationAllSeqs as databaseGetNotificationAllSeqs,
 } from '@/sqls';
@@ -12,7 +13,12 @@ export async function setNotificationSeq(
 ): Promise<string> {
   try {
     const db = await getInstance();
-    const execResult = databaseSetNotificationSeq(db, conversationID, seq);
+    let execResult = databaseSetNotificationSeq(db, conversationID, seq);
+
+    const modified = db.getRowsModified();
+    if (modified === 0) {
+      execResult = databaseInsertNotificationSeq(db, conversationID, seq);
+    }
 
     return formatResponse(execResult[0]);
   } catch (e) {

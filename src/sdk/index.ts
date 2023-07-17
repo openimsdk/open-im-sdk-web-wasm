@@ -157,7 +157,7 @@ class SDK extends Emitter {
           try {
             data = JSON.parse(data);
           } catch (error) {
-            console.log('SDK => parse error ', error);
+            console.log('SDK => parse error ', data);
           }
         }
         response.data = data;
@@ -204,7 +204,7 @@ class SDK extends Emitter {
           try {
             parsed.data = JSON.parse(parsed.data as string);
           } catch (error) {
-            console.log('SDK => parse error ', error);
+            console.log('SDK => parse error ', parsed.data);
           }
         }
 
