@@ -57,6 +57,12 @@ const InternalConstraint = [
   ['is_private_chat', 'isPrivateChat'],
   ['is_not_in_group', 'isNotInGroup'],
   ['update_unread_count_time', 'updateUnreadCountTime'],
+  ['is_msg_destruct', 'isMsgDestruct'],
+  ['msg_destruct_time', 'msgDestructTime'],
+  ['part_hash', 'partHash'],
+  ['upload_id', 'uploadID'],
+  ['upload_info', 'uploadInfo'],
+  ['expire_time', 'expireTime'],
 ];
 
 function _getInternalCamelCaseBySnakeCase(key: string) {

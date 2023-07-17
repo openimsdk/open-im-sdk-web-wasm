@@ -15,6 +15,7 @@ import {
   MessageReceiveOptType,
   GroupMemberRole,
   GroupMemberFilter,
+  LogLevel,
 } from './enum';
 
 export type InitAndLoginConfig = {
@@ -23,7 +24,7 @@ export type InitAndLoginConfig = {
   platformID: number;
   apiAddr: string;
   wsAddr: string;
-  logLevel?: number;
+  logLevel?: LogLevel;
   isLogStandardOutput?: boolean;
   isExternalExtensions?: boolean;
   tryParse?: boolean;
@@ -34,12 +35,12 @@ export type GetOneConversationParams = {
   sessionType: number;
 };
 export type GetAdvancedHistoryMsgParams = {
-  userID: string;
-  groupID: string;
+  userID?: string;
+  groupID?: string;
   lastMinSeq: number;
   count: number;
   startClientMsgID: string;
-  conversationID?: string;
+  conversationID: string;
 };
 export type GetHistoryMsgParams = {
   userID: string;
@@ -50,7 +51,7 @@ export type GetHistoryMsgParams = {
 };
 export type MarkNotiParams = {
   conversationID: string;
-  msgIDList: string[];
+  clientMsgIDList: string[];
 };
 export type GetGroupMemberParams = {
   groupID: string;
@@ -62,7 +63,7 @@ export type SendMsgParams = {
   recvID: string;
   groupID: string;
   offlinePushInfo?: OfflinePush;
-  message: string;
+  message: MessageItem;
   fileArrayBuffer?: ArrayBuffer;
   snpFileArrayBuffer?: ArrayBuffer;
 };
@@ -108,7 +109,7 @@ export type QuoteMsgParams = {
 };
 export type AdvancedQuoteMsgParams = {
   text: string;
-  message: string;
+  message: MessageItem;
   messageEntityList?: MessageEntity[];
 };
 export type AdvancedMsgParams = {
@@ -140,7 +141,9 @@ export type UpdateMemberNameParams = {
   userID: string;
   GroupMemberNickname: string;
 };
-export type GroupBaseInfo = Partial<Omit<GroupInitInfo, 'groupType'>>;
+export type GroupBaseInfo = Partial<Omit<GroupInitInfo, 'groupType'>> & {
+  groupID: string;
+};
 export type JoinGroupParams = {
   groupID: string;
   reqMsg: string;
@@ -190,7 +193,7 @@ export type AtMsgParams = {
   text: string;
   atUserIDList: string[];
   atUsersInfo?: AtUsersInfoItem[];
-  message?: string;
+  message?: MessageItem;
 };
 export type SoundMsgParams = {
   uuid: string;
@@ -235,12 +238,12 @@ export type GroupMsgReadParams = {
   msgIDList: string[];
 };
 export type InsertSingleMsgParams = {
-  message: string;
+  message: MessageItem;
   recvID: string;
   sendID: string;
 };
 export type InsertGroupMsgParams = {
-  message: string;
+  message: MessageItem;
   groupID: string;
   sendID: string;
 };
@@ -321,7 +324,8 @@ export type SetMemberAuthParams = {
 export type CreateGroupParams = {
   memberUserIDs: string[];
   groupInfo: GroupInitInfo;
-  adminUserIDs: string[];
+  adminUserIDs?: string[];
+  ownerUserID?: string;
 };
 export type GroupInfoParams = Partial<GroupInitInfo> & {
   groupID: string;
@@ -342,5 +346,11 @@ export type MemberExParams = {
 export type FindMessageParams = {
   conversationID: string;
   clientMsgIDList: string[];
+};
+export type UploadFileParams = {
+  name: string;
+  contentType: string;
+  uuid: string;
+  file: File;
 };
 export type PartialUserItem = Partial<SelfUserInfo>;

@@ -30,6 +30,8 @@ export function localConversations(db: Database): QueryExecResult[] {
             'max_seq' integer,
             'min_seq' integer,
             'has_read_seq' integer,
+            'msg_destruct_time' integer default 604800,
+            'is_msg_destruct' numeric default false,
             primary key ('conversation_id')
         )
     `
@@ -182,7 +184,7 @@ export function decrConversationUnreadCount(
     db.exec(
       `
           update local_conversations set 
-              unread_count=unread_count-${0} 
+              unread_count=${0} 
           where conversation_id = '${conversationID}';
       `
     );

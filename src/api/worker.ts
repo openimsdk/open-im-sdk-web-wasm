@@ -8,6 +8,7 @@ import {
   getSendingMessageList,
   updateMessageTimeAndStatus,
   updateMessage,
+  updateMessageBySeq,
   updateColumnsMessage,
   insertMessage,
   batchInsertMessageList,
@@ -155,6 +156,12 @@ import {
   getMessagesBySeqs,
   getMessageBySeq,
   getAllConversations,
+
+  // upload
+  updateUpload,
+  deleteUpload,
+  getUpload,
+  insertUpload,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -162,6 +169,13 @@ import {
   setNotificationSeq,
   getNotificationAllSeqs,
 } from './database/notification';
+import {
+  fileMapClear,
+  fileMapSet,
+  wasmClose,
+  wasmOpen,
+  wasmRead,
+} from './upload';
 const ctx = self;
 const rpc = new RPC({
   event: new RPCMessageEvent({
@@ -169,6 +183,17 @@ const rpc = new RPC({
     targetEndpoint: ctx,
   }),
 });
+
+// upload
+rpc.registerMethod('fileMapSet', fileMapSet);
+rpc.registerMethod('fileMapClear', fileMapClear);
+rpc.registerMethod('wasmOpen', wasmOpen);
+rpc.registerMethod('wasmClose', wasmClose);
+rpc.registerMethod('wasmRead', wasmRead);
+rpc.registerMethod('getUpload', getUpload);
+rpc.registerMethod('insertUpload', insertUpload);
+rpc.registerMethod('updateUpload', updateUpload);
+rpc.registerMethod('deleteUpload', deleteUpload);
 
 rpc.registerMethod('initDB', init);
 rpc.registerMethod('close', close);
@@ -179,6 +204,7 @@ rpc.registerMethod('getMultipleMessage', getMultipleMessage);
 rpc.registerMethod('getSendingMessageList', getSendingMessageList);
 rpc.registerMethod('updateMessageTimeAndStatus', updateMessageTimeAndStatus);
 rpc.registerMethod('updateMessage', updateMessage);
+rpc.registerMethod('updateMessageBySeq', updateMessageBySeq);
 rpc.registerMethod('updateColumnsMessage', updateColumnsMessage);
 rpc.registerMethod('insertMessage', insertMessage);
 rpc.registerMethod('batchInsertMessageList', batchInsertMessageList);

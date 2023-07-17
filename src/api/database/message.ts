@@ -13,6 +13,7 @@ import {
   getSendingMessageList as databaseGetSendingMessageList,
   updateMessageTimeAndStatus as databaseUpdateMessageTimeAndStatus,
   updateMessage as databaseUpdateMessage,
+  updateMessageBySeq as databaseUpdateMessageBySeq,
   updateColumnsMessage as databaseUpdateColumnsMessage,
   deleteConversationMsgs as databaseDeleteConversationMsgs,
   markConversationAllMessageAsRead as databaseMarkConversationAllMessageAsRead,
@@ -93,7 +94,7 @@ export async function getAlreadyExistSeqList(
         'isRead',
         'isReact',
         'isExternalExtensions',
-      ])[0] ?? ''
+      ])[0] ?? []
     );
   } catch (e) {
     console.error(e);
@@ -202,7 +203,7 @@ export async function getMessagesByClientMsgIDs(
         'isRead',
         'isReact',
         'isExternalExtensions',
-      ])[0]
+      ])
     );
   } catch (e) {
     console.error(e);
@@ -409,6 +410,40 @@ export async function updateMessage(
     const modifed = db.getRowsModified();
     if (modifed === 0) {
       throw 'updateMessage no record updated';
+    }
+
+    return formatResponse(execResult);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateMessageBySeq(
+  conversationID: string,
+  seq: number,
+  messageStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const message = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(messageStr))
+    ) as ClientMessage;
+
+    const execResult = databaseUpdateMessageBySeq(
+      db,
+      conversationID,
+      seq,
+      message
+    );
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateMessageBySeq no record updated';
     }
 
     return formatResponse(execResult);

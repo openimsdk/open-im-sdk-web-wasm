@@ -1,4 +1,4 @@
-import { CbEvents, RequestFunc } from '../constant';
+import { CbEvents } from '../constant';
 import {
   GroupType,
   SessionType,
@@ -14,16 +14,17 @@ import {
   GroupAtType,
   LogLevel,
   ApplicationHandleResult,
+  Relationship,
 } from './enum';
-export type WSEvent = {
+export type WSEvent<T = unknown> = {
   event: CbEvents;
-  data: unknown;
+  data: T;
   errCode: number;
   errMsg: string;
   operationID: string;
 };
 export type WsResponse<T = string> = {
-  event: RequestFunc;
+  event: string;
   errCode: number;
   errMsg: string;
   data: T;
@@ -59,6 +60,7 @@ export type AtUsersInfoItem = {
   groupNickname: string;
 };
 export type GroupInitInfo = {
+  groupID?: string;
   groupType: GroupType;
   groupName: string;
   introduction?: string;
@@ -133,18 +135,18 @@ export type PartialUserInfo = {
 } & Partial<Omit<SelfUserInfo, 'userID'>>;
 export type FriendUserItem = {
   addSource: number;
-  birth: number;
   createTime: number;
-  email: string;
   ex: string;
   faceURL: string;
   userID: string;
-  gender: number;
   nickname: string;
   operatorUserID: string;
   ownerUserID: string;
-  phoneNumber: string;
   remark: string;
+  attachedInfo: string;
+};
+export type SearchedFriendsInfo = FriendUserItem & {
+  relationship: Relationship;
 };
 export type FriendshipInfo = {
   result: number;
@@ -385,4 +387,42 @@ export type AdvancedRevokeContent = {
   sourceMessageSendID: string;
   sourceMessageSendTime: number;
   sourceMessageSenderNickname: string;
+};
+
+export type RevokedInfo = {
+  revokerID: string;
+  revokerRole: number;
+  clientMsgID: string;
+  revokerNickname: string;
+  revokeTime: number;
+  sourceMessageSendTime: number;
+  sourceMessageSendID: string;
+  sourceMessageSenderNickname: string;
+  sessionType: number;
+  seq: number;
+  ex: string;
+};
+
+export type ReceiptInfo = {
+  userID: string;
+  groupID: string;
+  msgIDList: string[];
+  readTime: number;
+  msgFrom: number;
+  contentType: MessageType;
+  sessionType: SessionType;
+};
+
+export type SearchMessageResult = {
+  totalCount: number;
+  searchResultItems: SearchMessageResultItem[];
+};
+
+export type SearchMessageResultItem = {
+  conversationID: string;
+  messageCount: number;
+  conversationType: SessionType;
+  showName: string;
+  faceURL: string;
+  messageList: MessageItem[];
 };

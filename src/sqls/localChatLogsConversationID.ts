@@ -120,6 +120,7 @@ export function getMessagesBySeqs(
   conversationID: string,
   seqs: number[]
 ): QueryExecResult[] {
+  _initLocalChatLogsTable(db, conversationID);
   return db.exec(
     `
     SELECT * FROM 'chat_logs_${conversationID}' WHERE seq in (${seqs.join(
@@ -149,6 +150,7 @@ export function getConversationNormalMsgSeq(
   db: Database,
   conversationID: string
 ): QueryExecResult[] {
+  _initLocalChatLogsTable(db, conversationID);
   return db.exec(
     `
       SELECT seq FROM 'chat_logs_${conversationID}' order by seq desc limit 1;
@@ -205,6 +207,21 @@ export function updateMessage(
     .table(`chat_logs_${conversationID}`)
     .setFields(localChatLogs)
     .where(`client_msg_id = '${clientMsgID}'`)
+    .toString();
+  return db.exec(sql);
+}
+
+export function updateMessageBySeq(
+  db: Database,
+  conversationID: string,
+  seq: number,
+  localChatLogs: ClientMessage
+): QueryExecResult[] {
+  const sql = squel
+    .update()
+    .table(`chat_logs_${conversationID}`)
+    .setFields(localChatLogs)
+    .where(`seq = '${seq}'`)
     .toString();
   return db.exec(sql);
 }
@@ -394,7 +411,7 @@ export function updateMsgSenderFaceURLAndSenderNickname(
 ): QueryExecResult[] {
   return db.exec(
     `
-      UPDATE chat_logs_${conversationID} SET sender_face_url = '${faceURL}', sender_nickname = '${nickname}' WHERE send_id = '${sendID}';
+      UPDATE chat_logs_${conversationID} SET sender_face_url = '${faceURL}', sender_nick_name = '${nickname}' WHERE send_id = '${sendID}';
       `
   );
 }
@@ -463,6 +480,7 @@ export function markConversationMessageAsReadBySeqs(
   seqList: number[],
   loginUserID: string
 ): QueryExecResult[] {
+  _initLocalChatLogsTable(db, conversationID);
   const values = seqList.map(v => `${v}`).join(',');
   return db.exec(
     `

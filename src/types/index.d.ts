@@ -1,4 +1,5 @@
 import { CbEvents } from '../constant';
+import { CreateGroupParams } from './params';
 
 type DatabaseApi = (...args: any[]) => Promise<any>;
 
@@ -8,6 +9,15 @@ declare global {
     [functionName: DatabaseAPI]: (...args: any[]) => Promise<any>;
     // [functionName: string]: (...args: any[]) => Promise<any>;
 
+    // upload
+    wasmOpen: DatabaseApi;
+    wasmClose: DatabaseApi;
+    wasmRead: DatabaseApi;
+    getUpload: DatabaseApi;
+    insertUpload: DatabaseApi;
+    updateUpload: DatabaseApi;
+    deleteUpload: DatabaseApi;
+
     initDB: DatabaseApi;
     // message
     getMessage: DatabaseApi;
@@ -16,6 +26,7 @@ declare global {
     getNormalMsgSeq: DatabaseApi;
     updateMessageTimeAndStatus: DatabaseApi;
     updateMessage: DatabaseApi;
+    updateMessageBySeq: DatabaseApi;
     updateColumnsMessage: DatabaseApi;
     insertMessage: DatabaseApi;
     batchInsertMessageList: DatabaseApi;
@@ -463,6 +474,10 @@ declare global {
       operationID: string,
       userID: string
     ) => Promise<string>;
+    hideConversation: (
+      operationID: string,
+      conversationID: string
+    ) => Promise<string>;
     getConversationListSplit: (
       operationID: string,
       offset: number,
@@ -503,15 +518,7 @@ declare global {
     ) => Promise<string>;
     searchLocalMessages: (
       operationID: string,
-      conversationID: string,
-      keywordList: string[],
-      keywordListMatchType?: number,
-      senderUserIDList?: string[],
-      messageTypeList?: MessageType[],
-      searchTimePosition?: number,
-      searchTimePeriod?: number,
-      pageIndex?: number,
-      count?: number
+      options: string
     ) => Promise<string>;
     addFriend: (
       operationID: string,
@@ -609,13 +616,11 @@ declare global {
     getJoinedGroupList: (operationID: string) => Promise<string>;
     createGroup: (
       operationID: string,
-      groupBaseInfo: GroupInitInfo,
-      memberList: Member[]
+      options: CreateGroupParams
     ) => Promise<string>;
     setGroupInfo: (
       operationID: string,
-      groupID: string,
-      groupInfo: GroupBaseInfo
+      groupBaseInfo: string
     ) => Promise<string>;
     setGroupMemberNickname: (
       operationID: string,
@@ -625,7 +630,7 @@ declare global {
     ) => Promise<string>;
     setGroupMemberInfo: (
       operationID: string,
-      groupBaseInfo: string
+      memberInfo: string
     ) => Promise<string>;
     joinGroup: (
       operationID: string,
@@ -705,6 +710,7 @@ declare global {
       conversationID: string,
       clientMsgIDList: string[]
     ) => Promise<string>;
+    uploadFile: (operationID: string, upload: UploadParams) => Promise<string>;
     networkStatusChanged: (operationID: string) => Promise<string>;
 
     // debug

@@ -46,7 +46,7 @@ export function updateLoginUser(
     .update()
     .table('local_users')
     .setFields(user)
-    .where(`user_id = '${user.userID}'`)
+    .where(`user_id = '${user.user_id}'`)
     .toString();
 
   return db.exec(sql);

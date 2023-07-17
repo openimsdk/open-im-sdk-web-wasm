@@ -31,7 +31,7 @@ export async function getNotificationAllSeqs(): Promise<string> {
     const db = await getInstance();
     const execResult = databaseGetNotificationAllSeqs(db);
 
-    return formatResponse(execResult[0]);
+    return formatResponse(execResult[0] ?? []);
   } catch (e) {
     console.error(e);
 

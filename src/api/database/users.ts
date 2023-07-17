@@ -72,7 +72,10 @@ export async function updateLoginUser(userStr: string): Promise<string> {
     ) as ClientUser;
 
     const execResult = databaseUpdateLoginUser(db, user);
-
+    const modifed = db.getRowsModified();
+    if (modifed === 0) {
+      throw 'updateLoginUser no record updated';
+    }
     return formatResponse(execResult);
   } catch (e) {
     console.error(e);

@@ -46,6 +46,7 @@ export async function getAllConversationList(): Promise<string> {
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {
@@ -70,6 +71,7 @@ export async function getAllConversationListToSync(): Promise<string> {
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {
@@ -138,6 +140,7 @@ export async function getHiddenConversationList(): Promise<string> {
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {
@@ -170,6 +173,7 @@ export async function getConversation(conversationID: string): Promise<string> {
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])[0]
     );
   } catch (e) {
@@ -197,6 +201,7 @@ export async function getMultipleConversation(
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {
@@ -336,6 +341,7 @@ export async function getConversationByUserID(userID: string): Promise<string> {
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {
@@ -363,6 +369,7 @@ export async function getConversationListSplit(
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {
@@ -690,6 +697,7 @@ export async function getAllConversations(): Promise<string> {
         'isPinned',
         'isPrivateChat',
         'isNotInGroup',
+        'isMsgDestruct',
       ])
     );
   } catch (e) {

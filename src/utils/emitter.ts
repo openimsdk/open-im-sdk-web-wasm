@@ -5,7 +5,7 @@ interface Events {
   [key: string]: Cbfn[];
 }
 
-type Cbfn = (data: WSEvent) => void;
+type Cbfn = (data: WSEvent<any>) => void;
 
 class Emitter {
   private events: Events;

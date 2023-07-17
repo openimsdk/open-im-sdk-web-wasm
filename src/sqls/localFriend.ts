@@ -28,10 +28,6 @@ export function insertFriend(
   db: Database,
   localFriend: LocalFriend
 ): QueryExecResult[] {
-  console.log('localFriend::::insert');
-
-  console.log(localFriend);
-
   const sql = squel
     .insert()
     .into('local_friends')

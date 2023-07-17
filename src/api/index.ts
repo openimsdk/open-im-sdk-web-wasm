@@ -65,7 +65,11 @@ function catchErrorHandle(error: unknown) {
   throw error;
 }
 
-function registeMethodOnWindow(name: string, realName?: string) {
+function registeMethodOnWindow(
+  name: string,
+  realName?: string,
+  needStringify = true
+) {
   console.info(`=> (database api) registe ${realName ?? name}`);
 
   return async (...args: unknown[]) => {
@@ -89,6 +93,10 @@ function registeMethodOnWindow(name: string, realName?: string) {
         JSON.stringify(response)
       );
 
+      if (!needStringify) {
+        return response;
+      }
+
       return JSON.stringify(response);
     } catch (error: unknown) {
       // defined in rpc-shooter
@@ -97,11 +105,23 @@ function registeMethodOnWindow(name: string, realName?: string) {
   };
 }
 
+export const fileMapSet = registeMethodOnWindow('fileMapSet');
+export const fileMapClear = registeMethodOnWindow('fileMapClear');
+
 // register method on window for go wasm invoke
 export function initDatabaseAPI(): void {
   if (!rpc) {
     return;
   }
+
+  // upload
+  window.wasmOpen = registeMethodOnWindow('wasmOpen');
+  window.wasmClose = registeMethodOnWindow('wasmClose');
+  window.wasmRead = registeMethodOnWindow('wasmRead', 'wasmRead', false);
+  window.getUpload = registeMethodOnWindow('getUpload');
+  window.insertUpload = registeMethodOnWindow('insertUpload');
+  window.updateUpload = registeMethodOnWindow('updateUpload');
+  window.deleteUpload = registeMethodOnWindow('deleteUpload');
 
   window.initDB = registeMethodOnWindow('initDB');
   window.close = registeMethodOnWindow('close');
@@ -115,6 +135,7 @@ export function initDatabaseAPI(): void {
     'updateMessageTimeAndStatus'
   );
   window.updateMessage = registeMethodOnWindow('updateMessage');
+  window.updateMessageBySeq = registeMethodOnWindow('updateMessageBySeq');
   window.updateColumnsMessage = registeMethodOnWindow('updateColumnsMessage');
   window.insertMessage = registeMethodOnWindow('insertMessage');
   window.batchInsertMessageList = registeMethodOnWindow(

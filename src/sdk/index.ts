@@ -1,4 +1,9 @@
-import { initDatabaseAPI, workerPromise } from '@/api';
+import {
+  fileMapClear,
+  fileMapSet,
+  initDatabaseAPI,
+  workerPromise,
+} from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
@@ -25,7 +30,7 @@ import {
   GetHistoryMsgParams,
   GetOneConversationParams,
   GetOneCveParams,
-  GroupInfoParams,
+  GroupBaseInfo,
   ImageMsgParams,
   InitAndLoginConfig,
   InsertGroupMsgParams,
@@ -59,12 +64,20 @@ import {
   SplitParams,
   TransferGroupParams,
   TypingUpdateParams,
+  UploadFileParams,
   VideoMsgFullParams,
   VideoMsgParams,
 } from '../types/params';
 
-import { CardElem, IMConfig, WSEvent, WsResponse } from '../types/entity';
+import {
+  CardElem,
+  IMConfig,
+  MessageItem,
+  WSEvent,
+  WsResponse,
+} from '../types/entity';
 import { MessageReceiveOptType } from '@/types/enum';
+import { logBoxStyleValue } from '@/utils';
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<any>;
   private goExitPromise: Promise<void> | undefined;
@@ -107,11 +120,13 @@ class SDK extends Emitter {
   ): Promise<WsResponse<T>> {
     return new Promise(async (resolve, reject) => {
       this._logWrap(
-        `SDK => [OperationID:${
+        `%cSDK =>%c [OperationID:${
           args[0]
         }] (invoked by js) run ${functionName} with args ${JSON.stringify(
           args
-        )}`
+        )}`,
+        'font-size:14px; background:#7CAEFF; border-radius:4px; padding-inline:4px;',
+        ''
       );
 
       let response = {
@@ -126,13 +141,15 @@ class SDK extends Emitter {
 
         let data = await func(...args);
         if (processor) {
-          // this._logWrap(
-          //   `SDK => [OperationID:${
-          //     args[0]
-          //   }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
-          //     data
-          //   )}`
-          // );
+          this._logWrap(
+            `%cSDK =>%c [OperationID:${
+              args[0]
+            }] (invoked by js) run ${functionName} with response before processor ${JSON.stringify(
+              data
+            )}`,
+            logBoxStyleValue('#FFDC19'),
+            ''
+          );
           data = processor(data);
         }
 
@@ -146,29 +163,21 @@ class SDK extends Emitter {
         response.data = data;
         resolve(response);
       } catch (error) {
-        // this._logWrap(
-        //   `SDK => [OperationID:${
-        //     args[0]
-        //   }] (invoked by js) run ${functionName} with error ${JSON.stringify(
-        //     error
-        //   )}`
-        // );
+        this._logWrap(
+          `%cSDK =>%c [OperationID:${
+            args[0]
+          }] (invoked by js) run ${functionName} with error ${JSON.stringify(
+            error
+          )}`,
+          logBoxStyleValue('#EE4245'),
+          ''
+        );
         response = {
           ...response,
           ...(error as WsResponse<T>),
         };
         reject(response);
       }
-
-      // this._logWrap(
-      //   `SDK => [OperationID:${
-      //     args[0]
-      //   }] (invoked by js) run ${functionName} with response ${JSON.stringify(
-      //     response
-      //   )}`
-      // );
-
-      // return response as WsResponse;
     });
   }
   login = async (params: InitAndLoginConfig, operationID = uuidv4()) => {
@@ -183,8 +192,21 @@ class SDK extends Emitter {
     await this.wasmInitializedPromise;
     window.commonEventFunc(event => {
       try {
-        console.info('SDK => received event ', event);
+        console.info(
+          `%cSDK =>%c received event %c${event}%c `,
+          logBoxStyleValue('#282828', '#ffffff'),
+          '',
+          'color: #4f2398;',
+          ''
+        );
         const parsed = JSON.parse(event) as WSEvent;
+        if (this.tryParse) {
+          try {
+            parsed.data = JSON.parse(parsed.data as string);
+          } catch (error) {
+            console.log('SDK => parse error ', error);
+          }
+        }
 
         this.emit(parsed.event, parsed);
       } catch (error) {
@@ -197,7 +219,7 @@ class SDK extends Emitter {
       apiAddr: params.apiAddr,
       wsAddr: params.wsAddr,
       dataDir: './',
-      logLevel: params.logLevel || 6,
+      logLevel: params.logLevel || 5,
       isLogStandardOutput: params.isLogStandardOutput || true,
       logFilePath: './',
       isExternalExtensions: params.isExternalExtensions || false,
@@ -208,6 +230,7 @@ class SDK extends Emitter {
     return await window.login(operationID, params.userID, params.token);
   };
   logout = <T>(operationID = uuidv4()) => {
+    fileMapClear();
     return this._invoker<T>('logout', window.logout, [operationID]);
   };
   getAllConversationList = <T>(operationID = uuidv4()) => {
@@ -278,7 +301,11 @@ class SDK extends Emitter {
     return this._invoker<T>(
       'markMessagesAsReadByMsgID',
       window.markMessagesAsReadByMsgID,
-      [operationID, params.conversationID, JSON.stringify(params.msgIDList)]
+      [
+        operationID,
+        params.conversationID,
+        JSON.stringify(params.clientMsgIDList),
+      ]
     );
   };
   getGroupMemberList = <T>(
@@ -307,6 +334,26 @@ class SDK extends Emitter {
   createImageMessage = <T>(params: ImageMsgParams, operationID = uuidv4()) => {
     return this._invoker<T>(
       'createImageMessage',
+      window.createImageMessageByURL,
+      [
+        operationID,
+        JSON.stringify(params.sourcePicture),
+        JSON.stringify(params.bigPicture),
+        JSON.stringify(params.snapshotPicture),
+      ],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
+  };
+  createImageMessageByFile = <T>(
+    params: ImageMsgParams & { file: File },
+    operationID = uuidv4()
+  ) => {
+    fileMapSet(params.sourcePicture.uuid, params.file);
+    return this._invoker<T>(
+      'createImageMessageByFile',
       window.createImageMessageByURL,
       [
         operationID,
@@ -355,7 +402,7 @@ class SDK extends Emitter {
       [
         operationID,
         params.text,
-        params.message,
+        JSON.stringify(params.message),
         JSON.stringify(params.messageEntityList),
       ],
       data => {
@@ -388,7 +435,7 @@ class SDK extends Emitter {
     };
     return this._invoker<T>('sendMessage', window.sendMessage, [
       operationID,
-      params.message,
+      JSON.stringify(params.message),
       params.recvID,
       params.groupID,
       JSON.stringify(offlinePushInfo),
@@ -404,7 +451,7 @@ class SDK extends Emitter {
     };
     return this._invoker<T>('sendMessageNotOss', window.sendMessageNotOss, [
       operationID,
-      params.message,
+      JSON.stringify(params.message),
       params.recvID,
       params.groupID,
       JSON.stringify(offlinePushInfo),
@@ -420,7 +467,7 @@ class SDK extends Emitter {
     };
     return this._invoker<T>('sendMessageByBuffer', window.sendMessageByBuffer, [
       operationID,
-      params.message,
+      JSON.stringify(params.message),
       params.recvID,
       params.groupID,
       JSON.stringify(offlinePushInfo),
@@ -547,7 +594,7 @@ class SDK extends Emitter {
         data.text,
         JSON.stringify(data.atUserIDList),
         JSON.stringify(data.atUsersInfo),
-        data.message,
+        JSON.stringify(data.message) ?? '',
       ],
       data => {
         // compitable with old version sdk
@@ -558,6 +605,21 @@ class SDK extends Emitter {
   createSoundMessage = <T>(data: SoundMsgParams, operationID = uuidv4()) => {
     return this._invoker<T>(
       'createSoundMessage',
+      window.createSoundMessageByURL,
+      [operationID, JSON.stringify(data)],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
+  };
+  createSoundMessageByFile = <T>(
+    data: SoundMsgParams & { file: File },
+    operationID = uuidv4()
+  ) => {
+    fileMapSet(data.uuid, data.file);
+    return this._invoker<T>(
+      'createSoundMessageByFile',
       window.createSoundMessageByURL,
       [operationID, JSON.stringify(data)],
       data => {
@@ -579,9 +641,42 @@ class SDK extends Emitter {
     );
   };
 
+  createVideoMessageByFile = <T>(
+    data: VideoMsgParams & { videoFile: File; snapFile: File },
+    operationID = uuidv4()
+  ) => {
+    fileMapSet(data.videoUUID, data.videoFile);
+    fileMapSet(data.snapshotUUID, data.snapFile);
+    return this._invoker<T>(
+      'createVideoMessageByFile',
+      window.createVideoMessageByURL,
+      [operationID, JSON.stringify(data)],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
+  };
+
   createFileMessage = <T>(data: FileMsgParams, operationID = uuidv4()) => {
     return this._invoker<T>(
       'createFileMessage',
+      window.createFileMessageByURL,
+      [operationID, JSON.stringify(data)],
+      data => {
+        // compitable with old version sdk
+        return data[0];
+      }
+    );
+  };
+
+  createFileMessageByFile = <T>(
+    data: FileMsgParams & { file: File },
+    operationID = uuidv4()
+  ) => {
+    fileMapSet(data.uuid, data.file);
+    return this._invoker<T>(
+      'createFileMessageByFile',
       window.createFileMessageByURL,
       [operationID, JSON.stringify(data)],
       data => {
@@ -674,11 +769,11 @@ class SDK extends Emitter {
     );
   };
 
-  createForwardMessage = <T>(data: string, operationID = uuidv4()) => {
+  createForwardMessage = <T>(data: MessageItem, operationID = uuidv4()) => {
     return this._invoker<T>(
       'createForwardMessage ',
       window.createForwardMessage,
-      [operationID, data],
+      [operationID, JSON.stringify(data)],
       data => {
         // compitable with old version sdk
         return data[0];
@@ -775,7 +870,7 @@ class SDK extends Emitter {
     return this._invoker<T>(
       'insertSingleMessageToLocalStorage ',
       window.insertSingleMessageToLocalStorage,
-      [operationID, data.message, data.recvID, data.sendID]
+      [operationID, JSON.stringify(data.message), data.recvID, data.sendID]
     );
   };
 
@@ -786,7 +881,7 @@ class SDK extends Emitter {
     return this._invoker<T>(
       'insertGroupMessageToLocalStorage ',
       window.insertGroupMessageToLocalStorage,
-      [operationID, data.message, data.groupID, data.sendID]
+      [operationID, JSON.stringify(data.message), data.groupID, data.sendID]
     );
   };
   typingStatusUpdate = <T>(
@@ -808,6 +903,12 @@ class SDK extends Emitter {
       window.clearConversationAndDeleteAllMsg,
       [operationID, data]
     );
+  };
+  hideConversation = <T>(data: string, operationID = uuidv4()) => {
+    return this._invoker<T>('hideConversation ', window.hideConversation, [
+      operationID,
+      data,
+    ]);
   };
   getConversationListSplit = <T>(data: SplitParams, operationID = uuidv4()) => {
     return this._invoker<T>(
@@ -1075,7 +1176,7 @@ class SDK extends Emitter {
       JSON.stringify(data),
     ]);
   };
-  setGroupInfo = <T>(data: GroupInfoParams, operationID = uuidv4()) => {
+  setGroupInfo = <T>(data: GroupBaseInfo, operationID = uuidv4()) => {
     return this._invoker<T>('setGroupInfo ', window.setGroupInfo, [
       operationID,
       JSON.stringify(data),
@@ -1235,6 +1336,18 @@ class SDK extends Emitter {
     return this._invoker<T>('findMessageList ', window.findMessageList, [
       operationID,
       JSON.stringify(data),
+    ]);
+  };
+  uploadFile = (data: UploadFileParams, operationID = uuidv4()) => {
+    fileMapSet(data.uuid, data.file);
+
+    return this._invoker<{ url: string }>('uploadFile ', window.uploadFile, [
+      operationID,
+      JSON.stringify({
+        ...data,
+        filepath: '',
+        cause: '',
+      }),
     ]);
   };
 }

@@ -13,3 +13,4 @@ export * from './localFriendRequest';
 export * from './localGroupMembers';
 export * from './tempCacheLocalChatLogs';
 export * from './localNotification';
+export * from './localUpload';

@@ -121,3 +121,12 @@ export enum GroupMemberFilter {
   AdminAndNomal = 4,
   AdminAndOwner = 5,
 }
+export enum Relationship {
+  isBlack = 0,
+  isFriend = 1,
+}
+export enum LoginStatus {
+  Logout = 1,
+  Logging = 2,
+  Logged = 3,
+}
