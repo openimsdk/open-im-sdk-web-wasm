@@ -4,7 +4,7 @@ import {
   setNotificationSeq as databaseSetNotificationSeq,
   getNotificationAllSeqs as databaseGetNotificationAllSeqs,
 } from '@/sqls';
-import { formatResponse } from '@/utils';
+import { converSqlExecResult, formatResponse } from '@/utils';
 import { getInstance } from './instance';
 
 export async function setNotificationSeq(
@@ -37,7 +37,7 @@ export async function getNotificationAllSeqs(): Promise<string> {
     const db = await getInstance();
     const execResult = databaseGetNotificationAllSeqs(db);
 
-    return formatResponse(execResult[0] ?? []);
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
     console.error(e);
 
