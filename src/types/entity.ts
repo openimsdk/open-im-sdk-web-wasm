@@ -426,3 +426,11 @@ export type SearchMessageResultItem = {
   faceURL: string;
   messageList: MessageItem[];
 };
+
+export type AdvancedGetMessageResult = {
+  isEnd: boolean;
+  lastMinSeq: number;
+  errCode: number;
+  errMsg: string;
+  messageList: MessageItem[];
+};
