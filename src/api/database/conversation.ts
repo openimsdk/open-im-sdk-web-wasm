@@ -342,7 +342,7 @@ export async function getConversationByUserID(userID: string): Promise<string> {
         'isPrivateChat',
         'isNotInGroup',
         'isMsgDestruct',
-      ])
+      ])[0]
     );
   } catch (e) {
     console.error(e);

@@ -80,6 +80,7 @@ import {
   getRecvFriendApplication,
   getSendFriendApplication,
   getFriendApplicationByBothID,
+  getBothFriendReq,
 
   // groups
   insertGroup,
@@ -92,6 +93,7 @@ import {
   addMemberCount,
   getJoinedWorkingGroupIDList,
   getJoinedWorkingGroupList,
+  getGroups,
 
   // groupRequest
   insertGroupRequest,
@@ -133,6 +135,7 @@ import {
   searchGroupMembers,
   updateGroupMember,
   updateGroupMemberField,
+  getUserJoinedGroupIDs,
 
   // temp cache chatlogs
   batchInsertTempCacheMessageList,
@@ -338,6 +341,7 @@ rpc.registerMethod(
   'getFriendApplicationByBothID',
   getFriendApplicationByBothID
 );
+rpc.registerMethod('getBothFriendReq', getBothFriendReq);
 
 // groups
 rpc.registerMethod('insertGroup', insertGroup);
@@ -354,6 +358,7 @@ rpc.registerMethod('addMemberCount', addMemberCount);
 rpc.registerMethod('getJoinedWorkingGroupIDList', getJoinedWorkingGroupIDList);
 rpc.registerMethod('getJoinedWorkingGroupList', getJoinedWorkingGroupList);
 rpc.registerMethod('getGroupMemberAllGroupIDs', getGroupMemberAllGroupIDs);
+rpc.registerMethod('getGroups', getGroups);
 
 // groupMembers
 rpc.registerMethod(
@@ -388,6 +393,7 @@ rpc.registerMethod('deleteGroupAllMembers', deleteGroupAllMembers);
 rpc.registerMethod('updateGroupMember', updateGroupMember);
 rpc.registerMethod('updateGroupMemberField', updateGroupMemberField);
 rpc.registerMethod('searchGroupMembers', searchGroupMembers);
+rpc.registerMethod('getUserJoinedGroupIDs', getUserJoinedGroupIDs);
 
 // groupRequest
 rpc.registerMethod('insertGroupRequest', insertGroupRequest);

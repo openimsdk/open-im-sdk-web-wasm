@@ -146,3 +146,11 @@ export function getGroupMemberAllGroupIDs(db: Database): QueryExecResult[] {
     `
   );
 }
+
+export function getGroups(db: Database, groupIDs: string[]): QueryExecResult[] {
+  return db.exec(
+    `
+    select * from local_groups where group_id in (${groupIDs.join(',')});
+    `
+  );
+}

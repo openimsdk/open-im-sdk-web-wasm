@@ -150,6 +150,7 @@ declare global {
     getRecvFriendApplication: DatabaseApi;
     getSendFriendApplication: DatabaseApi;
     getFriendApplicationByBothID: DatabaseApi;
+    getBothFriendReq: DatabaseApi;
 
     // friend
     insertFriend: DatabaseApi;
@@ -173,6 +174,8 @@ declare global {
     getJoinedWorkingGroupIDList: DatabaseApi;
     getJoinedWorkingGroupList: DatabaseApi;
     getGroupMemberAllGroupIDs: DatabaseApi;
+    getUserJoinedGroupIDs: DatabaseApi;
+    getGroups: DatabaseApi;
 
     // groupRequest
     insertGroupRequest: DatabaseApi;

@@ -44,7 +44,7 @@ export function getConversationByUserID(
 ): QueryExecResult[] {
   return db.exec(
     `
-        select * from local_conversations where user_id = "${userID}";
+        select * from local_conversations where user_id = "${userID}" limit 1;
     `
   );
 }

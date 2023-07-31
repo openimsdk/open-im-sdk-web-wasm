@@ -114,3 +114,20 @@ export function getFriendApplicationByBothID(
       `
   );
 }
+
+export function getBothFriendReq(
+  db: Database,
+  fromUserID: string,
+  toUserID: boolean
+): QueryExecResult[] {
+  return db.exec(
+    `
+      select *
+        from local_friend_requests
+        where (from_user_id = "${fromUserID}"
+        and to_user_id = "${toUserID}")
+        or (from_user_id = "${toUserID}"
+        and to_user_id = "${fromUserID}")
+      `
+  );
+}

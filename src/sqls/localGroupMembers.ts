@@ -384,3 +384,14 @@ export function searchGroupMembers(
   }
   return db.exec(condition);
 }
+
+export function getUserJoinedGroupIDs(
+  db: Database,
+  userID: string
+): QueryExecResult[] {
+  return db.exec(
+    `
+    select group_id from local_group_members where user_id = ${userID};
+    `
+  );
+}

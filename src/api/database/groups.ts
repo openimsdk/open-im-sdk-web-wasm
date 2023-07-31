@@ -9,6 +9,7 @@ import {
   getAllGroupInfoByGroupIDOrGroupName as databaseGetAllGroupInfoByGroupIDOrGroupName,
   subtractMemberCount as databaseSubtractMemberCount,
   addMemberCount as databaseAddMemberCount,
+  getGroups as databaseGetGroups,
   LocalGroup,
 } from '@/sqls';
 import {
@@ -235,7 +236,7 @@ export async function getJoinedWorkingGroupList(): Promise<string> {
       { name: 'groupName' }
     );
     const filterList = allJoinedGroupList.filter(
-      group => group.group_type === 2
+      group => group.groupType === 2
     );
 
     return formatResponse(JSON.stringify(filterList));
@@ -258,6 +259,29 @@ export async function getGroupMemberAllGroupIDs(): Promise<string> {
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase').map(item => item.groupID)
     );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getGroups(groupIDListStr: string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetGroups(db, JSON.parse(groupIDListStr));
+    const allJoinedGroupList = converSqlExecResult(
+      execResult[0],
+      'CamelCase',
+      [],
+      { name: 'groupName' }
+    );
+    return formatResponse(JSON.stringify(allJoinedGroupList));
   } catch (e) {
     console.error(e);
 

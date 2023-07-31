@@ -442,6 +442,7 @@ export function initDatabaseAPI(): void {
   window.getFriendApplicationByBothID = registeMethodOnWindow(
     'getFriendApplicationByBothID'
   );
+  window.getBothFriendReq = registeMethodOnWindow('getBothFriendReq');
 
   // friend
   window.insertFriend = registeMethodOnWindow('insertFriend');
@@ -475,6 +476,8 @@ export function initDatabaseAPI(): void {
   window.getGroupMemberAllGroupIDs = registeMethodOnWindow(
     'getGroupMemberAllGroupIDs'
   );
+  window.getUserJoinedGroupIDs = registeMethodOnWindow('getUserJoinedGroupIDs');
+  window.getGroups = registeMethodOnWindow('getGroups');
 
   // groupRequest
   window.insertGroupRequest = registeMethodOnWindow('insertGroupRequest');

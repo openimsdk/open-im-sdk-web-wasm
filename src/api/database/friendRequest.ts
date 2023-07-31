@@ -6,6 +6,7 @@ import {
   getRecvFriendApplication as databaseGetRecvFriendApplication,
   getSendFriendApplication as databaseGetSendFriendApplication,
   getFriendApplicationByBothID as databaseGetFriendApplicationByBothID,
+  getBothFriendReq as databaseGetBothFriendReq,
   LocalFriendRequest,
 } from '@/sqls';
 import {
@@ -134,6 +135,27 @@ export async function getFriendApplicationByBothID(
       fromUserID,
       toUserID
     );
+
+    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getBothFriendReq(
+  fromUserID: string,
+  toUserID: boolean
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetBothFriendReq(db, fromUserID, toUserID);
 
     return formatResponse(converSqlExecResult(execResult[0], 'CamelCase'));
   } catch (e) {
