@@ -46,4 +46,20 @@ export enum CbEvents {
   OnGroupApplicationRejected = 'OnGroupApplicationRejected',
 
   UploadComplete = 'UploadComplete',
+
+  // rtc
+  OnReceiveNewInvitation = 'OnReceiveNewInvitation',
+  OnInviteeAccepted = 'OnInviteeAccepted',
+  OnInviteeRejected = 'OnInviteeRejected',
+  OnInvitationCancelled = 'OnInvitationCancelled',
+  OnHangUp = 'OnHangUp',
+  OnInvitationTimeout = 'OnInvitationTimeout',
+  OnInviteeAcceptedByOtherDevice = 'OnInviteeAcceptedByOtherDevice',
+  OnInviteeRejectedByOtherDevice = 'OnInviteeRejectedByOtherDevice',
+
+  // meeting
+  OnStreamChange = 'OnStreamChange',
+  OnRoomParticipantConnected = 'OnRoomParticipantConnected',
+  OnRoomParticipantDisconnected = 'OnRoomParticipantDisconnected',
+  OnReceiveCustomSignal = 'OnReceiveCustomSignal',
 }

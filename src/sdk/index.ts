@@ -19,7 +19,9 @@ import {
   ChangeGroupMemberMuteParams,
   ChangeGroupMuteParams,
   CreateGroupParams,
+  CreateMeetingParams,
   CustomMsgParams,
+  CustomSignalParams,
   FaceMessageParams,
   FileMsgFullParams,
   FileMsgParams,
@@ -40,6 +42,7 @@ import {
   JoinGroupParams,
   LocationMsgParams,
   MarkNotiParams,
+  MeetingOperateStreamParams,
   MemberExParams,
   MemberNameParams,
   MergerMsgParams,
@@ -47,23 +50,28 @@ import {
   PinCveParams,
   QuoteMsgParams,
   RemarkFriendParams,
+  RtcActionParams,
   SearchFriendParams,
   SearchGroupMemberParams,
   SearchGroupParams,
   SearchLocalParams,
   SendMsgParams,
   setBurnDurationParams,
+  SetConversationMsgDestructParams,
+  SetConversationMsgDestructTimeParams,
   SetDraftParams,
   SetGroupRoleParams,
   SetGroupVerificationParams,
   SetMemberAuthParams,
   SetMessageLocalExParams,
   setPrvParams,
+  SignalingInviteParams,
   SoundMsgParams,
   SouondMsgFullParams,
   SplitParams,
   TransferGroupParams,
   TypingUpdateParams,
+  UpdateMeetingParams,
   UploadFileParams,
   VideoMsgFullParams,
   VideoMsgParams,
@@ -1347,7 +1355,7 @@ class SDK extends Emitter {
       [operationID, opt]
     );
   };
-  findMessageList = (data: FindMessageParams, operationID = uuidv4()) => {
+  findMessageList = (data: FindMessageParams[], operationID = uuidv4()) => {
     return this._invoker<SearchMessageResult>(
       'findMessageList ',
       window.findMessageList,
@@ -1356,7 +1364,6 @@ class SDK extends Emitter {
   };
   uploadFile = (data: UploadFileParams, operationID = uuidv4()) => {
     fileMapSet(data.uuid, data.file);
-
     return this._invoker<{ url: string }>('uploadFile ', window.uploadFile, [
       operationID,
       JSON.stringify({
@@ -1365,6 +1372,155 @@ class SDK extends Emitter {
         cause: '',
       }),
     ]);
+  };
+  signalingInvite = <T>(
+    data: SignalingInviteParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>('signalingInvite ', window.signalingInvite, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  signalingInviteInGroup = <T>(
+    data: SignalingInviteParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'signalingInviteInGroup ',
+      window.signalingInviteInGroup,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  signalingAccept = <T>(data: RtcActionParams, operationID = uuidv4()) => {
+    return this._invoker<T>('signalingAccept ', window.signalingAccept, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  signalingReject = <T>(data: RtcActionParams, operationID = uuidv4()) => {
+    return this._invoker<T>('signalingReject ', window.signalingReject, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  signalingCancel = <T>(data: RtcActionParams, operationID = uuidv4()) => {
+    return this._invoker<T>('signalingCancel ', window.signalingCancel, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  signalingHungUp = <T>(data: RtcActionParams, operationID = uuidv4()) => {
+    return this._invoker<T>('signalingHungUp ', window.signalingHungUp, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  signalingGetRoomByGroupID = <T>(groupID: string, operationID = uuidv4()) => {
+    return this._invoker<T>(
+      'signalingGetRoomByGroupID ',
+      window.signalingGetRoomByGroupID,
+      [operationID, groupID]
+    );
+  };
+  signalingGetTokenByRoomID = <T>(roomID: string, operationID = uuidv4()) => {
+    return this._invoker<T>(
+      'signalingGetTokenByRoomID ',
+      window.signalingGetTokenByRoomID,
+      [operationID, roomID]
+    );
+  };
+  signalingSendCustomSignal = <T>(
+    data: CustomSignalParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'signalingSendCustomSignal ',
+      window.signalingSendCustomSignal,
+      [operationID, data.customInfo, data.roomID]
+    );
+  };
+  signalingCreateMeeting = <T>(
+    data: CreateMeetingParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'signalingCreateMeeting ',
+      window.signalingCreateMeeting,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  signalingJoinMeeting = <T>(data: string, operationID = uuidv4()) => {
+    return this._invoker<T>(
+      'signalingJoinMeeting ',
+      window.signalingJoinMeeting,
+      [
+        operationID,
+        JSON.stringify({
+          roomID: data,
+        }),
+      ]
+    );
+  };
+  signalingUpdateMeetingInfo = <T>(
+    data: UpdateMeetingParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'signalingUpdateMeetingInfo ',
+      window.signalingUpdateMeetingInfo,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  signalingCloseRoom = <T>(roomID: string, operationID = uuidv4()) => {
+    return this._invoker<T>('signalingCloseRoom ', window.signalingCloseRoom, [
+      operationID,
+      roomID,
+    ]);
+  };
+  signalingGetMeetings = <T>(operationID = uuidv4()) => {
+    return this._invoker<T>(
+      'signalingGetMeetings ',
+      window.signalingGetMeetings,
+      [operationID]
+    );
+  };
+  signalingOperateStream = <T>(
+    data: MeetingOperateStreamParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'signalingOperateStream ',
+      window.signalingOperateStream,
+      [
+        operationID,
+        data.streamType,
+        data.roomID,
+        data.userID,
+        data.mute,
+        data.muteAll,
+      ]
+    );
+  };
+  setConversationIsMsgDestruct = <T>(
+    data: SetConversationMsgDestructParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'setConversationIsMsgDestruct ',
+      window.setConversationIsMsgDestruct,
+      [operationID, data.conversationID, data.isMsgDestruct]
+    );
+  };
+  setConversationMsgDestructTime = <T>(
+    data: SetConversationMsgDestructTimeParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'setConversationMsgDestructTime ',
+      window.setConversationMsgDestructTime,
+      [operationID, data.conversationID, data.msgDestructTime]
+    );
   };
 }
 

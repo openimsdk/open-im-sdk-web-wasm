@@ -72,7 +72,6 @@ export type GroupApplicationItem = {
   createTime: number;
   creatorUserID: string;
   ex: string;
-  gender: number;
   groupFaceURL: string;
   groupID: string;
   groupName: string;
@@ -97,7 +96,6 @@ export type FriendApplicationItem = {
   createTime: number;
   ex: string;
   fromFaceURL: string;
-  fromGender: number;
   fromNickname: string;
   fromUserID: string;
   handleMsg: string;
@@ -106,7 +104,6 @@ export type FriendApplicationItem = {
   handlerUserID: string;
   reqMsg: string;
   toFaceURL: string;
-  toGender: number;
   toNickname: string;
   toUserID: string;
 };
@@ -116,7 +113,6 @@ export type FullUserItem = {
   publicInfo: PublicUserItem | null;
 };
 export type PublicUserItem = {
-  gender: number;
   nickname: string;
   userID: string;
   faceURL: string;
@@ -158,7 +154,6 @@ export type BlackUserItem = {
   createTime: number;
   ex: string;
   faceURL: string;
-  gender: number;
   nickname: string;
   operatorUserID: string;
   ownerUserID: string;
@@ -209,9 +204,12 @@ export type ConversationItem = {
   latestMsgSendTime: number;
   draftText: string;
   draftTextTime: number;
+  burnDuration: number;
+  msgDestructTime: number;
   isPinned: boolean;
   isNotInGroup: boolean;
   isPrivateChat: boolean;
+  isMsgDestruct: boolean;
   attachedInfo: string;
   ex: string;
 };
@@ -433,4 +431,18 @@ export type AdvancedGetMessageResult = {
   errCode: number;
   errMsg: string;
   messageList: MessageItem[];
+};
+
+export type RtcInvite = {
+  inviterUserID: string;
+  inviteeUserIDList: string[];
+  customData?: string;
+  groupID: string;
+  roomID: string;
+  timeout: number;
+  mediaType: string;
+  sessionType: number;
+  platformID: number;
+  initiateTime?: number;
+  busyLineUserIDList?: string[];
 };

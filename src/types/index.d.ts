@@ -716,6 +716,24 @@ declare global {
     uploadFile: (operationID: string, upload: UploadParams) => Promise<string>;
     networkStatusChanged: (operationID: string) => Promise<string>;
 
+    signalingInvite: (...args) => Promise<string>;
+    signalingInviteInGroup: (...args) => Promise<string>;
+    signalingAccept: (...args) => Promise<string>;
+    signalingReject: (...args) => Promise<string>;
+    signalingCancel: (...args) => Promise<string>;
+    signalingHungUp: (...args) => Promise<string>;
+    signalingGetRoomByGroupID: (...args) => Promise<string>;
+    signalingGetTokenByRoomID: (...args) => Promise<string>;
+    signalingSendCustomSignal: (...args) => Promise<string>;
+    signalingCreateMeeting: (...args) => Promise<string>;
+    signalingJoinMeeting: (...args) => Promise<string>;
+    signalingUpdateMeetingInfo: (...args) => Promise<string>;
+    signalingCloseRoom: (...args) => Promise<string>;
+    signalingGetMeetings: (operationID: string) => Promise<string>;
+    signalingOperateStream: (...args) => Promise<string>;
+    setConversationIsMsgDestruct: (...args) => Promise<string>;
+    setConversationMsgDestructTime: (...args) => Promise<string>;
+
     // debug
     exec: (sql: string) => Promise<any>;
     exportDB: () => Promise<string>; //return Uint8Array
