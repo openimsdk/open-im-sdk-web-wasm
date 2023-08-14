@@ -370,6 +370,7 @@ class SDK extends Emitter {
     params: ImageMsgParams & { file: File },
     operationID = uuidv4()
   ) => {
+    params.sourcePicture.uuid = `${params.sourcePicture.uuid}/${params.file.name}`;
     fileMapSet(params.sourcePicture.uuid, params.file);
     return this._invoker<T>(
       'createImageMessageByFile',
@@ -641,6 +642,7 @@ class SDK extends Emitter {
     data: SoundMsgParams & { file: File },
     operationID = uuidv4()
   ) => {
+    data.uuid = `${data.uuid}/${data.file.name}`;
     fileMapSet(data.uuid, data.file);
     return this._invoker<T>(
       'createSoundMessageByFile',
@@ -666,11 +668,13 @@ class SDK extends Emitter {
   };
 
   createVideoMessageByFile = <T>(
-    data: VideoMsgParams & { videoFile: File; snapFile: File },
+    data: VideoMsgParams & { videoFile: File; snapshotFile: File },
     operationID = uuidv4()
   ) => {
+    data.videoUUID = `${data.videoUUID}/${data.videoFile.name}`;
+    data.snapshotUUID = `${data.snapshotUUID}/${data.snapshotFile.name}`;
     fileMapSet(data.videoUUID, data.videoFile);
-    fileMapSet(data.snapshotUUID, data.snapFile);
+    fileMapSet(data.snapshotUUID, data.snapshotFile);
     return this._invoker<T>(
       'createVideoMessageByFile',
       window.createVideoMessageByURL,
@@ -698,6 +702,7 @@ class SDK extends Emitter {
     data: FileMsgParams & { file: File },
     operationID = uuidv4()
   ) => {
+    data.uuid = `${data.uuid}/${data.file.name}`;
     fileMapSet(data.uuid, data.file);
     return this._invoker<T>(
       'createFileMessageByFile',
@@ -1363,6 +1368,7 @@ class SDK extends Emitter {
     );
   };
   uploadFile = (data: UploadFileParams, operationID = uuidv4()) => {
+    data.uuid = `${data.uuid}/${data.file.name}`;
     fileMapSet(data.uuid, data.file);
     return this._invoker<{ url: string }>('uploadFile ', window.uploadFile, [
       operationID,
