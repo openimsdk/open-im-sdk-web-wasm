@@ -46,6 +46,7 @@ export enum CbEvents {
   OnGroupApplicationRejected = 'OnGroupApplicationRejected',
 
   UploadComplete = 'UploadComplete',
+  OnRecvCustomBusinessMessage = 'OnRecvCustomBusinessMessage',
 
   // rtc
   OnReceiveNewInvitation = 'OnReceiveNewInvitation',
