@@ -351,7 +351,7 @@ declare global {
       token: string,
       userID: string
     ) => Promise<string>;
-    getLoginUser: (operationID: string) => Promise<string>;
+    getLoginUserID: (operationID: string) => Promise<string>;
     getSelfUserInfo: (operationID: string) => Promise<string>;
     getUsersInfo: (
       operationID: string,

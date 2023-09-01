@@ -4,7 +4,6 @@ import {
   localFriends,
   localGroups,
   localFriendRequests,
-  localErrChatLogs,
   localGroupRequests,
   localAdminGroupRequests,
   localConversations,
@@ -39,7 +38,6 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultLocalBlack = locaBlacks(db);
     const execResultLocalFriend = localFriends(db);
     const execResuLocalGroup = localGroups(db);
-    const execResuLocalErrChatLos = localErrChatLogs(db);
     const execResuLocalGroupRequest = localGroupRequests(db);
     const execResuLocalGroupMembers = localGroupMembers(db);
     const execResuLocalAdminGroupRequest = localAdminGroupRequests(db);
@@ -62,7 +60,6 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResuLocalGroup,
         execResuLocalGroupMembers,
         execResultlocaFendRequest,
-        execResuLocalErrChatLos,
         execResuLocalGroupRequest,
         execResuLocalAdminGroupRequest,
         execResultTempCacheLocalChatLogs,

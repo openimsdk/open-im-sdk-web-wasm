@@ -241,7 +241,7 @@ class SDK extends Emitter {
       wsAddr: params.wsAddr,
       dataDir: './',
       logLevel: params.logLevel || 5,
-      isLogStandardOutput: params.isLogStandardOutput || true,
+      isLogStandardOutput: params.isLogStandardOutput ?? true,
       logFilePath: './',
       isExternalExtensions: params.isExternalExtensions || false,
     };
@@ -582,8 +582,8 @@ class SDK extends Emitter {
     );
   };
 
-  getLoginUser = (operationID = uuidv4()) => {
-    return this._invoker<string>('getLoginUser', window.getLoginUser, [
+  getLoginUserID = (operationID = uuidv4()) => {
+    return this._invoker<string>('getLoginUserID', window.getLoginUserID, [
       operationID,
     ]);
   };

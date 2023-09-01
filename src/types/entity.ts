@@ -15,6 +15,7 @@ import {
   LogLevel,
   ApplicationHandleResult,
   Relationship,
+  OnlineState,
 } from './enum';
 export type WSEvent<T = unknown> = {
   event: CbEvents;
@@ -445,4 +446,10 @@ export type RtcInvite = {
   platformID: number;
   initiateTime?: number;
   busyLineUserIDList?: string[];
+};
+
+export type UserOnlineState = {
+  platformID: Platform;
+  status: OnlineState;
+  userID: string;
 };

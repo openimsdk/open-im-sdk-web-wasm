@@ -105,7 +105,7 @@ export function getAllGroupInfoByGroupIDOrGroupName(
     totalConditionStr = groupNameCondition;
   }
   if (isSearchGroupName && isSearchGroupID) {
-    totalConditionStr = groupIDCondition + 'or' + groupNameCondition;
+    totalConditionStr = groupIDCondition + ' or ' + groupNameCondition;
   }
   return db.exec(
     `
