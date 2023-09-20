@@ -144,9 +144,6 @@ export function initDatabaseAPI(): void {
   window.getMessageList = registeMethodOnWindow('getMessageList');
   window.getMessageListNoTime = registeMethodOnWindow('getMessageListNoTime');
   window.messageIfExists = registeMethodOnWindow('messageIfExists');
-  window.isExistsInErrChatLogBySeq = registeMethodOnWindow(
-    'isExistsInErrChatLogBySeq'
-  );
   window.messageIfExistsBySeq = registeMethodOnWindow('messageIfExistsBySeq');
   window.getAbnormalMsgSeq = registeMethodOnWindow('getAbnormalMsgSeq');
   window.getAbnormalMsgSeqList = registeMethodOnWindow('getAbnormalMsgSeqList');
@@ -306,6 +303,8 @@ export function initDatabaseAPI(): void {
   window.getLoginUser = registeMethodOnWindow('getLoginUser');
   window.insertLoginUser = registeMethodOnWindow('insertLoginUser');
   window.updateLoginUser = registeMethodOnWindow('updateLoginUser');
+  window.getStrangerInfo = registeMethodOnWindow('getStrangerInfo');
+  window.setStrangerInfo = registeMethodOnWindow('setStrangerInfo');
 
   // super groups
   window.getJoinedSuperGroupList = registeMethodOnWindow(

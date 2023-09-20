@@ -113,6 +113,12 @@ export type FullUserItem = {
   friendInfo: FriendUserItem | null;
   publicInfo: PublicUserItem | null;
 };
+export type FullUserItemWithCache = {
+  blackInfo: BlackUserItem | null;
+  friendInfo: FriendUserItem | null;
+  publicInfo: PublicUserItem | null;
+  groupMemberInfo: GroupMemberItem | null;
+};
 export type PublicUserItem = {
   nickname: string;
   userID: string;
@@ -449,7 +455,7 @@ export type RtcInvite = {
 };
 
 export type UserOnlineState = {
-  platformID: Platform;
+  platformIDs?: Platform[];
   status: OnlineState;
   userID: string;
 };

@@ -14,6 +14,7 @@ import {
   tempCacheLocalChatLogs,
   localNotification,
   localUploads,
+  localStranger,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
@@ -33,6 +34,7 @@ export async function init(userId: string, dir: string): Promise<string> {
     const db = await getInstance(`${dir}${userId}.sqlite`);
     const results: QueryExecResult[][] = [];
     const execResultLocalUploads = localUploads(db);
+    const execResultLocalStrangers = localStranger(db);
     const execResultLocalConversations = localConversations(db);
     const execResultLocalUsers = localUsers(db);
     const execResultLocalBlack = locaBlacks(db);
@@ -51,6 +53,7 @@ export async function init(userId: string, dir: string): Promise<string> {
     results.push(
       ...[
         execResultLocalUploads,
+        execResultLocalStrangers,
         execResultLocalConversations,
         execResultLocalUsers,
         execResultLocalSuperGroups,

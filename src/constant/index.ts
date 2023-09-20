@@ -36,6 +36,7 @@ export enum CbEvents {
   OnFriendDeleted = 'OnFriendDeleted',
   OnJoinedGroupAdded = 'OnJoinedGroupAdded',
   OnJoinedGroupDeleted = 'OnJoinedGroupDeleted',
+  OnGroupDismissed = 'OnGroupDismissed',
   OnGroupMemberAdded = 'OnGroupMemberAdded',
   OnGroupMemberDeleted = 'OnGroupMemberDeleted',
   OnGroupApplicationAdded = 'OnGroupApplicationAdded',

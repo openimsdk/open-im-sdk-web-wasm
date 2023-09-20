@@ -12,3 +12,4 @@ export * from './groupRequest';
 export * from './groupMember';
 export * from './tempCacheChatLogs';
 export * from './upload';
+export * from './stranger';

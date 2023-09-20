@@ -336,6 +336,14 @@ export async function getConversationByUserID(userID: string): Promise<string> {
 
     const execResult = databaseGetConversationByUserID(db, userID);
 
+    if (execResult.length === 0) {
+      return formatResponse(
+        '',
+        DatabaseErrorCode.ErrorNoRecord,
+        `no conversation with userID ${userID}`
+      );
+    }
+
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [
         'isPinned',

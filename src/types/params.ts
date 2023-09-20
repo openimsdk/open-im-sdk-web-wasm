@@ -182,13 +182,13 @@ export type SetGroupVerificationParams = {
   verification: GroupVerificationType;
   groupID: string;
 };
-export type setPrvParams = {
-  conversationID: string;
-  isPrivate: boolean;
-};
-export type setBurnDurationParams = {
+export type SetBurnDurationParams = {
   conversationID: string;
   burnDuration: number;
+};
+export type GetUserInfoWithCacheParams = {
+  userIDList: string[];
+  groupID: string;
 };
 export type AtMsgParams = {
   text: string;

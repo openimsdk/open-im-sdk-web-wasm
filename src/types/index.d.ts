@@ -33,7 +33,6 @@ declare global {
     getMessageList: DatabaseApi;
     getMessageListNoTime: DatabaseApi;
     messageIfExists: DatabaseApi;
-    isExistsInErrChatLogBySeq: DatabaseApi;
     messageIfExistsBySeq: DatabaseApi;
     getAbnormalMsgSeq: DatabaseApi;
     getAbnormalMsgSeqList: DatabaseApi;
@@ -101,6 +100,8 @@ declare global {
     getLoginUser: DatabaseApi;
     insertLoginUser: DatabaseApi;
     updateLoginUser: DatabaseApi;
+    getStrangerInfo: DatabaseApi;
+    setStrangerInfo: DatabaseApi;
     getJoinedSuperGroupList: DatabaseApi;
     getJoinedSuperGroupIDList: DatabaseApi;
     getSuperGroupInfoByGroupID: DatabaseApi;
@@ -356,6 +357,11 @@ declare global {
     getUsersInfo: (
       operationID: string,
       userIDList: string[]
+    ) => Promise<string>;
+    getUsersInfoWithCache: (
+      operationID: string,
+      userIDList: string[],
+      groupID: string
     ) => Promise<string>;
     setSelfInfo: (operationID: string, userInfo: string[]) => Promise<string>;
     createTextAtMessage: (
@@ -715,6 +721,16 @@ declare global {
     ) => Promise<string>;
     uploadFile: (operationID: string, upload: UploadParams) => Promise<string>;
     networkStatusChanged: (operationID: string) => Promise<string>;
+    subscribeUsersStatus: (
+      userIDList: string[],
+      operationID: string
+    ) => Promise<string>;
+    unsubscribeUsersStatus: (
+      userIDList: string[],
+      operationID: string
+    ) => Promise<string>;
+    getSubscribeUsersStatus: (operationID: string) => Promise<string>;
+    getUserStatus: (operationID: string) => Promise<string>;
 
     signalingInvite: (...args) => Promise<string>;
     signalingInviteInGroup: (...args) => Promise<string>;

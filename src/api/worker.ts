@@ -15,7 +15,6 @@ import {
   getMessageList,
   getMessageListNoTime,
   messageIfExists,
-  isExistsInErrChatLogBySeq,
   searchMessageByKeyword,
   searchMessageByContentType,
   searchMessageByContentTypeAndKeyword,
@@ -51,6 +50,8 @@ import {
   getLoginUser,
   insertLoginUser,
   updateLoginUser,
+  getStrangerInfo,
+  setStrangerInfo,
 
   // super group
   getJoinedSuperGroupList,
@@ -214,7 +215,6 @@ rpc.registerMethod('batchInsertMessageList', batchInsertMessageList);
 rpc.registerMethod('getMessageList', getMessageList);
 rpc.registerMethod('getMessageListNoTime', getMessageListNoTime);
 rpc.registerMethod('messageIfExists', messageIfExists);
-rpc.registerMethod('isExistsInErrChatLogBySeq', isExistsInErrChatLogBySeq);
 rpc.registerMethod('searchMessageByKeyword', searchMessageByKeyword);
 rpc.registerMethod('searchMessageByContentType', searchMessageByContentType);
 rpc.registerMethod(
@@ -302,6 +302,8 @@ rpc.registerMethod('getAllConversations', getAllConversations);
 rpc.registerMethod('getLoginUser', getLoginUser);
 rpc.registerMethod('insertLoginUser', insertLoginUser);
 rpc.registerMethod('updateLoginUser', updateLoginUser);
+rpc.registerMethod('getStrangerInfo', getStrangerInfo);
+rpc.registerMethod('setStrangerInfo', setStrangerInfo);
 
 rpc.registerMethod('getJoinedSuperGroupList', getJoinedSuperGroupList);
 rpc.registerMethod('getJoinedSuperGroupIDList', getJoinedSuperGroupIDList);

@@ -32,6 +32,7 @@ import {
   GetHistoryMsgParams,
   GetOneConversationParams,
   GetOneCveParams,
+  GetUserInfoWithCacheParams,
   GroupBaseInfo,
   ImageMsgParams,
   InitAndLoginConfig,
@@ -56,7 +57,7 @@ import {
   SearchGroupParams,
   SearchLocalParams,
   SendMsgParams,
-  setBurnDurationParams,
+  SetBurnDurationParams,
   SetConversationMsgDestructParams,
   SetConversationMsgDestructTimeParams,
   SetDraftParams,
@@ -64,7 +65,7 @@ import {
   SetGroupVerificationParams,
   SetMemberAuthParams,
   SetMessageLocalExParams,
-  setPrvParams,
+  SetPrvParams,
   SignalingInviteParams,
   SoundMsgParams,
   SouondMsgFullParams,
@@ -86,6 +87,7 @@ import {
   FriendshipInfo,
   FriendUserItem,
   FullUserItem,
+  FullUserItemWithCache,
   GroupApplicationItem,
   GroupItem,
   GroupMemberItem,
@@ -94,6 +96,7 @@ import {
   SearchedFriendsInfo,
   SearchMessageResult,
   SelfUserInfo,
+  UserOnlineState,
   WSEvent,
   WsResponse,
 } from '../types/entity';
@@ -533,7 +536,7 @@ class SDK extends Emitter {
   };
 
   setConversationPrivateChat = <T>(
-    params: setPrvParams,
+    params: SetPrvParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -544,7 +547,7 @@ class SDK extends Emitter {
   };
 
   setConversationBurnDuration = <T>(
-    params: setBurnDurationParams,
+    params: SetBurnDurationParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -601,6 +604,16 @@ class SDK extends Emitter {
       operationID,
       JSON.stringify(data),
     ]);
+  };
+  getUsersInfoWithCache = (
+    data: GetUserInfoWithCacheParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<FullUserItemWithCache[]>(
+      'getUsersInfoWithCache',
+      window.getUsersInfoWithCache,
+      [operationID, JSON.stringify(data.userIDList), data.groupID]
+    );
   };
 
   setSelfInfo = <T>(data: PartialUserItem, operationID = uuidv4()) => {
@@ -1378,6 +1391,34 @@ class SDK extends Emitter {
         cause: '',
       }),
     ]);
+  };
+  subscribeUsersStatus = (data: string[], operationID = uuidv4()) => {
+    return this._invoker<UserOnlineState[]>(
+      'subscribeUsersStatus ',
+      window.subscribeUsersStatus,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  unsubscribeUsersStatus = (data: string[], operationID = uuidv4()) => {
+    return this._invoker<UserOnlineState[]>(
+      'unsubscribeUsersStatus ',
+      window.unsubscribeUsersStatus,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+  getUserStatus = (operationID = uuidv4()) => {
+    return this._invoker<UserOnlineState[]>(
+      'getUserStatus ',
+      window.getUserStatus,
+      [operationID]
+    );
+  };
+  getSubscribeUsersStatus = (operationID = uuidv4()) => {
+    return this._invoker<UserOnlineState[]>(
+      'getSubscribeUsersStatus ',
+      window.getSubscribeUsersStatus,
+      [operationID]
+    );
   };
   signalingInvite = <T>(
     data: SignalingInviteParams,

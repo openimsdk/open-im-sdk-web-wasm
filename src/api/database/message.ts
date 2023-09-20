@@ -22,7 +22,6 @@ import {
   batchInsertMessageList as databaseBatchInsertMessageList,
   getMessageList as databaseGetMesageList,
   messageIfExists as databaseMessageIfExists,
-  isExistsInErrChatLogBySeq as databaseIsExistsInErrChatLogBySeq,
   searchMessageByKeyword as databaseSearchMessageByKeyword,
   searchMessageByContentType as databaseSearchMessageByContentType,
   searchMessageByContentTypeAndKeyword as databaseSearchMessageByContentTypeAndKeyword,
@@ -94,7 +93,7 @@ export async function getAlreadyExistSeqList(
         'isRead',
         'isReact',
         'isExternalExtensions',
-      ])[0] ?? []
+      ]).map(item => item.seq) ?? []
     );
   } catch (e) {
     console.error(e);
@@ -670,24 +669,6 @@ export async function messageIfExists(
     const db = await getInstance();
 
     const execResult = databaseMessageIfExists(db, conversationID, clientMsgID);
-
-    return formatResponse(execResult.length !== 0);
-  } catch (e) {
-    console.error(e);
-
-    return formatResponse(
-      undefined,
-      DatabaseErrorCode.ErrorInit,
-      JSON.stringify(e)
-    );
-  }
-}
-
-export async function isExistsInErrChatLogBySeq(seq: number): Promise<string> {
-  try {
-    const db = await getInstance();
-
-    const execResult = databaseIsExistsInErrChatLogBySeq(db, seq);
 
     return formatResponse(execResult.length !== 0);
   } catch (e) {
