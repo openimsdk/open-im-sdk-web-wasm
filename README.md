@@ -1,106 +1,179 @@
-## use demo
+# JavaScript/TypeScript Client SDK for OpenIM 👨‍💻💬
 
-[Repository](https://github.com/OpenIMSDK/Open-IM-PC-Web-Demo)
+Use this SDK to add instant messaging capabilities to your JavaScript/TypeScript app. By connecting to a self-hosted [OpenIM](https://www.openim.online/) server, you can quickly integrate instant messaging capabilities into your app with just a few lines of code.
 
-## Integration steps(Webpack5+)
+The underlying SDK core is implemented in Go. JavaScript handles the logic of the SQL layer by virtualizing SQLite and storing it in IndexDB using [sql.js](https://sql.js.org/). The SDK exposes a re-encapsulated API for easy usage.
 
-### 1. Add dependencies
+## Documentation 📚
 
-```bash
-npm install open-im-sdk-wasm
+Visit [https://doc.rentsoft.cn/](https://doc.rentsoft.cn/) for detailed documentation and guides.
+
+For the SDK reference, see [https://doc.rentsoft.cn/sdks/quickstart/browser](https://doc.rentsoft.cn/sdks/quickstart/browser).
+
+## Installation 💻
+
+### Adding Dependencies
+
+```shell
+npm install open-im-sdk-wasm --save
 ```
 
-### 2. Obtain static resources required by wasm
+### Obtaining Required Static Resources for WASM
 
-> Find the `open-im-sdk-wasm` subdirectory in the `node_modules` directory under the project root directory, and copy all the files in the `assets` folder to the project public resource directory (public).
+Follow these steps to obtain the static resources required for WebAssembly (WASM):
 
-- Document List
+1. Locate the `open-im-sdk-wasm` subdirectory in the `node_modules` directory of your project. Copy all the files in the `assets` folder to your project's public resource directory.
 
-```bash
-openIM.wasm
-sql-wasm.wasm
-wasm_exec.js
-```
+   The files to be copied are:
 
-- After the copy is complete, import the `wasm_exec.js` file through the script tag in your `index.html` file.
+   - `openIM.wasm`
+   - `sql-wasm.wasm`
+   - `wasm_exec.js`
 
-### 3. Import SDK
+2. After copying the files, import the `wasm_exec.js` file in your `index.html` file using a `<script>` tag.
 
-- Import SDK
+### Possible Issues ❗
 
-```ts
-import { getSDK } from 'open-im-sdk-wasm';
+#### For Webpack 5+
 
-const OpenIM = getSDK();
-```
+Add the following configuration to your Webpack configuration:
 
-- possible problems
-  ![webpack5_error](./assets/webpack5_error.png)
-
-- solution
-  > The new configuration in the webpack configuration is as follows
-
-```bash
+```js
 resolve: {
-      fallback: {
-        path: false,
-        crypto: false,
-      },
-    },
+  fallback: {
+    fs: false,
+    path: false,
+    crypto: false,
+  },
+},
 ```
 
-## Integration steps(Vite、Webpack4)
+#### For Webpack 4 or Vite
 
-> The first and second steps are the same as above Webpack5+ import steps.
+**Note:**
+If you are using `Webpack 4`, you will also need to install the worker loader.
 
-### Import SDK
-
-#### Copy the lib directory in the npm package to the project, such as: src/utils/lib
-
-#### If it is Webpack4, also need to introduce woker loader
-
-- Install `worker-loader` and `worker-plugin`
-
-```bash
+```shell
 npm install worker-loader worker-plugin -D
 ```
 
-- Add configuration in webpack
+Add the following configuration to your Webpack configuration:
 
 ```js
 const WorkerPlugin = require("worker-plugin");
 
-...
-plugins: [new WorkerPlugin()]
-...
+// ...
+
+plugins: [new WorkerPlugin()],
+
+// ...
 ```
 
-#### Modify the import method of web worker in the lib/api/index.js file.
+Follow these steps:
 
-- Webpack4.x
+1. Copy the `lib` directory from the npm package to your project (e.g., `src/utils/lib`).
 
-```js
-+ import IMWorker from 'worker-loader!./worker.js';
+2. Modify the import method of the web worker in the `lib/api/index.js` file.
 
-- worker = new Worker(new URL('./worker.js', import.meta.url));
-+ worker = new IMWorker();
-```
+   `````js
+   // For Webpack 4:
+   + import IMWorker from 'worker-loader!./worker.js';
+   // For Vite:
+   + import IMWorker from './worker?worker';
+   
+   - worker = new Worker(new URL('./worker.js', import.meta.url));
+   + worker = new IMWorker();
+   `````
 
-- Vite
+## Usage 🚀
 
-```js
-+ import IMWorker from './worker?worker';
+The following examples demonstrate how to use the SDK. TypeScript is used, providing complete type hints.
 
-- worker = new Worker(new URL('./worker.js', import.meta.url));
-+ worker = new IMWorker();
-```
+### Importing the SDK
 
-#### Import
-
-> The path is the path where `lib` is placed after copying
-
-```ts
-import { getSDK } from '@/utils/lib';
+```typescript
+import { getSDK } from 'open-im-sdk-wasm';
+// or your own path after copying
+// import { getSDK } from '@/utils/lib';
 
 const OpenIM = getSDK();
 ```
+
+### Logging In and Listening for Connection Status
+
+```typescript
+import { CbEvents } from 'open-im-sdk-wasm';
+import type { WSEvent } from 'open-im-sdk-wasm';
+
+OpenIM.on(CbEvents.OnConnecting, handleConnecting);
+OpenIM.on(CbEvents.OnConnectFailed, handleConnectFailed);
+OpenIM.on(CbEvents.OnConnectSuccess, handleConnectSuccess);
+
+OpenIM.login({
+  userID: 'IM user ID',
+  token: 'IM user token',
+  platformID: 5,
+  apiAddr: 'http://ip:10002',
+  wsAddr: 'ws://ip:10001',
+});
+
+function handleConnecting() {
+  // Connecting...
+}
+
+function handleConnectFailed({ errCode, errMsg }: WSEvent) {
+  // Connection failed ❌
+  console.log(errCode, errMsg);
+}
+
+function handleConnectSuccess() {
+  // Connection successful ✅
+}
+```
+
+To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://doc.rentsoft.cn/restapi/userManagement/userRegister) for details.
+
+### Receiving and Sending Messages 💬
+
+OpenIM makes it easy to send and receive messages. By default, there is no restriction on having a friend relationship to send messages (although you can configure other policies on the server). If you know the user ID of the recipient, you can conveniently send a message to them.
+
+```typescript
+import { CbEvents } from 'open-im-sdk-wasm';
+import type { WSEvent, MessageItem } from 'open-im-sdk-wasm';
+
+// Listenfor new messages 📩
+OpenIM.on(CbEvents.OnRecvNewMessages, handleNewMessages);
+
+const message = (await OpenIM.createTextMessage('hello openim')).data;
+
+OpenIM.sendMessage({
+  recvID: 'recipient user ID',
+  groupID: '',
+  message,
+})
+  .then(() => {
+    // Message sent successfully ✉️
+  })
+  .catch(err => {
+    // Failed to send message ❌
+    console.log(err);
+  });
+
+function handleNewMessages({ data }: WSEvent<MessageItem[]>) {
+  // New message list 📨
+  console.log(data);
+}
+```
+
+## Examples 🌟
+
+You can find a demo web app that uses the SDK in the [openim-pc-web-demo](https://github.com/openimsdk/open-im-pc-web-demo) repository.
+
+## Browser Support 🌐
+
+| Browser             | Desktop OS            | Mobile OS |
+| ------------------- | --------------------- | --------- |
+| Chrome (61+)        | Windows, macOS, Linux | Android   |
+| Firefox (58+)       | Windows, macOS, Linux | Android   |
+| Safari (15+)        | macOS                 | iOS       |
+| Edge (Chromium 16+) | Windows, macOS        |           |
