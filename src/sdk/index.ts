@@ -29,6 +29,7 @@ import {
   GetAdvancedHistoryMsgParams,
   GetGroupMemberByTimeParams,
   GetGroupMemberParams,
+  GetGroupMessageReaderParams,
   GetHistoryMsgParams,
   GetOneConversationParams,
   GetOneCveParams,
@@ -56,6 +57,7 @@ import {
   SearchGroupMemberParams,
   SearchGroupParams,
   SearchLocalParams,
+  SendGroupReadReceiptParams,
   SendMsgParams,
   SetBurnDurationParams,
   SetConversationMsgDestructParams,
@@ -181,7 +183,7 @@ class SDK extends Emitter {
           try {
             data = JSON.parse(data);
           } catch (error) {
-            console.log('SDK => parse error ', error);
+            // parse error
           }
         }
         response.data = data;
@@ -228,7 +230,7 @@ class SDK extends Emitter {
           try {
             parsed.data = JSON.parse(parsed.data as string);
           } catch (error) {
-            console.log('SDK => parse error ', error);
+            // parse error
           }
         }
 
@@ -329,6 +331,37 @@ class SDK extends Emitter {
         operationID,
         params.conversationID,
         JSON.stringify(params.clientMsgIDList),
+      ]
+    );
+  };
+  sendGroupMessageReadReceipt = <T>(
+    params: SendGroupReadReceiptParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'sendGroupMessageReadReceipt',
+      window.sendGroupMessageReadReceipt,
+      [
+        operationID,
+        params.conversationID,
+        JSON.stringify(params.clientMsgIDList),
+      ]
+    );
+  };
+  getGroupMessageReaderList = <T>(
+    params: GetGroupMessageReaderParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>(
+      'getGroupMessageReaderList',
+      window.getGroupMessageReaderList,
+      [
+        operationID,
+        params.conversationID,
+        params.clientMsgID,
+        params.filter,
+        params.offset,
+        params.count,
       ]
     );
   };

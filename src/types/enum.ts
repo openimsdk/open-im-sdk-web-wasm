@@ -134,3 +134,7 @@ export enum OnlineState {
   Online = 1,
   Offline = 0,
 }
+export enum GroupMessageReaderFilter {
+  Readed = 0,
+  UnRead = 1,
+}

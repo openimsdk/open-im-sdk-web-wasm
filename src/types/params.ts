@@ -17,6 +17,7 @@ import {
   GroupMemberRole,
   GroupMemberFilter,
   LogLevel,
+  GroupMessageReaderFilter,
 } from './enum';
 
 export type InitAndLoginConfig = {
@@ -53,6 +54,17 @@ export type GetHistoryMsgParams = {
 export type MarkNotiParams = {
   conversationID: string;
   clientMsgIDList: string[];
+};
+export type SendGroupReadReceiptParams = {
+  conversationID: string;
+  clientMsgIDList: string[];
+};
+export type GetGroupMessageReaderParams = {
+  conversationID: string;
+  clientMsgID: string;
+  filter: GroupMessageReaderFilter;
+  offset: number;
+  count: number;
 };
 export type GetGroupMemberParams = {
   groupID: string;

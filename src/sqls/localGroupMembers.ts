@@ -117,12 +117,12 @@ export function getGroupMemberListSplit(
   groupID: string,
   filter: number,
   offset: number,
-  count: number
+  count: number,
+  loginUserID: string
 ): QueryExecResult[] {
   let condition = `
     SELECT * FROM local_group_members 
         WHERE group_id = "${groupID}" 
-        And role_level > 0 
         ORDER BY role_level DESC,join_time ASC 
     LIMIT ${count} OFFSET ${offset}
     `;
@@ -130,18 +130,51 @@ export function getGroupMemberListSplit(
     condition = `
         SELECT * FROM local_group_members 
             WHERE group_id = "${groupID}" 
-            And role_level = 1 
+            And role_level = 100 
+        LIMIT ${count} OFFSET ${offset}
+        `;
+  }
+  if (filter === 2) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And role_level = 60 
         ORDER BY join_time ASC 
         LIMIT ${count} OFFSET ${offset}
         `;
   }
-
+  if (filter === 3) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And role_level = 20 
+        ORDER BY join_time ASC 
+        LIMIT ${count} OFFSET ${offset}
+        `;
+  }
   if (filter === 4) {
     condition = `
         SELECT * FROM local_group_members 
             WHERE group_id = "${groupID}" 
-            And ( role_level = 1 OR role_level = 3 )  
+            And ( role_level = 20 OR role_level = 60 )  
         ORDER BY role_level DESC,join_time ASC 
+        LIMIT ${count} OFFSET ${offset}
+        `;
+  }
+  if (filter === 5) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And ( role_level = 100 OR role_level = 60 )  
+        ORDER BY role_level DESC,join_time ASC 
+        LIMIT ${count} OFFSET ${offset}
+        `;
+  }
+  if (filter === 6) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And user_id != "${loginUserID}" 
         LIMIT ${count} OFFSET ${offset}
         `;
   }
@@ -157,7 +190,7 @@ export function getGroupMemberOwnerAndAdmin(
       SELECT * FROM local_group_members 
       WHERE group_id = "${groupID}" 
       And role_level > 1 
-      ORDER BY join_time DESC
+      ORDER BY role_level DESC
         `
   );
 }

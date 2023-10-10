@@ -409,6 +409,7 @@ export function updateMsgSenderFaceURLAndSenderNickname(
   faceURL: string,
   nickname: string
 ): QueryExecResult[] {
+  _initLocalChatLogsTable(db, conversationID);
   return db.exec(
     `
       UPDATE chat_logs_${conversationID} SET sender_face_url = '${faceURL}', sender_nick_name = '${nickname}' WHERE send_id = '${sendID}';

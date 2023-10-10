@@ -259,6 +259,16 @@ declare global {
       conversationID: string,
       msgIDListStr: string
     ) => Promise<string>;
+    sendGroupMessageReadReceipt: (
+      operationID: string,
+      conversationID: string,
+      msgIDListStr: string
+    ) => Promise<string>;
+    getGroupMessageReaderList: (
+      operationID: string,
+      conversationID: string,
+      clientMsgID: string
+    ) => Promise<string>;
     getGroupMemberList: (
       operationID: string,
       groupID: string,

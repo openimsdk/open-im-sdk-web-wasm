@@ -197,7 +197,8 @@ export async function getGroupMemberListSplit(
   groupID: string,
   filter: number,
   offset: number,
-  count: number
+  count: number,
+  loginUserID: string
 ): Promise<string> {
   try {
     const db = await getInstance();
@@ -207,7 +208,8 @@ export async function getGroupMemberListSplit(
       groupID,
       filter,
       offset,
-      count
+      count,
+      loginUserID
     );
 
     return formatResponse(
