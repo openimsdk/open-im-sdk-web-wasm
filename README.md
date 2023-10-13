@@ -1,6 +1,6 @@
 # JavaScript/TypeScript Client SDK for OpenIM 👨‍💻💬
 
-Use this SDK to add instant messaging capabilities to your XXX app. By connecting to a self-hosted [OpenIM](https://www.openim.online/) server, you can quickly integrate instant messaging capabilities into your app with just a few lines of code.
+Use this SDK to add instant messaging capabilities to your application. By connecting to a self-hosted [OpenIM](https://www.openim.online/) server, you can quickly integrate instant messaging capabilities into your app with just a few lines of code.
 
 The underlying SDK core is implemented in [OpenIM SDK Core](https://github.com/openimsdk/openim-sdk-core). Using the [WebAssembly](https://webassembly.org/) support provided by Go language, it can be compiled into wasm for web integration. The web interacts with the [OpenIM SDK Core](https://github.com/openimsdk/openim-sdk-core) through JSON, and the SDK exposes a re-encapsulated API for easy usage. In terms of data storage, JavaScript handles the logic of the SQL layer by virtualizing SQLite and storing it in IndexedDB using sql.js (https://sql.js.org/).
 
