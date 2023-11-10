@@ -60,15 +60,6 @@ export type AtUsersInfoItem = {
   atUserID: string;
   groupNickname: string;
 };
-export type GroupInitInfo = {
-  groupID?: string;
-  groupType: GroupType;
-  groupName: string;
-  introduction?: string;
-  notification?: string;
-  faceURL?: string;
-  ex?: string;
-};
 export type GroupApplicationItem = {
   createTime: number;
   creatorUserID: string;
@@ -345,6 +336,7 @@ export type UploadProgress = {
 };
 export type GroupHasReadInfo = {
   hasReadCount: number;
+  unreadCount: number;
   hasReadUserIDList: string[];
   groupMemberCount: number;
 };
@@ -458,4 +450,15 @@ export type UserOnlineState = {
   platformIDs?: Platform[];
   status: OnlineState;
   userID: string;
+};
+
+export type GroupMessageReceiptInfo = {
+  conversationID: string;
+  groupMessageReadInfo: GroupMessageReadInfo[];
+};
+export type GroupMessageReadInfo = {
+  clientMsgID: string;
+  hasReadCount: number;
+  unreadCount: number;
+  readMembers: GroupMemberItem[];
 };

@@ -8,6 +8,7 @@ export enum AllowType {
   NotAllowed = 1,
 }
 export enum GroupType {
+  Group = 2,
   WorkingGroup = 2,
 }
 export enum GroupJoinSource {
@@ -71,7 +72,6 @@ export enum MessageType {
   OANotification = 1400,
 
   GroupCreated = 1501,
-  GroupInfoUpdated = 1502,
   MemberQuit = 1504,
   GroupOwnerTransferred = 1507,
   MemberKicked = 1508,
@@ -82,21 +82,16 @@ export enum MessageType {
   GroupMemberCancelMuted = 1513,
   GroupMuted = 1514,
   GroupCancelMuted = 1515,
-  GroupMemberInfoUpdated = 1516,
-  GroupMemberToAdmin = 1517,
-  GroupAdminToNomal = 1518,
   GroupAnnouncementUpdated = 1519,
   GroupNameUpdated = 1520,
   BurnMessageChange = 1701,
 
   // notification
   RevokeMessage = 2101,
-  HasReadReceiptMessage = 2150,
-  GroupHasReadReceipt = 2155,
 }
 export enum SessionType {
   Single = 1,
-  Group = 2,
+  Group = 3,
   WorkingGroup = 3,
   Notification = 4,
 }

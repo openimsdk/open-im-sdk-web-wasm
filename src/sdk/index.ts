@@ -34,7 +34,6 @@ import {
   GetOneConversationParams,
   GetOneCveParams,
   GetUserInfoWithCacheParams,
-  GroupBaseInfo,
   ImageMsgParams,
   InitAndLoginConfig,
   InsertGroupMsgParams,
@@ -45,8 +44,7 @@ import {
   LocationMsgParams,
   MarkNotiParams,
   MeetingOperateStreamParams,
-  MemberExParams,
-  MemberNameParams,
+  UpdateMemberInfoParams,
   MergerMsgParams,
   PartialUserItem,
   PinCveParams,
@@ -78,6 +76,7 @@ import {
   UploadFileParams,
   VideoMsgFullParams,
   VideoMsgParams,
+  MemberNameParams,
 } from '../types/params';
 
 import {
@@ -413,6 +412,7 @@ class SDK extends Emitter {
       window.createImageMessageByURL,
       [
         operationID,
+        params.sourcePath,
         JSON.stringify(params.sourcePicture),
         JSON.stringify(params.bigPicture),
         JSON.stringify(params.snapshotPicture),
@@ -1250,7 +1250,10 @@ class SDK extends Emitter {
       JSON.stringify(data),
     ]);
   };
-  setGroupInfo = <T>(data: GroupBaseInfo, operationID = uuidv4()) => {
+  setGroupInfo = <T>(
+    data: Partial<GroupItem> & { groupID: string },
+    operationID = uuidv4()
+  ) => {
     return this._invoker<T>('setGroupInfo ', window.setGroupInfo, [
       operationID,
       JSON.stringify(data),
@@ -1266,7 +1269,10 @@ class SDK extends Emitter {
       [operationID, data.groupID, data.userID, data.groupMemberNickname]
     );
   };
-  setGroupMemberInfo = <T>(data: MemberExParams, operationID = uuidv4()) => {
+  setGroupMemberInfo = <T>(
+    data: UpdateMemberInfoParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<T>('setGroupMemberInfo ', window.setGroupMemberInfo, [
       operationID,
       JSON.stringify(data),
@@ -1602,6 +1608,7 @@ class SDK extends Emitter {
       [operationID, data.conversationID, data.msgDestructTime]
     );
   };
+  fileMapSet = (uuid: string, file: File) => fileMapSet(uuid, file);
 }
 
 let instance: SDK;

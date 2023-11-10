@@ -15,6 +15,7 @@ import {
   localNotification,
   localUploads,
   localStranger,
+  localSendingMessages,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
@@ -46,7 +47,8 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultlocaFendRequest = localFriendRequests(db);
     const execResultLocalSuperGroups = localSuperGroups(db);
     const execResultTempCacheLocalChatLogs = tempCacheLocalChatLogs(db);
-    const execResultlocalNotification = localNotification(db);
+    const execResultLocalNotification = localNotification(db);
+    const execResultLocalSendMessages = localSendingMessages(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
 
@@ -66,7 +68,8 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResuLocalGroupRequest,
         execResuLocalAdminGroupRequest,
         execResultTempCacheLocalChatLogs,
-        execResultlocalNotification,
+        execResultLocalNotification,
+        execResultLocalSendMessages,
       ]
     );
 

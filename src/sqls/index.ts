@@ -14,3 +14,4 @@ export * from './tempCacheLocalChatLogs';
 export * from './localNotification';
 export * from './localUpload';
 export * from './localStranger';
+export * from './localSendingMessages';

@@ -229,6 +229,9 @@ export function initDatabaseAPI(): void {
   window.searchAllMessageByContentType = registeMethodOnWindow(
     'searchAllMessageByContentType'
   );
+  window.insertSendingMessage = registeMethodOnWindow('insertSendingMessage');
+  window.deleteSendingMessage = registeMethodOnWindow('deleteSendingMessage');
+  window.getAllSendingMessages = registeMethodOnWindow('getAllSendingMessages');
   // conversation
   window.getAllConversationListDB = registeMethodOnWindow(
     'getAllConversationList'

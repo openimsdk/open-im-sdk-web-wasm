@@ -66,6 +66,9 @@ declare global {
     deleteConversationMsgs: DatabaseApi;
     markConversationAllMessageAsRead: DatabaseApi;
     searchAllMessageByContentType: DatabaseApi;
+    insertSendingMessage: DatabaseApi;
+    deleteSendingMessage: DatabaseApi;
+    getAllSendingMessages: DatabaseApi;
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;

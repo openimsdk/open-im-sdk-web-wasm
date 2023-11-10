@@ -19,6 +19,9 @@ import {
   searchMessageByContentType,
   searchMessageByContentTypeAndKeyword,
   updateMsgSenderFaceURLAndSenderNickname,
+  insertSendingMessage,
+  deleteSendingMessage,
+  getAllSendingMessages,
 
   // conversation
   getAllConversationList,
@@ -260,6 +263,9 @@ rpc.registerMethod(
   'searchAllMessageByContentType',
   searchAllMessageByContentType
 );
+rpc.registerMethod('insertSendingMessage', insertSendingMessage);
+rpc.registerMethod('deleteSendingMessage', deleteSendingMessage);
+rpc.registerMethod('getAllSendingMessages', getAllSendingMessages);
 
 // conversation
 rpc.registerMethod('getAllConversationList', getAllConversationList);

@@ -3,10 +3,10 @@ import {
   OfflinePush,
   PicBaseInfo,
   AtUsersInfoItem,
-  GroupInitInfo,
   MessageItem,
   SelfUserInfo,
   RtcInvite,
+  GroupItem,
 } from './entity';
 import {
   AllowType,
@@ -89,6 +89,7 @@ export type ImageMsgParams = {
   sourcePicture: PicBaseInfo;
   bigPicture: PicBaseInfo;
   snapshotPicture: PicBaseInfo;
+  sourcePath: string;
 };
 export type VideoMsgParams = {
   videoPath: string;
@@ -154,9 +155,6 @@ export type UpdateMemberNameParams = {
   userID: string;
   GroupMemberNickname: string;
 };
-export type GroupBaseInfo = Partial<Omit<GroupInitInfo, 'groupType'>> & {
-  groupID: string;
-};
 export type JoinGroupParams = {
   groupID: string;
   reqMsg: string;
@@ -200,7 +198,7 @@ export type SetBurnDurationParams = {
 };
 export type GetUserInfoWithCacheParams = {
   userIDList: string[];
-  groupID: string;
+  groupID?: string;
 };
 export type AtMsgParams = {
   text: string;
@@ -336,25 +334,22 @@ export type SetMemberAuthParams = {
 };
 export type CreateGroupParams = {
   memberUserIDs: string[];
-  groupInfo: GroupInitInfo;
+  groupInfo: Partial<GroupItem>;
   adminUserIDs?: string[];
   ownerUserID?: string;
-};
-export type GroupInfoParams = Partial<GroupInitInfo> & {
-  groupID: string;
-  needVerification: GroupVerificationType;
-  lookMemberInfo: AllowType;
-  applyMemberFriend: AllowType;
 };
 export type MemberNameParams = {
   groupID: string;
   userID: string;
   groupMemberNickname: string;
 };
-export type MemberExParams = {
+export type UpdateMemberInfoParams = {
   groupID: string;
   userID: string;
-  ex: string;
+  nickname?: string;
+  faceURL?: string;
+  roleLevel?: GroupMemberRole;
+  ex?: string;
 };
 export type FindMessageParams = {
   conversationID: string;
