@@ -391,6 +391,7 @@ class SDK extends Emitter {
       window.createImageMessageByURL,
       [
         operationID,
+        params.sourcePath,
         JSON.stringify(params.sourcePicture),
         JSON.stringify(params.bigPicture),
         JSON.stringify(params.snapshotPicture),
