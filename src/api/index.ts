@@ -2,14 +2,6 @@ import { initBackend } from 'absurd-sql-optimized/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
 
-// @ts-ignore
-//  for vite
-// import IMWorker from './worker?worker';
-
-//  @ts-ignore
-//  for webpack4
-// import IMWorker from 'worker-loader!./worker.js';
-
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
 
@@ -18,11 +10,9 @@ function initWorker() {
     return;
   }
 
-  // for webpack4 or vite
-  // worker = new IMWorker();
-
-  // for webpack5
-  worker = new Worker(new URL('./worker.js', import.meta.url));
+  worker = new Worker(new URL('./worker.js', import.meta.url), {
+    type: 'module',
+  });
 
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
@@ -123,6 +113,7 @@ export function initDatabaseAPI(): void {
   window.updateUpload = registeMethodOnWindow('updateUpload');
   window.deleteUpload = registeMethodOnWindow('deleteUpload');
 
+  window.setSqlWasmPath = registeMethodOnWindow('setSqlWasmPath');
   window.initDB = registeMethodOnWindow('initDB');
   window.close = registeMethodOnWindow('close');
 

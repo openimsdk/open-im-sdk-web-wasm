@@ -21,6 +21,12 @@ import { formatResponse } from '@/utils';
 import { QueryExecResult } from '@jlongster/sql.js';
 import { getInstance, resetInstance } from './instance';
 
+let sqlWasmPath: string;
+
+export function setSqlWasmPath(wasmPath: string) {
+  sqlWasmPath = wasmPath;
+}
+
 export async function init(userId: string, dir: string): Promise<string> {
   console.info(
     `=> (database api) invoke init with args ${JSON.stringify({
@@ -32,7 +38,7 @@ export async function init(userId: string, dir: string): Promise<string> {
   try {
     console.time('SDK => (performance measure) init database used ');
 
-    const db = await getInstance(`${dir}${userId}.sqlite`);
+    const db = await getInstance(`${dir}${userId}.sqlite`, sqlWasmPath);
     const results: QueryExecResult[][] = [];
     const execResultLocalUploads = localUploads(db);
     const execResultLocalStrangers = localStranger(db);

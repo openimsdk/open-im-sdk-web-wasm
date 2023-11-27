@@ -20,6 +20,11 @@ import {
   GroupMessageReaderFilter,
 } from './enum';
 
+export type WasmPathConfig = {
+  coreWasmPath?: string;
+  sqlWasmPath?: string;
+};
+
 export type InitAndLoginConfig = {
   userID: string;
   token: string;

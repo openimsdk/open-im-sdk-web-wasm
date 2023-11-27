@@ -169,6 +169,7 @@ import {
   deleteUpload,
   getUpload,
   insertUpload,
+  setSqlWasmPath,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -202,6 +203,7 @@ rpc.registerMethod('insertUpload', insertUpload);
 rpc.registerMethod('updateUpload', updateUpload);
 rpc.registerMethod('deleteUpload', deleteUpload);
 
+rpc.registerMethod('setSqlWasmPath', setSqlWasmPath);
 rpc.registerMethod('initDB', init);
 rpc.registerMethod('close', close);
 

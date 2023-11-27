@@ -18,6 +18,7 @@ declare global {
     updateUpload: DatabaseApi;
     deleteUpload: DatabaseApi;
 
+    setSqlWasmPath: DatabaseApi;
     initDB: DatabaseApi;
     // message
     getMessage: DatabaseApi;

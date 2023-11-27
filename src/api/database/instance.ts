@@ -3,16 +3,15 @@
 import initSqlJs, { Database, SqlJsStatic } from '@jlongster/sql.js';
 import { SQLiteFS } from 'absurd-sql-optimized';
 import IndexedDBBackend from 'absurd-sql-optimized/dist/indexeddb-backend';
-
 (self as any).$RefreshReg$ = () => {};
 (self as any).$RefreshSig$ = () => () => {};
 
 let instance: Promise<Database> | undefined;
 let SQL: SqlJsStatic | undefined;
 
-async function InitializeDB(filePath: string) {
+async function InitializeDB(filePath: string, sqlWasmPath = '/sql-wasm.wasm') {
   if (!SQL) {
-    SQL = await initSqlJs({ locateFile: () => '/sql-wasm.wasm' });
+    SQL = await initSqlJs({ locateFile: () => sqlWasmPath });
     const sqlFS = new SQLiteFS(SQL.FS, new IndexedDBBackend());
 
     SQL.register_for_idb(sqlFS);
@@ -40,7 +39,10 @@ async function InitializeDB(filePath: string) {
   return db;
 }
 
-export function getInstance(filePath?: string): Promise<Database> {
+export function getInstance(
+  filePath?: string,
+  sqlWasmPath?: string
+): Promise<Database> {
   if (instance) {
     return instance;
   }
@@ -50,7 +52,7 @@ export function getInstance(filePath?: string): Promise<Database> {
   }
 
   instance = new Promise<Database>((resolve, reject) => {
-    const db = InitializeDB(filePath);
+    const db = InitializeDB(filePath, sqlWasmPath);
     db.then(res => resolve(res)).catch(err => reject(err));
   });
 

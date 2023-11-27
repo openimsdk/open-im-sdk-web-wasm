@@ -77,6 +77,7 @@ import {
   VideoMsgFullParams,
   VideoMsgParams,
   MemberNameParams,
+  WasmPathConfig,
 } from '../types/params';
 
 import {
@@ -1614,7 +1615,8 @@ class SDK extends Emitter {
 
 let instance: SDK;
 
-export function getSDK(url = '/openIM.wasm'): SDK {
+export function getSDK(config?: WasmPathConfig): SDK {
+  const { coreWasmPath = '/openIM.wasm', sqlWasmPath } = config || {};
   if (typeof window === 'undefined') {
     return {} as SDK;
   }
@@ -1623,7 +1625,11 @@ export function getSDK(url = '/openIM.wasm'): SDK {
     return instance;
   }
 
-  instance = new SDK(url);
+  instance = new SDK(coreWasmPath);
+
+  if (sqlWasmPath) {
+    window.setSqlWasmPath(sqlWasmPath);
+  }
 
   return instance;
 }
