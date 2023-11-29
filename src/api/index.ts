@@ -5,15 +5,41 @@ import { DatabaseErrorCode } from '@/constant';
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
 
+function supportsModuleWorkers() {
+  if (typeof Worker !== 'undefined' && 'type' in Worker.prototype) {
+    return true;
+  }
+  try {
+    const blob = new Blob([''], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    new Worker(url, { type: 'module' });
+    URL.revokeObjectURL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
 function initWorker() {
   if (typeof window === 'undefined') {
     return;
   }
 
-  worker = new Worker(new URL('./worker.js', import.meta.url), {
-    type: 'module',
-  });
+  // use for webpack 4
+  // const IMWorker = require('worker-loader!./worker.js');
+  // worker = new IMWorker.default();
 
+  // use for webpack5+ or vite
+  const isViteEnvironment = import.meta.url.includes('.vite/deps');
+  const isSupportModuleWorker = supportsModuleWorkers();
+  const getWorkerUrl = (url: URL) =>
+    url.href.replace('.vite/deps', 'open-im-sdk-wasm/lib');
+  const workerUrl = isSupportModuleWorker
+    ? new URL('worker.js', import.meta.url)
+    : new URL('worker-legacy.js', import.meta.url);
+  worker = new Worker(isViteEnvironment ? getWorkerUrl(workerUrl) : workerUrl, {
+    type: isSupportModuleWorker ? 'module' : 'classic',
+  });
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
