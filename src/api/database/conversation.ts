@@ -27,6 +27,7 @@ import {
   unPinConversation as databaseUnPinConversation,
   setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
   getAllConversations as databaseGetAllConversations,
+  searchConversations as databaseSearchConversations,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -699,6 +700,31 @@ export async function getAllConversations(): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetAllConversations(db);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isPinned',
+        'isPrivateChat',
+        'isNotInGroup',
+        'isMsgDestruct',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function searchConversations(keyword: string): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseSearchConversations(db, keyword);
 
     return formatResponse(
       converSqlExecResult(execResult[0], 'CamelCase', [

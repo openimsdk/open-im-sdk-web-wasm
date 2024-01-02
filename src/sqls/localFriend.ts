@@ -18,6 +18,7 @@ export function localFriends(db: Database): QueryExecResult[] {
           'face_url'         varchar(255),
           'ex'               varchar(1024),
           'attached_info'    varchar(1024),
+          'is_pinned'        numeric,
           primary key ('owner_user_id', 'friend_user_id')
       )       
       `
@@ -158,4 +159,20 @@ export function getFriendInfoList(
         where friend_user_id in (${values})
         `
   );
+}
+
+export function updateColumnsFriend(
+  db: Database,
+  friendUserIDs: string[],
+  localFriend: LocalFriend
+): QueryExecResult[] {
+  const values = friendUserIDs.map(v => `${v}`).join(',');
+  const sql = squel
+    .update()
+    .table('local_friends')
+    .setFields(localFriend)
+    .where(`friend_user_id IN (${values})`)
+    .toString();
+
+  return db.exec(sql);
 }

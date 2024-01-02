@@ -3,6 +3,7 @@ import {
   insertFriend as databaseInsertFriend,
   deleteFriend as databasedeleteFriend,
   updateFriend as databaseupdateFriend,
+  updateColumnsFriend as databaseupdateColumnsFriend,
   getAllFriendList as databaseGetAllFriendList,
   getPageFriendList as databaseGetPageFriendList,
   searchFriendList as databasesearchFriendList,
@@ -94,7 +95,7 @@ export async function getAllFriendList(loginUserID: string): Promise<string> {
     const execResult = databaseGetAllFriendList(db, loginUserID);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], {
+      converSqlExecResult(execResult[0], 'CamelCase', ['isPinned'], {
         name: 'nickname',
         friend_user_id: 'userID',
       })
@@ -126,7 +127,7 @@ export async function getPageFriendList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], {
+      converSqlExecResult(execResult[0], 'CamelCase', ['isPinned'], {
         name: 'nickname',
         friend_user_id: 'userID',
       })
@@ -160,7 +161,7 @@ export async function searchFriendList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], {
+      converSqlExecResult(execResult[0], 'CamelCase', ['isPinned'], {
         name: 'nickname',
         friend_user_id: 'userID',
       })
@@ -198,7 +199,7 @@ export async function getFriendInfoByFriendUserID(
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], {
+      converSqlExecResult(execResult[0], 'CamelCase', ['isPinned'], {
         name: 'nickname',
         friend_user_id: 'userID',
       })[0]
@@ -226,11 +227,42 @@ export async function getFriendInfoList(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], {
+      converSqlExecResult(execResult[0], 'CamelCase', ['isPinned'], {
         name: 'nickname',
         friend_user_id: 'userID',
       })
     );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function updateColumnsFriend(
+  friendUserIDListStr: string,
+  localFriendStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+    const localFriend = convertToSnakeCaseObject(
+      convertObjectField(JSON.parse(localFriendStr), {
+        userID: 'friend_user_id',
+        nickname: 'name',
+      })
+    ) as LocalFriend;
+
+    databaseupdateColumnsFriend(
+      db,
+      JSON.parse(friendUserIDListStr),
+      localFriend
+    );
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

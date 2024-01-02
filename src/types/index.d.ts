@@ -99,6 +99,7 @@ declare global {
     getAllSingleConversationIDList: DatabaseApi;
     getAllConversationIDList: DatabaseApi;
     getAllConversations: DatabaseApi;
+    searchConversations: DatabaseApi;
     // users
     getLoginUser: DatabaseApi;
     insertLoginUser: DatabaseApi;
@@ -165,6 +166,7 @@ declare global {
     getFriendInfoByFriendUserID: DatabaseApi;
     getFriendInfoList: DatabaseApi;
     getPageFriendList: DatabaseApi;
+    updateColumnsFriend: DatabaseApi;
 
     // groups
     insertGroup: DatabaseApi;

@@ -375,3 +375,16 @@ export function getAllConversations(db: Database): QueryExecResult[] {
     `
   );
 }
+
+export function searchConversations(
+  db: Database,
+  keyword: string
+): QueryExecResult[] {
+  return db.exec(
+    `
+    SELECT * FROM local_conversations
+    WHERE show_name LIKE '%${keyword}%'
+    ORDER BY latest_msg_send_time DESC
+    `
+  );
+}

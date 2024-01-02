@@ -169,6 +169,8 @@ import {
   deleteUpload,
   getUpload,
   insertUpload,
+  updateColumnsFriend,
+  searchConversations,
 } from '@/api/database';
 
 import { getInstance } from './database/instance';
@@ -304,6 +306,7 @@ rpc.registerMethod(
 );
 rpc.registerMethod('getAllConversationIDList', getAllConversationIDList);
 rpc.registerMethod('getAllConversations', getAllConversations);
+rpc.registerMethod('searchConversations', searchConversations);
 
 rpc.registerMethod('getLoginUser', getLoginUser);
 rpc.registerMethod('insertLoginUser', insertLoginUser);
@@ -422,6 +425,7 @@ rpc.registerMethod('searchFriendList', searchFriendList);
 rpc.registerMethod('getFriendInfoByFriendUserID', getFriendInfoByFriendUserID);
 rpc.registerMethod('getFriendInfoList', getFriendInfoList);
 rpc.registerMethod('getPageFriendList', getPageFriendList);
+rpc.registerMethod('updateColumnsFriend', updateColumnsFriend);
 
 // temp cache chatlogs
 rpc.registerMethod(

@@ -301,6 +301,7 @@ export function initDatabaseAPI(): void {
     'getAllConversationIDList'
   );
   window.getAllConversations = registeMethodOnWindow('getAllConversations');
+  window.searchConversations = registeMethodOnWindow('searchConversations');
 
   // users
   window.getLoginUser = registeMethodOnWindow('getLoginUser');
@@ -457,6 +458,7 @@ export function initDatabaseAPI(): void {
   );
   window.getFriendInfoList = registeMethodOnWindow('getFriendInfoList');
   window.getPageFriendList = registeMethodOnWindow('getPageFriendList');
+  window.updateColumnsFriend = registeMethodOnWindow('updateColumnsFriend');
 
   // groups
   window.insertGroup = registeMethodOnWindow('insertGroup');
