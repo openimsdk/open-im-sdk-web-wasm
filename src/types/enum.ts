@@ -70,8 +70,8 @@ export enum MessageType {
   FaceMessage = 115,
   FriendAdded = 1201,
   OANotification = 1400,
-
   GroupCreated = 1501,
+  GroupInfoUpdated = 1502,
   MemberQuit = 1504,
   GroupOwnerTransferred = 1507,
   MemberKicked = 1508,
@@ -85,8 +85,6 @@ export enum MessageType {
   GroupAnnouncementUpdated = 1519,
   GroupNameUpdated = 1520,
   BurnMessageChange = 1701,
-
-  // notification
   RevokeMessage = 2101,
 }
 export enum SessionType {

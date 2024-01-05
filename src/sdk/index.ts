@@ -347,11 +347,11 @@ class SDK extends Emitter {
       ]
     );
   };
-  getGroupMessageReaderList = <T>(
+  getGroupMessageReaderList = (
     params: GetGroupMessageReaderParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<GroupMemberItem[]>(
       'getGroupMessageReaderList',
       window.getGroupMessageReaderList,
       [
@@ -402,13 +402,13 @@ class SDK extends Emitter {
       }
     );
   };
-  createImageMessageByFile = <T>(
+  createImageMessageByFile = (
     params: ImageMsgParams & { file: File },
     operationID = uuidv4()
   ) => {
     params.sourcePicture.uuid = `${params.sourcePicture.uuid}/${params.file.name}`;
     fileMapSet(params.sourcePicture.uuid, params.file);
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createImageMessageByFile',
       window.createImageMessageByURL,
       [
@@ -515,7 +515,7 @@ class SDK extends Emitter {
       ]
     );
   };
-  sendMessageByBuffer = <T>(params: SendMsgParams, operationID = uuidv4()) => {
+  sendMessageByBuffer = (params: SendMsgParams, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
       title: '你有一条新消息',
       desc: '',
@@ -523,15 +523,19 @@ class SDK extends Emitter {
       iOSPushSound: '+1',
       iOSBadgeCount: true,
     };
-    return this._invoker<T>('sendMessageByBuffer', window.sendMessageByBuffer, [
-      operationID,
-      JSON.stringify(params.message),
-      params.recvID,
-      params.groupID,
-      JSON.stringify(offlinePushInfo),
-      params.fileArrayBuffer,
-      params.snpFileArrayBuffer,
-    ]);
+    return this._invoker<MessageItem>(
+      'sendMessageByBuffer',
+      window.sendMessageByBuffer,
+      [
+        operationID,
+        JSON.stringify(params.message),
+        params.recvID,
+        params.groupID,
+        JSON.stringify(offlinePushInfo),
+        params.fileArrayBuffer,
+        params.snpFileArrayBuffer,
+      ]
+    );
   };
 
   setMessageLocalEx = <T>(
@@ -550,11 +554,11 @@ class SDK extends Emitter {
     return this._invoker('exportDB', window.exportDB, [operationID]);
   }
 
-  getHistoryMessageListReverse = <T>(
+  getHistoryMessageListReverse = (
     params: GetHistoryMsgParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<AdvancedGetMessageResult>(
       'getHistoryMessageListReverse',
       window.getHistoryMessageListReverse,
       [operationID, JSON.stringify(params)]
@@ -685,13 +689,13 @@ class SDK extends Emitter {
       }
     );
   };
-  createSoundMessageByFile = <T>(
+  createSoundMessageByFile = (
     data: SoundMsgParams & { file: File },
     operationID = uuidv4()
   ) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
     fileMapSet(data.uuid, data.file);
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createSoundMessageByFile',
       window.createSoundMessageByURL,
       [operationID, JSON.stringify(data)],
@@ -714,7 +718,7 @@ class SDK extends Emitter {
     );
   };
 
-  createVideoMessageByFile = <T>(
+  createVideoMessageByFile = (
     data: VideoMsgParams & { videoFile: File; snapshotFile: File },
     operationID = uuidv4()
   ) => {
@@ -722,7 +726,7 @@ class SDK extends Emitter {
     data.snapshotUUID = `${data.snapshotUUID}/${data.snapshotFile.name}`;
     fileMapSet(data.videoUUID, data.videoFile);
     fileMapSet(data.snapshotUUID, data.snapshotFile);
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createVideoMessageByFile',
       window.createVideoMessageByURL,
       [operationID, JSON.stringify(data)],
@@ -745,13 +749,13 @@ class SDK extends Emitter {
     );
   };
 
-  createFileMessageByFile = <T>(
+  createFileMessageByFile = (
     data: FileMsgParams & { file: File },
     operationID = uuidv4()
   ) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
     fileMapSet(data.uuid, data.file);
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createFileMessageByFile',
       window.createFileMessageByURL,
       [operationID, JSON.stringify(data)],
@@ -762,11 +766,11 @@ class SDK extends Emitter {
     );
   };
 
-  createFileMessageFromFullPath = <T>(
+  createFileMessageFromFullPath = (
     data: FileMsgFullParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createFileMessageFromFullPath',
       window.createFileMessageFromFullPath,
       [operationID, data.fileFullPath, data.fileName],
@@ -777,11 +781,8 @@ class SDK extends Emitter {
     );
   };
 
-  createImageMessageFromFullPath = <T>(
-    data: string,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<T>(
+  createImageMessageFromFullPath = (data: string, operationID = uuidv4()) => {
+    return this._invoker<MessageItem>(
       'createImageMessageFromFullPath ',
       window.createImageMessageFromFullPath,
       [operationID, data],
@@ -792,11 +793,11 @@ class SDK extends Emitter {
     );
   };
 
-  createSoundMessageFromFullPath = <T>(
+  createSoundMessageFromFullPath = (
     data: SouondMsgFullParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createSoundMessageFromFullPath ',
       window.createSoundMessageFromFullPath,
       [operationID, data.soundPath, data.duration],
@@ -807,11 +808,11 @@ class SDK extends Emitter {
     );
   };
 
-  createVideoMessageFromFullPath = <T>(
+  createVideoMessageFromFullPath = (
     data: VideoMsgFullParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<MessageItem>(
       'createVideoMessageFromFullPath ',
       window.createVideoMessageFromFullPath,
       [
@@ -828,8 +829,8 @@ class SDK extends Emitter {
     );
   };
 
-  createMergerMessage = <T>(data: MergerMsgParams, operationID = uuidv4()) => {
-    return this._invoker<T>(
+  createMergerMessage = (data: MergerMsgParams, operationID = uuidv4()) => {
+    return this._invoker<MessageItem>(
       'createMergerMessage ',
       window.createMergerMessage,
       [
@@ -857,8 +858,8 @@ class SDK extends Emitter {
     );
   };
 
-  createFaceMessage = <T>(data: FaceMessageParams, operationID = uuidv4()) => {
-    return this._invoker<T>(
+  createFaceMessage = (data: FaceMessageParams, operationID = uuidv4()) => {
+    return this._invoker<MessageItem>(
       'createFaceMessage ',
       window.createFaceMessage,
       [operationID, data.index, data.data],

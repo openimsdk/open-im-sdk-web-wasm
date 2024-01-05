@@ -412,7 +412,8 @@ export type ReceiptInfo = {
 
 export type SearchMessageResult = {
   totalCount: number;
-  searchResultItems: SearchMessageResultItem[];
+  searchResultItems?: SearchMessageResultItem[];
+  findResultItems?: SearchMessageResultItem[];
 };
 
 export type SearchMessageResultItem = {
