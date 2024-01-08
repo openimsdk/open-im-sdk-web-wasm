@@ -171,7 +171,8 @@ import {
   insertUpload,
   updateColumnsFriend,
   searchConversations,
-} from '@/api/database';
+  setSqlWasmPath,
+} from '../api/database';
 
 import { getInstance } from './database/instance';
 import {
@@ -204,6 +205,7 @@ rpc.registerMethod('insertUpload', insertUpload);
 rpc.registerMethod('updateUpload', updateUpload);
 rpc.registerMethod('deleteUpload', deleteUpload);
 
+rpc.registerMethod('setSqlWasmPath', setSqlWasmPath);
 rpc.registerMethod('initDB', init);
 rpc.registerMethod('close', close);
 

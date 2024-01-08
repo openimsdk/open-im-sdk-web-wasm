@@ -2,28 +2,44 @@ import { initBackend } from 'absurd-sql-optimized/dist/indexeddb-main-thread';
 import { RPCMessageEvent, RPC, RPCError } from 'rpc-shooter';
 import { DatabaseErrorCode } from '@/constant';
 
-// @ts-ignore
-//  for vite
-// import IMWorker from './worker?worker';
-
-//  @ts-ignore
-//  for webpack4
-// import IMWorker from 'worker-loader!./worker.js';
-
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
+
+function supportsModuleWorkers() {
+  if (typeof Worker !== 'undefined' && 'type' in Worker.prototype) {
+    return true;
+  }
+  try {
+    const blob = new Blob([''], { type: 'text/javascript' });
+    const url = URL.createObjectURL(blob);
+    new Worker(url, { type: 'module' });
+    URL.revokeObjectURL(url);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
 
 function initWorker() {
   if (typeof window === 'undefined') {
     return;
   }
 
-  // for webpack4 or vite
-  // worker = new IMWorker();
+  // use for webpack 4
+  // const IMWorker = require('worker-loader!./worker.js');
+  // worker = new IMWorker.default();
 
-  // for webpack5
-  worker = new Worker(new URL('./worker.js', import.meta.url));
-
+  // use for webpack5+ or vite
+  const isViteEnvironment = import.meta.url.includes('.vite/deps');
+  const isSupportModuleWorker = supportsModuleWorkers();
+  const getWorkerUrl = (url: URL) =>
+    url.href.replace('.vite/deps', 'open-im-sdk-wasm/lib');
+  const workerUrl = isSupportModuleWorker
+    ? new URL('worker.js', import.meta.url)
+    : new URL('worker-legacy.js', import.meta.url);
+  worker = new Worker(isViteEnvironment ? getWorkerUrl(workerUrl) : workerUrl, {
+    type: isSupportModuleWorker ? 'module' : 'classic',
+  });
   // This is only required because Safari doesn't support nested
   // workers. This installs a handler that will proxy creating web
   // workers through the main thread
@@ -123,6 +139,7 @@ export function initDatabaseAPI(): void {
   window.updateUpload = registeMethodOnWindow('updateUpload');
   window.deleteUpload = registeMethodOnWindow('deleteUpload');
 
+  window.setSqlWasmPath = registeMethodOnWindow('setSqlWasmPath');
   window.initDB = registeMethodOnWindow('initDB');
   window.close = registeMethodOnWindow('close');
 
