@@ -87,7 +87,6 @@ import {
   ConversationItem,
   FriendApplicationItem,
   FriendshipInfo,
-  FriendUserItem,
   FullUserItem,
   FullUserItemWithCache,
   GroupApplicationItem,
@@ -1078,7 +1077,7 @@ class SDK extends Emitter {
     );
   };
   getSpecifiedFriendsInfo = (data: string[], operationID = uuidv4()) => {
-    return this._invoker<FriendUserItem[]>(
+    return this._invoker<FullUserItem[]>(
       'getSpecifiedFriendsInfo ',
       window.getSpecifiedFriendsInfo,
       [operationID, JSON.stringify(data)]
@@ -1099,7 +1098,7 @@ class SDK extends Emitter {
     );
   };
   getFriendList = (operationID = uuidv4()) => {
-    return this._invoker<FriendUserItem[]>(
+    return this._invoker<FullUserItem[]>(
       'getFriendList ',
       window.getFriendList,
       [operationID]
@@ -1552,7 +1551,7 @@ class SDK extends Emitter {
     );
   };
   signalingUpdateMeetingInfo = <T>(
-    data: UpdateMeetingParams,
+    data: Partial<UpdateMeetingParams> & { roomID: string },
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(

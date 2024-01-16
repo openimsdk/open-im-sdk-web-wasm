@@ -18,7 +18,7 @@ import {
   localSendingMessages,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
-import { QueryExecResult } from '@jlongster/sql.js';
+import { Database, QueryExecResult } from '@jlongster/sql.js';
 import { getInstance, resetInstance } from './instance';
 
 let sqlWasmPath: string;
@@ -57,7 +57,7 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultLocalSendMessages = localSendingMessages(db);
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
-
+    alterTable(db);
     results.push(
       ...[
         execResultLocalUploads,
@@ -108,5 +108,17 @@ export async function close() {
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
     );
+  }
+}
+
+export function alterTable(db: Database) {
+  try {
+    db.exec(
+      `
+        ALTER TABLE local_friends ADD COLUMN is_pinned numeric;
+        `
+    );
+  } catch (error) {
+    // alter table error
   }
 }
