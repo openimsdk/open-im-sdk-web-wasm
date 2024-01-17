@@ -1142,8 +1142,12 @@ class SDK extends Emitter {
       data,
     ]);
   };
-  addBlack = <T>(data: string, operationID = uuidv4()) => {
-    return this._invoker<T>('addBlack ', window.addBlack, [operationID, data]);
+  addBlack = <T>(data: string, ex = '', operationID = uuidv4()) => {
+    return this._invoker<T>('addBlack ', window.addBlack, [
+      operationID,
+      data,
+      ex,
+    ]);
   };
   removeBlack = <T>(data: string, operationID = uuidv4()) => {
     return this._invoker<T>('removeBlack ', window.removeBlack, [
@@ -1286,6 +1290,7 @@ class SDK extends Emitter {
       data.groupID,
       data.reqMsg,
       data.joinSource,
+      data.ex ?? '',
     ]);
   };
   searchGroups = (data: SearchGroupParams, operationID = uuidv4()) => {

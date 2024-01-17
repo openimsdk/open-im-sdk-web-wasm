@@ -164,6 +164,7 @@ export type JoinGroupParams = {
   groupID: string;
   reqMsg: string;
   joinSource: GroupJoinSource;
+  ex?: string;
 };
 export type SearchGroupParams = {
   keywordList: string[];
