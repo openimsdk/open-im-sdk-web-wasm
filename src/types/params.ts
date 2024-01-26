@@ -280,6 +280,10 @@ export type GetOneCveParams = {
   sourceID: string;
   sessionType: number;
 };
+export type SetConversationExParams = {
+  conversationID: string;
+  ex: string;
+};
 export type isRecvParams = {
   conversationID: string;
   opt: MessageReceiveOptType;
@@ -309,9 +313,21 @@ export type RemarkFriendParams = {
   toUserID: string;
   remark: string;
 };
+export type PinFriendParams = {
+  toUserIDs: string[];
+  isPinned: boolean;
+};
+export type SetFriendExParams = {
+  toUserIDs: string[];
+  ex: string;
+};
 export type AccessFriendParams = {
   toUserID: string;
   handleMsg: string;
+};
+export type AddBlackParams = {
+  toUserID: string;
+  ex?: string;
 };
 export type InviteGroupParams = {
   groupID: string;

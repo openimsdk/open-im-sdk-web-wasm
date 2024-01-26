@@ -508,6 +508,15 @@ declare global {
       offset: number,
       count: number
     ) => Promise<string>;
+    searchConversation: (
+      operationID: string,
+      searchParams: string
+    ) => Promise<string>;
+    setConversationEx: (
+      operationID: string,
+      conversationID: number,
+      ex: number
+    ) => Promise<string>;
     getConversationIDBySessionType: (
       operationID: string,
       sourceID: string,
@@ -572,6 +581,15 @@ declare global {
       operationID: string,
       toUserID: string,
       remark: string
+    ) => Promise<string>;
+    pinFriends: (
+      operationID: string,
+      pinFriendParams: string
+    ) => Promise<string>;
+    setFriendsEx: (
+      operationID: string,
+      toUserIDs: string,
+      ex: string
     ) => Promise<string>;
     checkFriend: (operationID: string, userIDList: string[]) => Promise<string>;
     acceptFriendApplication: (

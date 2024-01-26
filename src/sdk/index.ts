@@ -78,6 +78,10 @@ import {
   VideoMsgParams,
   MemberNameParams,
   WasmPathConfig,
+  PinFriendParams,
+  SetFriendExParams,
+  SetConversationExParams,
+  AddBlackParams,
 } from '../types/params';
 
 import {
@@ -317,20 +321,6 @@ class SDK extends Emitter {
       'markConversationMessageAsRead',
       window.markConversationMessageAsRead,
       [operationID, data]
-    );
-  };
-  markMessagesAsReadByMsgID = <T>(
-    params: MarkNotiParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<T>(
-      'markMessagesAsReadByMsgID',
-      window.markMessagesAsReadByMsgID,
-      [
-        operationID,
-        params.conversationID,
-        JSON.stringify(params.clientMsgIDList),
-      ]
     );
   };
   sendGroupMessageReadReceipt = <T>(
@@ -991,6 +981,23 @@ class SDK extends Emitter {
       [operationID, data.offset, data.count]
     );
   };
+  // searchConversation = (data: SplitParams, operationID = uuidv4()) => {
+  //   return this._invoker<ConversationItem[]>(
+  //     'searchConversation ',
+  //     window.searchConversation,
+  //     [operationID, data.offset, data.count]
+  //   );
+  // };
+  setConversationEx = (
+    data: SetConversationExParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<ConversationItem[]>(
+      'setConversationEx ',
+      window.setConversationEx,
+      [operationID, data.conversationID, data.ex]
+    );
+  };
   getConversationIDBySessionType = (
     data: GetOneCveParams,
     operationID = uuidv4()
@@ -1110,6 +1117,19 @@ class SDK extends Emitter {
       JSON.stringify(data),
     ]);
   };
+  pinFriends = <T>(data: PinFriendParams, operationID = uuidv4()) => {
+    return this._invoker<T>('pinFriends ', window.pinFriends, [
+      operationID,
+      JSON.stringify(data),
+    ]);
+  };
+  setFriendsEx = <T>(data: SetFriendExParams, operationID = uuidv4()) => {
+    return this._invoker<T>('setFriendsEx ', window.setFriendsEx, [
+      operationID,
+      JSON.stringify(data.toUserIDs),
+      data.ex,
+    ]);
+  };
   checkFriend = (data: string[], operationID = uuidv4()) => {
     return this._invoker<FriendshipInfo[]>('checkFriend', window.checkFriend, [
       operationID,
@@ -1142,11 +1162,11 @@ class SDK extends Emitter {
       data,
     ]);
   };
-  addBlack = <T>(data: string, ex = '', operationID = uuidv4()) => {
+  addBlack = <T>(data: AddBlackParams, operationID = uuidv4()) => {
     return this._invoker<T>('addBlack ', window.addBlack, [
       operationID,
-      data,
-      ex,
+      data.toUserID,
+      data.ex ?? '',
     ]);
   };
   removeBlack = <T>(data: string, operationID = uuidv4()) => {
