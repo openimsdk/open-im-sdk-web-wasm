@@ -424,7 +424,7 @@ export function getUserJoinedGroupIDs(
 ): QueryExecResult[] {
   return db.exec(
     `
-    select group_id from local_group_members where user_id = ${userID};
+    select group_id from local_group_members where user_id = "${userID}";
     `
   );
 }

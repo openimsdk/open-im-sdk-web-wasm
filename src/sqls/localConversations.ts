@@ -358,7 +358,7 @@ export function setMultipleConversationRecvMsgOpt(
   conversationIDList: string[],
   opt: number
 ): QueryExecResult[] {
-  const values = conversationIDList.map(v => `${v}`).join(',');
+  const values = conversationIDList.map(v => `'${v}'`).join(',');
   return db.exec(
     `
     UPDATE local_conversations

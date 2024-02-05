@@ -166,7 +166,7 @@ export function updateColumnsFriend(
   friendUserIDs: string[],
   localFriend: LocalFriend
 ): QueryExecResult[] {
-  const values = friendUserIDs.map(v => `${v}`).join(',');
+  const values = friendUserIDs.map(v => `'${v}'`).join(',');
   const sql = squel
     .update()
     .table('local_friends')
