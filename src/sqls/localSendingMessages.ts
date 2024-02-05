@@ -38,8 +38,8 @@ export function deleteSendingMessage(
   const sql = squel
     .delete()
     .from('local_sending_messages')
-    .where('conversation_id = ?', conversationID)
-    .where('client_msg_id = ?', clientMsgID)
+    .where(`conversation_id = '${conversationID}'`)
+    .where(`client_msg_id = '${clientMsgID}'`)
     .toString();
 
   return db.exec(sql);

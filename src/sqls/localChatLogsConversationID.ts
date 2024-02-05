@@ -204,7 +204,7 @@ export function updateMessage(
 ): QueryExecResult[] {
   const sql = squel
     .update()
-    .table(`chat_logs_${conversationID}`)
+    .table(`'chat_logs_${conversationID}'`)
     .setFields(localChatLogs)
     .where(`client_msg_id = '${clientMsgID}'`)
     .toString();
@@ -219,7 +219,7 @@ export function updateMessageBySeq(
 ): QueryExecResult[] {
   const sql = squel
     .update()
-    .table(`chat_logs_${conversationID}`)
+    .table(`'chat_logs_${conversationID}'`)
     .setFields(localChatLogs)
     .where(`seq = '${seq}'`)
     .toString();
@@ -233,7 +233,7 @@ export function batchInsertMessageList(
 ): QueryExecResult[] {
   const sql = squel
     .insert()
-    .into(`chat_logs_${conversationID}`)
+    .into(`'chat_logs_${conversationID}'`)
     .setFieldsRows(messageList)
     .toString();
   return db.exec(sql);
@@ -246,7 +246,7 @@ export function insertMessage(
 ): QueryExecResult[] {
   const sql = squel
     .insert()
-    .into(`chat_logs_${conversationID}`)
+    .into(`'chat_logs_${conversationID}'`)
     .setFields(localChatLogs)
     .toString();
   return db.exec(sql);
@@ -294,7 +294,7 @@ export function searchMessageByKeyword(
   });
   return db.exec(
     `  
-    SELECT * FROM chat_logs_${conversationID} 
+    SELECT * FROM 'chat_logs_${conversationID}' 
           WHERE send_time  between ${startTime} and ${finalEndTime} 
           AND status <=3  
           And content_type IN (${values}) 
@@ -317,7 +317,7 @@ export function searchMessageByContentType(
   const finalEndTime = endTime ? endTime : new Date().getTime();
   return db.exec(
     `  
-    SELECT * FROM chat_logs_${conversationID} 
+    SELECT * FROM 'chat_logs_${conversationID}' 
           WHERE send_time between ${startTime} and ${finalEndTime} 
           AND status <=3 
           And content_type IN (${values}) 
@@ -352,7 +352,7 @@ export function searchMessageByContentTypeAndKeyword(
   });
   return db.exec(
     `  
-      SELECT * FROM chat_logs_${conversationID} 
+      SELECT * FROM 'chat_logs_${conversationID}' 
             WHERE send_time between ${startTime} and ${finalEndTime} 
             AND status <=3 
             And content_type IN (${values}) 
@@ -369,7 +369,7 @@ export function messageIfExists(
 ): QueryExecResult[] {
   return db.exec(
     `
-      SELECT * FROM chat_logs_${conversationID} WHERE client_msg_id = '${clientMsgID}';
+      SELECT * FROM 'chat_logs_${conversationID}' WHERE client_msg_id = '${clientMsgID}';
       `
   );
 }
@@ -412,7 +412,7 @@ export function updateMsgSenderFaceURLAndSenderNickname(
   _initLocalChatLogsTable(db, conversationID);
   return db.exec(
     `
-      UPDATE chat_logs_${conversationID} SET sender_face_url = '${faceURL}', sender_nick_name = '${nickname}' WHERE send_id = '${sendID}';
+      UPDATE 'chat_logs_${conversationID}' SET sender_face_url = '${faceURL}', sender_nick_name = '${nickname}' WHERE send_id = '${sendID}';
       `
   );
 }
@@ -447,7 +447,7 @@ export function deleteConversationAllMessages(
 ): QueryExecResult[] {
   return db.exec(
     `
-      DELETE FROM chat_logs_${conversationID} WHERE 1=1;
+      DELETE FROM 'chat_logs_${conversationID}' WHERE 1=1;
       `
   );
 }
@@ -458,7 +458,7 @@ export function markDeleteConversationAllMessages(
 ): QueryExecResult[] {
   return db.exec(
     `
-      UPDATE chat_logs_${conversationID} SET status = 2 WHERE (1=1) and (conversation_id = '${conversationID}')';
+      UPDATE 'chat_logs_${conversationID}' SET status = 2 WHERE (1=1) and (conversation_id = '${conversationID}')';
       `
   );
 }
@@ -470,7 +470,7 @@ export function getUnreadMessage(
 ): QueryExecResult[] {
   return db.exec(
     `
-      SELECT * FROM chat_logs_${conversationID} WHERE send_id != '${loginUserID}' and is_read = 0;
+      SELECT * FROM 'chat_logs_${conversationID}' WHERE send_id != '${loginUserID}' and is_read = 0;
       `
   );
 }
@@ -485,7 +485,7 @@ export function markConversationMessageAsReadBySeqs(
   const values = seqList.map(v => `${v}`).join(',');
   return db.exec(
     `
-      UPDATE chat_logs_${conversationID} SET is_read = 1 WHERE seq IN (${values}) and send_id != '${loginUserID}';
+      UPDATE 'chat_logs_${conversationID}' SET is_read = 1 WHERE seq IN (${values}) and send_id != '${loginUserID}';
       `
   );
 }
@@ -499,7 +499,7 @@ export function markConversationMessageAsRead(
   const values = clientMsgIDList.map(v => `'${v}'`).join(',');
   return db.exec(
     `
-      UPDATE chat_logs_${conversationID} SET is_read = 1 WHERE client_msg_id IN (${values}) and send_id != '${loginUserID}';
+      UPDATE 'chat_logs_${conversationID}' SET is_read = 1 WHERE client_msg_id IN (${values}) and send_id != '${loginUserID}';
       `
   );
 }
@@ -512,7 +512,7 @@ export function updateColumnsMessage(
 ): QueryExecResult[] {
   const sql = squel
     .update()
-    .table(`chat_logs_${conversationID}`)
+    .table(`'chat_logs_${conversationID}'`)
     .setFields(localChatLogs)
     .where(`client_msg_id = '${clientMsgID}'`)
     .toString();
@@ -527,7 +527,7 @@ export function deleteConversationMsgs(
   const values = clientMsgIDList.map(v => `'${v}'`).join(',');
   return db.exec(
     `
-      DELETE FROM chat_logs_${conversationID} WHERE client_msg_id IN (${values});
+      DELETE FROM 'chat_logs_${conversationID}' WHERE client_msg_id IN (${values});
       `
   );
 }
@@ -551,7 +551,7 @@ export function markConversationAllMessageAsRead(
 ): QueryExecResult[] {
   return db.exec(
     `
-      UPDATE chat_logs_${conversationID} SET is_read = 1 WHERE is_read = 0 and send_id != '${loginUserID}';
+      UPDATE 'chat_logs_${conversationID}' SET is_read = 1 WHERE is_read = 0 and send_id != '${loginUserID}';
       `
   );
 }
@@ -567,7 +567,7 @@ export function searchAllMessageByContentType(
 ): QueryExecResult[] {
   return db.exec(
     `
-      SELECT * FROM chat_logs_${conversationID} WHERE content_type = ${contentType};
+      SELECT * FROM 'chat_logs_${conversationID}' WHERE content_type = ${contentType};
       `
   );
 }
