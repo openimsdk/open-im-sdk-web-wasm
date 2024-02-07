@@ -1,9 +1,4 @@
-import {
-  fileMapClear,
-  fileMapSet,
-  initDatabaseAPI,
-  workerPromise,
-} from '@/api';
+import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
 import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
@@ -114,20 +109,21 @@ class SDK extends Emitter {
   private tryParse = true;
   private isLogStandardOutput = true;
 
-  constructor(url = '/openIM.wasm') {
+  constructor(url = '/openIM.wasm', debug = true) {
     super();
 
-    initDatabaseAPI();
+    initDatabaseAPI(debug);
+    this.isLogStandardOutput = debug;
     this.wasmInitializedPromise = initializeWasm(url);
     this.goExitPromise = getGoExitPromsie();
 
     if (this.goExitPromise) {
       this.goExitPromise
         .then(() => {
-          console.info('SDK => wasm exist');
+          this._logWrap('SDK => wasm exist');
         })
         .catch(err => {
-          console.info('SDK => wasm with error ', err);
+          this._logWrap('SDK => wasm with error ', err);
         })
         .finally(() => {
           this.goExisted = true;
@@ -221,7 +217,7 @@ class SDK extends Emitter {
     await this.wasmInitializedPromise;
     window.commonEventFunc(event => {
       try {
-        console.info(
+        this._logWrap(
           `%cSDK =>%c received event %c${event}%c `,
           logBoxStyleValue('#282828', '#ffffff'),
           '',
@@ -249,17 +245,17 @@ class SDK extends Emitter {
       wsAddr: params.wsAddr,
       dataDir: './',
       logLevel: params.logLevel || 5,
-      isLogStandardOutput: params.isLogStandardOutput ?? true,
+      isLogStandardOutput:
+        params.isLogStandardOutput ?? this.isLogStandardOutput,
       logFilePath: './',
       isExternalExtensions: params.isExternalExtensions || false,
     };
     this.tryParse = params.tryParse ?? true;
-    this.isLogStandardOutput = config.isLogStandardOutput;
     window.initSDK(operationID, JSON.stringify(config));
     return await window.login(operationID, params.userID, params.token);
   };
   logout = <T>(operationID = uuidv4()) => {
-    fileMapClear();
+    window.fileMapClear();
     return this._invoker<T>('logout', window.logout, [operationID]);
   };
   getAllConversationList = (operationID = uuidv4()) => {
@@ -397,7 +393,7 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) => {
     params.sourcePicture.uuid = `${params.sourcePicture.uuid}/${params.file.name}`;
-    fileMapSet(params.sourcePicture.uuid, params.file);
+    window.fileMapSet(params.sourcePicture.uuid, params.file);
     return this._invoker<MessageItem>(
       'createImageMessageByFile',
       window.createImageMessageByURL,
@@ -684,7 +680,7 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
-    fileMapSet(data.uuid, data.file);
+    window.fileMapSet(data.uuid, data.file);
     return this._invoker<MessageItem>(
       'createSoundMessageByFile',
       window.createSoundMessageByURL,
@@ -714,8 +710,8 @@ class SDK extends Emitter {
   ) => {
     data.videoUUID = `${data.videoUUID}/${data.videoFile.name}`;
     data.snapshotUUID = `${data.snapshotUUID}/${data.snapshotFile.name}`;
-    fileMapSet(data.videoUUID, data.videoFile);
-    fileMapSet(data.snapshotUUID, data.snapshotFile);
+    window.fileMapSet(data.videoUUID, data.videoFile);
+    window.fileMapSet(data.snapshotUUID, data.snapshotFile);
     return this._invoker<MessageItem>(
       'createVideoMessageByFile',
       window.createVideoMessageByURL,
@@ -744,7 +740,7 @@ class SDK extends Emitter {
     operationID = uuidv4()
   ) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
-    fileMapSet(data.uuid, data.file);
+    window.fileMapSet(data.uuid, data.file);
     return this._invoker<MessageItem>(
       'createFileMessageByFile',
       window.createFileMessageByURL,
@@ -1448,7 +1444,7 @@ class SDK extends Emitter {
   };
   uploadFile = (data: UploadFileParams, operationID = uuidv4()) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
-    fileMapSet(data.uuid, data.file);
+    window.fileMapSet(data.uuid, data.file);
     return this._invoker<{ url: string }>('uploadFile ', window.uploadFile, [
       operationID,
       JSON.stringify({
@@ -1635,13 +1631,17 @@ class SDK extends Emitter {
       [operationID, data.conversationID, data.msgDestructTime]
     );
   };
-  fileMapSet = (uuid: string, file: File) => fileMapSet(uuid, file);
+  fileMapSet = (uuid: string, file: File) => window.fileMapSet(uuid, file);
 }
 
 let instance: SDK;
 
 export function getSDK(config?: WasmPathConfig): SDK {
-  const { coreWasmPath = '/openIM.wasm', sqlWasmPath } = config || {};
+  const {
+    sqlWasmPath,
+    coreWasmPath = '/openIM.wasm',
+    debug = true,
+  } = config || {};
   if (typeof window === 'undefined') {
     return {} as SDK;
   }
@@ -1650,7 +1650,7 @@ export function getSDK(config?: WasmPathConfig): SDK {
     return instance;
   }
 
-  instance = new SDK(coreWasmPath);
+  instance = new SDK(coreWasmPath, debug);
 
   if (sqlWasmPath) {
     window.setSqlWasmPath(sqlWasmPath);

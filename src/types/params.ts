@@ -23,6 +23,7 @@ import {
 export type WasmPathConfig = {
   coreWasmPath?: string;
   sqlWasmPath?: string;
+  debug?: boolean;
 };
 
 export type InitAndLoginConfig = {

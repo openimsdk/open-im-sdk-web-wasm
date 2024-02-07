@@ -4,6 +4,7 @@ import { DatabaseErrorCode } from '@/constant';
 
 let rpc: RPC | undefined;
 let worker: Worker | undefined;
+let debug = false;
 
 function supportsModuleWorkers() {
   if (typeof Worker !== 'undefined' && 'type' in Worker.prototype) {
@@ -81,12 +82,18 @@ function catchErrorHandle(error: unknown) {
   throw error;
 }
 
+function _logWrap(...args: any[]) {
+  if (debug) {
+    console.info(...args);
+  }
+}
+
 function registeMethodOnWindow(
   name: string,
   realName?: string,
   needStringify = true
 ) {
-  console.info(`=> (database api) registe ${realName ?? name}`);
+  _logWrap(`=> (database api) registe ${realName ?? name}`);
 
   return async (...args: unknown[]) => {
     if (!rpc || !worker) {
@@ -98,13 +105,13 @@ function registeMethodOnWindow(
     }
 
     try {
-      console.info(
+      _logWrap(
         `=> (invoked by go wasm) run ${
           realName ?? name
         } method with args ${JSON.stringify(args)}`
       );
       const response = await rpc.invoke(name, ...args, { timeout: 5000000 });
-      console.info(
+      _logWrap(
         `=> (invoked by go wasm) run ${realName ?? name} method with response `,
         JSON.stringify(response)
       );
@@ -121,14 +128,12 @@ function registeMethodOnWindow(
   };
 }
 
-export const fileMapSet = registeMethodOnWindow('fileMapSet');
-export const fileMapClear = registeMethodOnWindow('fileMapClear');
-
 // register method on window for go wasm invoke
-export function initDatabaseAPI(): void {
+export function initDatabaseAPI(isLogStandardOutput = true): void {
   if (!rpc) {
     return;
   }
+  debug = isLogStandardOutput;
 
   // upload
   window.wasmOpen = registeMethodOnWindow('wasmOpen');
@@ -138,6 +143,8 @@ export function initDatabaseAPI(): void {
   window.insertUpload = registeMethodOnWindow('insertUpload');
   window.updateUpload = registeMethodOnWindow('updateUpload');
   window.deleteUpload = registeMethodOnWindow('deleteUpload');
+  window.fileMapSet = registeMethodOnWindow('fileMapSet');
+  window.fileMapClear = registeMethodOnWindow('fileMapClear');
 
   window.setSqlWasmPath = registeMethodOnWindow('setSqlWasmPath');
   window.initDB = registeMethodOnWindow('initDB');
@@ -424,9 +431,9 @@ export function initDatabaseAPI(): void {
     }
 
     try {
-      console.info('=> (invoked by go wasm) run exportDB method ');
+      _logWrap('=> (invoked by go wasm) run exportDB method ');
       const result = await rpc.invoke('exportDB', undefined, { timeout: 5000 });
-      console.info(
+      _logWrap(
         '=> (invoked by go wasm) run exportDB method with response ',
         JSON.stringify(result)
       );

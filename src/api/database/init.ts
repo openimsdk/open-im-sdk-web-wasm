@@ -28,15 +28,15 @@ export function setSqlWasmPath(wasmPath: string) {
 }
 
 export async function init(userId: string, dir: string): Promise<string> {
-  console.info(
-    `=> (database api) invoke init with args ${JSON.stringify({
-      userId,
-      dir,
-    })}`
-  );
+  // console.info(
+  //   `=> (database api) invoke init with args ${JSON.stringify({
+  //     userId,
+  //     dir,
+  //   })}`
+  // );
 
   try {
-    console.time('SDK => (performance measure) init database used ');
+    // console.time('SDK => (performance measure) init database used ');
 
     const db = await getInstance(`${dir}${userId}.sqlite`, sqlWasmPath);
     const results: QueryExecResult[][] = [];
@@ -89,12 +89,12 @@ export async function init(userId: string, dir: string): Promise<string> {
       JSON.stringify(e)
     );
   } finally {
-    console.timeEnd('SDK => (performance measure) init database used ');
+    // console.timeEnd('SDK => (performance measure) init database used ');
   }
 }
 
 export async function close() {
-  console.info('=> (database api) invoke close');
+  // console.info('=> (database api) invoke close');
 
   try {
     await resetInstance();

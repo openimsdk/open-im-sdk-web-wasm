@@ -17,6 +17,8 @@ declare global {
     insertUpload: DatabaseApi;
     updateUpload: DatabaseApi;
     deleteUpload: DatabaseApi;
+    fileMapSet: DatabaseApi;
+    fileMapClear: DatabaseApi;
 
     setSqlWasmPath: DatabaseApi;
     initDB: DatabaseApi;
