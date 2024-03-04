@@ -479,6 +479,7 @@ class SDK extends Emitter {
       params.recvID,
       params.groupID,
       JSON.stringify(offlinePushInfo),
+      params.isOnlineonly ?? false,
     ]);
   };
   sendMessageNotOss = (params: SendMsgParams, operationID = uuidv4()) => {
@@ -498,28 +499,7 @@ class SDK extends Emitter {
         params.recvID,
         params.groupID,
         JSON.stringify(offlinePushInfo),
-      ]
-    );
-  };
-  sendMessageByBuffer = (params: SendMsgParams, operationID = uuidv4()) => {
-    const offlinePushInfo = params.offlinePushInfo ?? {
-      title: '你有一条新消息',
-      desc: '',
-      ex: '',
-      iOSPushSound: '+1',
-      iOSBadgeCount: true,
-    };
-    return this._invoker<MessageItem>(
-      'sendMessageByBuffer',
-      window.sendMessageByBuffer,
-      [
-        operationID,
-        JSON.stringify(params.message),
-        params.recvID,
-        params.groupID,
-        JSON.stringify(offlinePushInfo),
-        params.fileArrayBuffer,
-        params.snpFileArrayBuffer,
+        params.isOnlineonly ?? false,
       ]
     );
   };
