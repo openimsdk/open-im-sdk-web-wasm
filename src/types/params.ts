@@ -83,7 +83,7 @@ export type SendMsgParams = {
   groupID: string;
   offlinePushInfo?: OfflinePush;
   message: MessageItem;
-  isOnlineonly?: boolean;
+  isOnlineOnly?: boolean;
 };
 export type SetMessageLocalExParams = {
   conversationID: string;

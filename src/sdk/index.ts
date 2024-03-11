@@ -479,7 +479,7 @@ class SDK extends Emitter {
       params.recvID,
       params.groupID,
       JSON.stringify(offlinePushInfo),
-      params.isOnlineonly ?? false,
+      params.isOnlineOnly ?? false,
     ]);
   };
   sendMessageNotOss = (params: SendMsgParams, operationID = uuidv4()) => {
@@ -499,7 +499,7 @@ class SDK extends Emitter {
         params.recvID,
         params.groupID,
         JSON.stringify(offlinePushInfo),
-        params.isOnlineonly ?? false,
+        params.isOnlineOnly ?? false,
       ]
     );
   };
