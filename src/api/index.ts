@@ -38,7 +38,7 @@ function initWorker() {
   const workerUrl = isSupportModuleWorker
     ? new URL('worker.js', import.meta.url)
     : new URL('worker-legacy.js', import.meta.url);
-  worker = new Worker(isViteEnvironment ? getWorkerUrl(workerUrl) : workerUrl, {
+  worker = new Worker(window.WORKER_URL || (isViteEnvironment ? getWorkerUrl(workerUrl) : workerUrl), {
     type: isSupportModuleWorker ? 'module' : 'classic',
   });
   // This is only required because Safari doesn't support nested
