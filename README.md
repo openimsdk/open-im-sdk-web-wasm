@@ -4,14 +4,11 @@ Use this SDK to add instant messaging capabilities to your application. By conne
 
 The underlying SDK core is implemented in [OpenIM SDK Core](https://github.com/openimsdk/openim-sdk-core). Using the [WebAssembly](https://webassembly.org/) support provided by Go language, it can be compiled into wasm for web integration. The web interacts with the [OpenIM SDK Core](https://github.com/openimsdk/openim-sdk-core) through JSON, and the SDK exposes a re-encapsulated API for easy usage. In terms of data storage, JavaScript handles the logic of the SQL layer by virtualizing SQLite and storing it in IndexedDB using [sql.js](https://sql.js.org/).
 
-
-
-
 ## Documentation 📚
 
-Visit [https://doc.rentsoft.cn/](https://doc.rentsoft.cn/) for detailed documentation and guides.
+Visit [https://docs.openim.io/](https://docs.openim.io/) for detailed documentation and guides.
 
-For the SDK reference, see [https://doc.rentsoft.cn/sdks/quickstart/browser](https://doc.rentsoft.cn/sdks/quickstart/browser).
+For the SDK reference, see [https://docs.openim.io/sdks/quickstart/browser](https://docs.openim.io/sdks/quickstart/browser).
 
 ## Installation 💻
 
@@ -37,56 +34,7 @@ Follow these steps to obtain the static resources required for WebAssembly (WASM
 
 ### Possible Issues ❗
 
-#### For Webpack 5+
-
-Add the following configuration to your Webpack configuration:
-
-```js
-resolve: {
-  fallback: {
-    fs: false,
-    path: false,
-    crypto: false,
-  },
-},
-```
-
-#### For Webpack 4 or Vite
-
-**Note:**
-If you are using `Webpack 4`, you will also need to install the worker loader.
-
-```shell
-npm install worker-loader worker-plugin -D
-```
-
-Add the following configuration to your Webpack configuration:
-
-```js
-const WorkerPlugin = require("worker-plugin");
-
-// ...
-
-plugins: [new WorkerPlugin()],
-
-// ...
-```
-
-Follow these steps:
-
-1. Copy the `lib` directory from the npm package to your project (e.g., `src/utils/lib`).
-
-2. Modify the import method of the web worker in the `lib/api/index.js` file.
-
-   ```js
-   // For Webpack 4:
-   + import IMWorker from 'worker-loader!./worker.js';
-   // For Vite:
-   + import IMWorker from './worker?worker';
-
-   - worker = new Worker(new URL('./worker.js', import.meta.url));
-   + worker = new IMWorker();
-   ```
+> if you are using webpack4, you may flow this issue [How to import open-im-sdk-wasm in webpack4.x](https://github.com/openimsdk/open-im-sdk-web-wasm/issues/73).
 
 ## Usage 🚀
 
@@ -96,8 +44,6 @@ The following examples demonstrate how to use the SDK. TypeScript is used, provi
 
 ```typescript
 import { getSDK } from 'open-im-sdk-wasm';
-// or your own path after copying
-// import { getSDK } from '@/utils/lib';
 
 const OpenIM = getSDK();
 ```
@@ -108,7 +54,7 @@ const OpenIM = getSDK();
 
 ```typescript
 import { CbEvents } from 'open-im-sdk-wasm';
-import type { WSEvent } from 'open-im-sdk-wasm';
+import type { WSEvent } from 'open-im-sdk-wasm/lib/types/entity';
 
 OpenIM.on(CbEvents.OnConnecting, handleConnecting);
 OpenIM.on(CbEvents.OnConnectFailed, handleConnectFailed);
@@ -136,7 +82,7 @@ function handleConnectSuccess() {
 }
 ```
 
-To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://doc.rentsoft.cn/restapi/userManagement/userRegister) for details.
+To log into the IM server, you need to create an account and obtain a user ID and token. Refer to the [access token documentation](https://docs.openim.io/restapi/userManagement/userRegister) for details.
 
 ### Receiving and Sending Messages 💬
 
@@ -144,7 +90,7 @@ OpenIM makes it easy to send and receive messages. By default, there is no restr
 
 ```typescript
 import { CbEvents } from 'open-im-sdk-wasm';
-import type { WSEvent, MessageItem } from 'open-im-sdk-wasm';
+import type { WSEvent, MessageItem } from 'open-im-sdk-wasm/lib/types/entity';
 
 // Listenfor new messages 📩
 OpenIM.on(CbEvents.OnRecvNewMessages, handleNewMessages);
