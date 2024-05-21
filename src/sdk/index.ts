@@ -4,8 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
 
 import {
-  AccessFriendParams,
-  AccessGroupParams,
+  AccessFriendApplicationParams,
+  AccessGroupApplicationParams,
   AccessMessageParams,
   AddFriendParams,
   AdvancedMsgParams,
@@ -18,8 +18,8 @@ import {
   CustomMsgParams,
   CustomSignalParams,
   FaceMessageParams,
-  FileMsgFullParams,
-  FileMsgParams,
+  FileMsgParamsByFullPath,
+  FileMsgParamsByURL,
   FindMessageParams,
   GetAdvancedHistoryMsgParams,
   GetGroupMemberByTimeParams,
@@ -27,22 +27,20 @@ import {
   GetGroupMessageReaderParams,
   GetHistoryMsgParams,
   GetOneConversationParams,
-  GetOneCveParams,
   GetUserInfoWithCacheParams,
-  ImageMsgParams,
+  ImageMsgParamsByURL,
   InitAndLoginConfig,
   InsertGroupMsgParams,
   InsertSingleMsgParams,
-  InviteGroupParams,
-  isRecvParams,
+  AccessToGroupParams,
+  SetConversationRecvOptParams,
   JoinGroupParams,
   LocationMsgParams,
-  MarkNotiParams,
   MeetingOperateStreamParams,
   UpdateMemberInfoParams,
   MergerMsgParams,
   PartialUserItem,
-  PinCveParams,
+  SetConversationPinParams,
   QuoteMsgParams,
   RemarkFriendParams,
   RtcActionParams,
@@ -55,23 +53,23 @@ import {
   SetBurnDurationParams,
   SetConversationMsgDestructParams,
   SetConversationMsgDestructTimeParams,
-  SetDraftParams,
+  SetConversationDraftParams,
   SetGroupRoleParams,
   SetGroupVerificationParams,
-  SetMemberAuthParams,
+  SetMemberPermissionParams,
   SetMessageLocalExParams,
-  SetPrvParams,
+  SetConversationPrivateStateParams,
   SignalingInviteParams,
-  SoundMsgParams,
-  SouondMsgFullParams,
-  SplitParams,
+  SoundMsgParamsByURL,
+  SoundMsgParamsByFullPath,
+  SplitConversationParams,
   TransferGroupParams,
   TypingUpdateParams,
   UpdateMeetingParams,
   UploadFileParams,
-  VideoMsgFullParams,
-  VideoMsgParams,
-  MemberNameParams,
+  VideoMsgParamsByFullPath,
+  VideoMsgParamsByURL,
+  SetGroupMemberNickParams,
   WasmPathConfig,
   PinFriendParams,
   SetFriendExParams,
@@ -82,6 +80,7 @@ import {
 import {
   AdvancedGetMessageResult,
   BlackUserItem,
+  CallingRoomData,
   CardElem,
   ConversationItem,
   FriendApplicationItem,
@@ -92,7 +91,9 @@ import {
   GroupItem,
   GroupMemberItem,
   IMConfig,
+  MeetingRecord,
   MessageItem,
+  RtcInviteResults,
   SearchedFriendsInfo,
   SearchMessageResult,
   SelfUserInfo,
@@ -371,9 +372,12 @@ class SDK extends Emitter {
       }
     );
   };
-  createImageMessage = (params: ImageMsgParams, operationID = uuidv4()) => {
+  createImageMessageByURL = (
+    params: ImageMsgParamsByURL,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<MessageItem>(
-      'createImageMessage',
+      'createImageMessageByURL',
       window.createImageMessageByURL,
       [
         operationID,
@@ -389,7 +393,7 @@ class SDK extends Emitter {
     );
   };
   createImageMessageByFile = (
-    params: ImageMsgParams & { file: File },
+    params: ImageMsgParamsByURL & { file: File },
     operationID = uuidv4()
   ) => {
     params.sourcePicture.uuid = `${params.sourcePicture.uuid}/${params.file.name}`;
@@ -540,7 +544,7 @@ class SDK extends Emitter {
   };
 
   setConversationPrivateChat = <T>(
-    params: SetPrvParams,
+    params: SetConversationPrivateStateParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -644,9 +648,12 @@ class SDK extends Emitter {
       }
     );
   };
-  createSoundMessage = (data: SoundMsgParams, operationID = uuidv4()) => {
+  createSoundMessageByURL = (
+    data: SoundMsgParamsByURL,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<MessageItem>(
-      'createSoundMessage',
+      'createSoundMessageByURL',
       window.createSoundMessageByURL,
       [operationID, JSON.stringify(data)],
       data => {
@@ -656,7 +663,7 @@ class SDK extends Emitter {
     );
   };
   createSoundMessageByFile = (
-    data: SoundMsgParams & { file: File },
+    data: SoundMsgParamsByURL & { file: File },
     operationID = uuidv4()
   ) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
@@ -672,9 +679,12 @@ class SDK extends Emitter {
     );
   };
 
-  createVideoMessage = (data: VideoMsgParams, operationID = uuidv4()) => {
+  createVideoMessageByURL = (
+    data: VideoMsgParamsByURL,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<MessageItem>(
-      'createVideoMessage',
+      'createVideoMessageByURL',
       window.createVideoMessageByURL,
       [operationID, JSON.stringify(data)],
       data => {
@@ -685,7 +695,7 @@ class SDK extends Emitter {
   };
 
   createVideoMessageByFile = (
-    data: VideoMsgParams & { videoFile: File; snapshotFile: File },
+    data: VideoMsgParamsByURL & { videoFile: File; snapshotFile: File },
     operationID = uuidv4()
   ) => {
     data.videoUUID = `${data.videoUUID}/${data.videoFile.name}`;
@@ -703,9 +713,12 @@ class SDK extends Emitter {
     );
   };
 
-  createFileMessage = (data: FileMsgParams, operationID = uuidv4()) => {
+  createFileMessageByURL = (
+    data: FileMsgParamsByURL,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<MessageItem>(
-      'createFileMessage',
+      'createFileMessageByURL',
       window.createFileMessageByURL,
       [operationID, JSON.stringify(data)],
       data => {
@@ -716,7 +729,7 @@ class SDK extends Emitter {
   };
 
   createFileMessageByFile = (
-    data: FileMsgParams & { file: File },
+    data: FileMsgParamsByURL & { file: File },
     operationID = uuidv4()
   ) => {
     data.uuid = `${data.uuid}/${data.file.name}`;
@@ -725,69 +738,6 @@ class SDK extends Emitter {
       'createFileMessageByFile',
       window.createFileMessageByURL,
       [operationID, JSON.stringify(data)],
-      data => {
-        // compitable with old version sdk
-        return data[0];
-      }
-    );
-  };
-
-  createFileMessageFromFullPath = (
-    data: FileMsgFullParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<MessageItem>(
-      'createFileMessageFromFullPath',
-      window.createFileMessageFromFullPath,
-      [operationID, data.fileFullPath, data.fileName],
-      data => {
-        // compitable with old version sdk
-        return data[0];
-      }
-    );
-  };
-
-  createImageMessageFromFullPath = (data: string, operationID = uuidv4()) => {
-    return this._invoker<MessageItem>(
-      'createImageMessageFromFullPath ',
-      window.createImageMessageFromFullPath,
-      [operationID, data],
-      data => {
-        // compitable with old version sdk
-        return data[0];
-      }
-    );
-  };
-
-  createSoundMessageFromFullPath = (
-    data: SouondMsgFullParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<MessageItem>(
-      'createSoundMessageFromFullPath ',
-      window.createSoundMessageFromFullPath,
-      [operationID, data.soundPath, data.duration],
-      data => {
-        // compitable with old version sdk
-        return data[0];
-      }
-    );
-  };
-
-  createVideoMessageFromFullPath = (
-    data: VideoMsgFullParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<MessageItem>(
-      'createVideoMessageFromFullPath ',
-      window.createVideoMessageFromFullPath,
-      [
-        operationID,
-        data.videoFullPath,
-        data.videoType,
-        data.duration,
-        data.snapshotFullPath,
-      ],
       data => {
         // compitable with old version sdk
         return data[0];
@@ -950,14 +900,17 @@ class SDK extends Emitter {
       data,
     ]);
   };
-  getConversationListSplit = (data: SplitParams, operationID = uuidv4()) => {
+  getConversationListSplit = (
+    data: SplitConversationParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<ConversationItem[]>(
       'getConversationListSplit ',
       window.getConversationListSplit,
       [operationID, data.offset, data.count]
     );
   };
-  // searchConversation = (data: SplitParams, operationID = uuidv4()) => {
+  // searchConversation = (data: SplitConversationParams, operationID = uuidv4()) => {
   //   return this._invoker<ConversationItem[]>(
   //     'searchConversation ',
   //     window.searchConversation,
@@ -975,7 +928,7 @@ class SDK extends Emitter {
     );
   };
   getConversationIDBySessionType = (
-    data: GetOneCveParams,
+    data: GetOneConversationParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<string>(
@@ -1000,7 +953,10 @@ class SDK extends Emitter {
     ]);
   };
 
-  setConversationDraft = <T>(data: SetDraftParams, operationID = uuidv4()) => {
+  setConversationDraft = <T>(
+    data: SetConversationDraftParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<T>(
       'setConversationDraft ',
       window.setConversationDraft,
@@ -1008,7 +964,10 @@ class SDK extends Emitter {
     );
   };
 
-  pinConversation = <T>(data: PinCveParams, operationID = uuidv4()) => {
+  pinConversation = <T>(
+    data: SetConversationPinParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<T>('pinConversation ', window.pinConversation, [
       operationID,
       data.conversationID,
@@ -1030,7 +989,7 @@ class SDK extends Emitter {
     );
   };
   setConversationRecvMessageOpt = <T>(
-    data: isRecvParams,
+    data: SetConversationRecvOptParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1113,7 +1072,7 @@ class SDK extends Emitter {
     ]);
   };
   acceptFriendApplication = <T>(
-    data: AccessFriendParams,
+    data: AccessFriendApplicationParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1123,7 +1082,7 @@ class SDK extends Emitter {
     );
   };
   refuseFriendApplication = <T>(
-    data: AccessFriendParams,
+    data: AccessFriendApplicationParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1158,7 +1117,10 @@ class SDK extends Emitter {
       [operationID]
     );
   };
-  inviteUserToGroup = <T>(data: InviteGroupParams, operationID = uuidv4()) => {
+  inviteUserToGroup = <T>(
+    data: AccessToGroupParams,
+    operationID = uuidv4()
+  ) => {
     return this._invoker<T>('inviteUserToGroup ', window.inviteUserToGroup, [
       operationID,
       data.groupID,
@@ -1166,7 +1128,7 @@ class SDK extends Emitter {
       JSON.stringify(data.userIDList),
     ]);
   };
-  kickGroupMember = <T>(data: InviteGroupParams, operationID = uuidv4()) => {
+  kickGroupMember = <T>(data: AccessToGroupParams, operationID = uuidv4()) => {
     return this._invoker<T>('kickGroupMember ', window.kickGroupMember, [
       operationID,
       data.groupID,
@@ -1182,7 +1144,7 @@ class SDK extends Emitter {
   };
 
   getSpecifiedGroupMembersInfo = (
-    data: Omit<InviteGroupParams, 'reason'>,
+    data: Omit<AccessToGroupParams, 'reason'>,
     operationID = uuidv4()
   ) => {
     return this._invoker<GroupMemberItem[]>(
@@ -1220,7 +1182,7 @@ class SDK extends Emitter {
     );
   };
   setGroupApplyMemberFriend = <T>(
-    data: SetMemberAuthParams,
+    data: SetMemberPermissionParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1230,7 +1192,7 @@ class SDK extends Emitter {
     );
   };
   setGroupLookMemberInfo = <T>(
-    data: SetMemberAuthParams,
+    data: SetMemberPermissionParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1262,7 +1224,7 @@ class SDK extends Emitter {
     ]);
   };
   setGroupMemberNickname = <T>(
-    data: MemberNameParams,
+    data: SetGroupMemberNickParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1352,7 +1314,7 @@ class SDK extends Emitter {
     );
   };
   acceptGroupApplication = <T>(
-    data: AccessGroupParams,
+    data: AccessGroupApplicationParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1362,7 +1324,7 @@ class SDK extends Emitter {
     );
   };
   refuseGroupApplication = <T>(
-    data: AccessGroupParams,
+    data: AccessGroupApplicationParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
@@ -1462,30 +1424,29 @@ class SDK extends Emitter {
       [operationID]
     );
   };
-  signalingInvite = <T>(
-    data: SignalingInviteParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<T>('signalingInvite ', window.signalingInvite, [
-      operationID,
-      JSON.stringify(data),
-    ]);
+  signalingInvite = (data: SignalingInviteParams, operationID = uuidv4()) => {
+    return this._invoker<RtcInviteResults>(
+      'signalingInvite ',
+      window.signalingInvite,
+      [operationID, JSON.stringify(data)]
+    );
   };
-  signalingInviteInGroup = <T>(
+  signalingInviteInGroup = (
     data: SignalingInviteParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<RtcInviteResults>(
       'signalingInviteInGroup ',
       window.signalingInviteInGroup,
       [operationID, JSON.stringify(data)]
     );
   };
-  signalingAccept = <T>(data: RtcActionParams, operationID = uuidv4()) => {
-    return this._invoker<T>('signalingAccept ', window.signalingAccept, [
-      operationID,
-      JSON.stringify(data),
-    ]);
+  signalingAccept = (data: RtcActionParams, operationID = uuidv4()) => {
+    return this._invoker<RtcInviteResults>(
+      'signalingAccept ',
+      window.signalingAccept,
+      [operationID, JSON.stringify(data)]
+    );
   };
   signalingReject = <T>(data: RtcActionParams, operationID = uuidv4()) => {
     return this._invoker<T>('signalingReject ', window.signalingReject, [
@@ -1505,15 +1466,15 @@ class SDK extends Emitter {
       JSON.stringify(data),
     ]);
   };
-  signalingGetRoomByGroupID = <T>(groupID: string, operationID = uuidv4()) => {
-    return this._invoker<T>(
+  signalingGetRoomByGroupID = (groupID: string, operationID = uuidv4()) => {
+    return this._invoker<CallingRoomData>(
       'signalingGetRoomByGroupID ',
       window.signalingGetRoomByGroupID,
       [operationID, groupID]
     );
   };
-  signalingGetTokenByRoomID = <T>(roomID: string, operationID = uuidv4()) => {
-    return this._invoker<T>(
+  signalingGetTokenByRoomID = (roomID: string, operationID = uuidv4()) => {
+    return this._invoker<RtcInviteResults>(
       'signalingGetTokenByRoomID ',
       window.signalingGetTokenByRoomID,
       [operationID, roomID]
@@ -1529,18 +1490,18 @@ class SDK extends Emitter {
       [operationID, data.customInfo, data.roomID]
     );
   };
-  signalingCreateMeeting = <T>(
+  signalingCreateMeeting = (
     data: CreateMeetingParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
+    return this._invoker<RtcInviteResults>(
       'signalingCreateMeeting ',
       window.signalingCreateMeeting,
       [operationID, JSON.stringify(data)]
     );
   };
-  signalingJoinMeeting = <T>(data: string, operationID = uuidv4()) => {
-    return this._invoker<T>(
+  signalingJoinMeeting = (data: string, operationID = uuidv4()) => {
+    return this._invoker<RtcInviteResults>(
       'signalingJoinMeeting ',
       window.signalingJoinMeeting,
       [
@@ -1567,8 +1528,8 @@ class SDK extends Emitter {
       roomID,
     ]);
   };
-  signalingGetMeetings = <T>(operationID = uuidv4()) => {
-    return this._invoker<T>(
+  signalingGetMeetings = (operationID = uuidv4()) => {
+    return this._invoker<{ meetingInfoList: MeetingRecord[] }>(
       'signalingGetMeetings ',
       window.signalingGetMeetings,
       [operationID]

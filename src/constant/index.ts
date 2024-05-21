@@ -15,6 +15,8 @@ export enum CbEvents {
   OnProgress = 'OnProgress',
   OnRecvNewMessage = 'OnRecvNewMessage',
   OnRecvNewMessages = 'OnRecvNewMessages',
+  OnRecvOfflineNewMessage = 'onRecvOfflineNewMessage',
+  OnRecvOfflineNewMessages = 'onRecvOfflineNewMessages',
   OnRecvMessageRevoked = 'OnRecvMessageRevoked',
   OnNewRecvMessageRevoked = 'OnNewRecvMessageRevoked',
   OnRecvC2CReadReceipt = 'OnRecvC2CReadReceipt',
@@ -65,4 +67,7 @@ export enum CbEvents {
   OnRoomParticipantConnected = 'OnRoomParticipantConnected',
   OnRoomParticipantDisconnected = 'OnRoomParticipantDisconnected',
   OnReceiveCustomSignal = 'OnReceiveCustomSignal',
+
+  // unuse
+  UnUsedEvent = 'UnUsedEvent',
 }
