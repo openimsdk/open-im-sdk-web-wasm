@@ -32,13 +32,25 @@ function initWorker() {
 
   // use for webpack5+ or vite
   const isViteEnvironment = import.meta.url.includes('.vite/deps');
+  const isNuxtEnvironment = import.meta.url.includes('_nuxt/node_modules');
   const isSupportModuleWorker = supportsModuleWorkers();
-  const getWorkerUrl = (url: URL) =>
-    url.href.replace('.vite/deps', 'open-im-sdk-wasm/lib');
-  const workerUrl = isSupportModuleWorker
+
+  let workerUrl = isSupportModuleWorker
     ? new URL('worker.js', import.meta.url)
     : new URL('worker-legacy.js', import.meta.url);
-  worker = new Worker(isViteEnvironment ? getWorkerUrl(workerUrl) : workerUrl, {
+  if (isViteEnvironment) {
+    workerUrl = workerUrl.href.replace(
+      '.vite/deps',
+      'open-im-sdk-wasm/lib'
+    ) as unknown as URL;
+  }
+  if (isNuxtEnvironment) {
+    workerUrl = workerUrl.href.replace(
+      '.cache/vite/client/deps',
+      'open-im-sdk-wasm/lib'
+    ) as unknown as URL;
+  }
+  worker = new Worker(workerUrl, {
     type: isSupportModuleWorker ? 'module' : 'classic',
   });
   // This is only required because Safari doesn't support nested
