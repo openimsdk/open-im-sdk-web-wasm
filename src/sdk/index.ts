@@ -1385,7 +1385,7 @@ class SDK extends Emitter {
     );
   };
   uploadFile = (data: UploadFileParams, operationID = uuidv4()) => {
-    data.uuid = `${data.uuid}/${data.file.name}`;
+    data.uuid = `${data.uuid}/${data.file?.name}`;
     window.fileMapSet(data.uuid, data.file);
     return this._invoker<{ url: string }>('uploadFile ', window.uploadFile, [
       operationID,

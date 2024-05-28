@@ -356,7 +356,9 @@ export type UploadFileParams = {
   name: string;
   contentType: string;
   uuid: string;
-  file: File;
+  file?: File;
+  filepath?: string;
+  cause?: string;
 };
 export type PartialUserItem = Partial<SelfUserInfo>;
 
