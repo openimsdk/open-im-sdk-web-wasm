@@ -95,7 +95,7 @@ export enum SessionType {
 }
 export enum GroupStatus {
   Normal = 0,
-  Baned = 1,
+  Banned = 1,
   Dismissed = 2,
   Muted = 3,
 }
@@ -128,6 +128,6 @@ export enum OnlineState {
   Offline = 0,
 }
 export enum GroupMessageReaderFilter {
-  Readed = 0,
+  Read = 0,
   UnRead = 1,
 }
