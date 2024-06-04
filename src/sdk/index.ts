@@ -234,7 +234,7 @@ class SDK extends Emitter {
           }
         }
 
-        this.emit(parsed.event, parsed);
+        this.emit(parsed.event, parsed as any);
       } catch (error) {
         console.error(error);
       }
