@@ -7,6 +7,7 @@ import {
   GroupApplicationItem,
   GroupItem,
   GroupMemberItem,
+  GroupMessageReceiptInfo,
   MessageItem,
   ReceiptInfo,
   RevokedInfo,
@@ -15,10 +16,10 @@ import {
 } from './entity';
 
 export type EventDataMap = {
-  [CbEvents.OnProgress]: number;
+  [CbEvents.OnProgress]: { progress: number; clientMsgID: string };
   [CbEvents.OnBlackAdded]: BlackUserItem;
   [CbEvents.OnBlackDeleted]: BlackUserItem;
-  [CbEvents.OnConversationChanged]: ConversationItem;
+  [CbEvents.OnConversationChanged]: ConversationItem[];
   [CbEvents.OnFriendAdded]: FriendUserItem;
   [CbEvents.OnFriendApplicationAdded]: FriendApplicationItem;
   [CbEvents.OnFriendApplicationDeleted]: FriendApplicationItem;
@@ -37,14 +38,15 @@ export type EventDataMap = {
   [CbEvents.OnNewConversation]: ConversationItem[];
   [CbEvents.OnNewRecvMessageRevoked]: RevokedInfo;
   [CbEvents.OnRecvC2CReadReceipt]: ReceiptInfo[];
-  [CbEvents.OnRecvGroupReadReceipt]: ReceiptInfo[];
+  [CbEvents.OnRecvGroupReadReceipt]: GroupMessageReceiptInfo;
   [CbEvents.OnRecvNewMessage]: MessageItem;
   [CbEvents.OnRecvNewMessages]: MessageItem[];
   [CbEvents.OnRecvOfflineNewMessage]: MessageItem;
   [CbEvents.OnRecvOfflineNewMessages]: MessageItem[];
   [CbEvents.OnSelfInfoUpdated]: SelfUserInfo;
   [CbEvents.OnSyncServerFailed]: void;
-  [CbEvents.OnSyncServerStart]: void;
+  [CbEvents.OnSyncServerStart]: { reinstalled: boolean };
+  [CbEvents.OnSyncServerProgress]: { progress: number };
   [CbEvents.OnSyncServerFinish]: void;
   [CbEvents.OnTotalUnreadMessageCountChanged]: number;
   [CbEvents.OnUserStatusChanged]: UserOnlineState;
@@ -53,6 +55,7 @@ export type EventDataMap = {
   [CbEvents.OnConnecting]: void;
   [CbEvents.OnKickedOffline]: void;
   [CbEvents.OnUserTokenExpired]: void;
+  [CbEvents.OnUserTokenInvalid]: void;
 };
 
 export type DataOfEvent<E extends CbEvents> = E extends keyof EventDataMap

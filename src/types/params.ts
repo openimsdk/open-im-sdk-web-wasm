@@ -329,6 +329,10 @@ export type SetMemberPermissionParams = {
   rule: AllowType;
   groupID: string;
 };
+export type OffsetParams = {
+  offset: number;
+  count: number;
+};
 export type CreateGroupParams = {
   memberUserIDs: string[];
   groupInfo: Partial<GroupItem>;

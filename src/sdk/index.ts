@@ -1,7 +1,7 @@
 import { initDatabaseAPI, workerPromise } from '@/api';
 import Emitter from '@/utils/emitter';
 import { v4 as uuidv4 } from 'uuid';
-import { getGO, initializeWasm, getGoExitPromsie } from './initialize';
+import { getGO, initializeWasm, getGoExitPromise } from './initialize';
 
 import {
   AccessFriendApplicationParams,
@@ -18,7 +18,6 @@ import {
   CustomMsgParams,
   CustomSignalParams,
   FaceMessageParams,
-  FileMsgParamsByFullPath,
   FileMsgParamsByURL,
   FindMessageParams,
   GetAdvancedHistoryMsgParams,
@@ -61,13 +60,11 @@ import {
   SetConversationPrivateStateParams,
   SignalingInviteParams,
   SoundMsgParamsByURL,
-  SoundMsgParamsByFullPath,
   SplitConversationParams,
   TransferGroupParams,
   TypingUpdateParams,
   UpdateMeetingParams,
   UploadFileParams,
-  VideoMsgParamsByFullPath,
   VideoMsgParamsByURL,
   SetGroupMemberNickParams,
   WasmPathConfig,
@@ -75,6 +72,7 @@ import {
   SetFriendExParams,
   SetConversationExParams,
   AddBlackParams,
+  OffsetParams,
 } from '../types/params';
 
 import {
@@ -116,7 +114,7 @@ class SDK extends Emitter {
     initDatabaseAPI(debug);
     this.isLogStandardOutput = debug;
     this.wasmInitializedPromise = initializeWasm(url);
-    this.goExitPromise = getGoExitPromsie();
+    this.goExitPromise = getGoExitPromise();
 
     if (this.goExitPromise) {
       this.goExitPromise
@@ -1046,6 +1044,13 @@ class SDK extends Emitter {
       [operationID]
     );
   };
+  getFriendListPage = (data: OffsetParams, operationID = uuidv4()) => {
+    return this._invoker<FullUserItem[]>(
+      'getFriendListPage ',
+      window.getFriendListPage,
+      [operationID, data.offset, data.count]
+    );
+  };
   setFriendRemark = <T>(data: RemarkFriendParams, operationID = uuidv4()) => {
     return this._invoker<T>('setFriendRemark ', window.setFriendRemark, [
       operationID,
@@ -1206,6 +1211,13 @@ class SDK extends Emitter {
       'getJoinedGroupList ',
       window.getJoinedGroupList,
       [operationID]
+    );
+  };
+  getJoinedGroupListPage = (data: OffsetParams, operationID = uuidv4()) => {
+    return this._invoker<GroupItem[]>(
+      'getJoinedGroupListPage ',
+      window.getJoinedGroupListPage,
+      [operationID, data.offset, data.count]
     );
   };
   createGroup = (data: CreateGroupParams, operationID = uuidv4()) => {
