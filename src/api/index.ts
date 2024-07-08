@@ -346,6 +346,10 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   window.getStrangerInfo = registeMethodOnWindow('getStrangerInfo');
   window.setStrangerInfo = registeMethodOnWindow('setStrangerInfo');
 
+  // app sdk versions
+  window.getAppSDKVersion = registeMethodOnWindow('getAppSDKVersion');
+  window.setAppSDKVersion = registeMethodOnWindow('setAppSDKVersion');
+
   // super groups
   window.getJoinedSuperGroupList = registeMethodOnWindow(
     'getJoinedSuperGroupList'

@@ -172,6 +172,8 @@ import {
   updateColumnsFriend,
   searchConversations,
   setSqlWasmPath,
+  getAppSDKVersion,
+  setAppSDKVersion,
 } from '../api/database';
 
 import { getInstance } from './database/instance';
@@ -315,6 +317,9 @@ rpc.registerMethod('insertLoginUser', insertLoginUser);
 rpc.registerMethod('updateLoginUser', updateLoginUser);
 rpc.registerMethod('getStrangerInfo', getStrangerInfo);
 rpc.registerMethod('setStrangerInfo', setStrangerInfo);
+
+rpc.registerMethod('getAppSDKVersion', getAppSDKVersion);
+rpc.registerMethod('setAppSDKVersion', setAppSDKVersion);
 
 rpc.registerMethod('getJoinedSuperGroupList', getJoinedSuperGroupList);
 rpc.registerMethod('getJoinedSuperGroupIDList', getJoinedSuperGroupIDList);
