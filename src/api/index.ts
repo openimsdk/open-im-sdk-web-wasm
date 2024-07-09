@@ -22,8 +22,7 @@ function supportsModuleWorkers() {
 }
 
 function initWorker() {
-  if (typeof 
-      === 'undefined') {
+  if (typeof === 'undefined') {
     return;
   }
 
