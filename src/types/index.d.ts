@@ -115,6 +115,9 @@ declare global {
     deleteSuperGroup: DatabaseApi;
     insertSuperGroup: DatabaseApi;
     updateSuperGroup: DatabaseApi;
+    // app sdk version
+    getAppSDKVersion: DatabaseApi;
+    setAppSDKVersion: DatabaseApi;
     // unread messages
     deleteConversationUnreadMessageList: DatabaseApi;
     batchInsertConversationUnreadMessageList: DatabaseApi;
@@ -579,6 +582,7 @@ declare global {
       operationID: string
     ) => Promise<string>;
     getFriendList: (operationID: string) => Promise<string>;
+    getFriendListPage: (operationID: string) => Promise<string>;
     setFriendRemark: (
       operationID: string,
       toUserID: string,
@@ -659,6 +663,7 @@ declare global {
       groupID: string
     ) => Promise<string>;
     getJoinedGroupList: (operationID: string) => Promise<string>;
+    getJoinedGroupListPage: (operationID: string) => Promise<string>;
     createGroup: (
       operationID: string,
       options: CreateGroupParams

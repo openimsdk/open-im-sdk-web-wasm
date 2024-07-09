@@ -12,9 +12,12 @@ export enum CbEvents {
   OnKickedOffline = 'OnKickedOffline',
   OnSelfInfoUpdated = 'OnSelfInfoUpdated',
   OnUserTokenExpired = 'OnUserTokenExpired',
+  OnUserTokenInvalid = 'OnUserTokenInvalid',
   OnProgress = 'OnProgress',
   OnRecvNewMessage = 'OnRecvNewMessage',
   OnRecvNewMessages = 'OnRecvNewMessages',
+  OnRecvOfflineNewMessage = 'onRecvOfflineNewMessage',
+  OnRecvOfflineNewMessages = 'onRecvOfflineNewMessages',
   OnRecvMessageRevoked = 'OnRecvMessageRevoked',
   OnNewRecvMessageRevoked = 'OnNewRecvMessageRevoked',
   OnRecvC2CReadReceipt = 'OnRecvC2CReadReceipt',
@@ -23,6 +26,7 @@ export enum CbEvents {
   OnNewConversation = 'OnNewConversation',
   OnSyncServerFailed = 'OnSyncServerFailed',
   OnSyncServerFinish = 'OnSyncServerFinish',
+  OnSyncServerProgress = 'OnSyncServerProgress',
   OnSyncServerStart = 'OnSyncServerStart',
   OnTotalUnreadMessageCountChanged = 'OnTotalUnreadMessageCountChanged',
   OnBlackAdded = 'OnBlackAdded',
@@ -65,4 +69,7 @@ export enum CbEvents {
   OnRoomParticipantConnected = 'OnRoomParticipantConnected',
   OnRoomParticipantDisconnected = 'OnRoomParticipantDisconnected',
   OnReceiveCustomSignal = 'OnReceiveCustomSignal',
+
+  // unuse
+  UnUsedEvent = 'UnUsedEvent',
 }

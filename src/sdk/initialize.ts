@@ -1,11 +1,13 @@
 import { wait } from '@/utils';
 
-let initiallized = false;
+let initialized = false;
 let go: Go;
 let goExitPromise: Promise<void> | undefined;
 
+const CACHE_KEY = 'openim-wasm-cache';
+
 export async function initializeWasm(url: string): Promise<Go | null> {
-  if (initiallized) {
+  if (initialized) {
     return null;
   }
 
@@ -14,32 +16,70 @@ export async function initializeWasm(url: string): Promise<Go | null> {
   }
 
   go = new Go();
-  if ('instantiateStreaming' in WebAssembly) {
-    const wasm = await WebAssembly.instantiateStreaming(
-      fetch(url),
-      go.importObject
-    );
+  let wasm;
+  try {
+    if ('instantiateStreaming' in WebAssembly) {
+      wasm = await WebAssembly.instantiateStreaming(
+        fetchWithCache(url),
+        go.importObject
+      );
+    } else {
+      const bytes = await fetchWithCache(url).then(resp => resp.arrayBuffer());
+      wasm = await WebAssembly.instantiate(bytes, go.importObject);
+    }
     go.run(wasm.instance);
-  } else {
-    const bytes = await fetch(url).then(resp => resp.arrayBuffer());
-
-    const wasm = await WebAssembly.instantiate(bytes, go.importObject);
-    goExitPromise = go.run(wasm.instance);
+  } catch (error) {
+    console.error('Failed to initialize WASM:', error);
+    return null;
   }
 
   await wait(100);
-
+  initialized = true;
   return go;
 }
 
 export function reset() {
-  initiallized = false;
+  initialized = false;
 }
 
 export function getGO() {
   return go;
 }
 
-export function getGoExitPromsie() {
+export function getGoExitPromise() {
   return goExitPromise;
+}
+
+async function fetchWithCache(url: string): Promise<Response> {
+  if (!('caches' in window)) {
+    return fetch(url);
+  }
+
+  const cache = await caches.open(CACHE_KEY);
+  const cachedResponse = await cache.match(url);
+  const isResourceUpdated = async () => {
+    const serverResponse = await fetch(url, { method: 'HEAD' });
+    const etag = serverResponse.headers.get('ETag');
+    const lastModified = serverResponse.headers.get('Last-Modified');
+    return (
+      serverResponse.ok &&
+      (etag !== cachedResponse?.headers.get('ETag') ||
+        lastModified !== cachedResponse?.headers.get('Last-Modified'))
+    );
+  };
+
+  if (cachedResponse && !(await isResourceUpdated())) {
+    return cachedResponse;
+  }
+
+  return fetchAndUpdateCache(url, cache);
+}
+
+async function fetchAndUpdateCache(
+  url: string,
+  cache: Cache
+): Promise<Response> {
+  const response = await fetch(url, { cache: 'no-cache' });
+  await cache.put(url, response.clone());
+  return response;
 }

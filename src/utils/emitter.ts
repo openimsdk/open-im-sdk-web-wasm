@@ -1,11 +1,12 @@
 import { WSEvent } from '@/types/entity';
 import { CbEvents } from '../constant';
+import { DataOfEvent } from '../types/eventData';
 
 interface Events {
-  [key: string]: Cbfn[];
+  [key: string]: Cbfn<any>[];
 }
 
-type Cbfn = (data: WSEvent<any>) => void;
+type Cbfn<E extends CbEvents> = (data: WSEvent<DataOfEvent<E>>) => void;
 
 class Emitter {
   private events: Events;
@@ -14,7 +15,7 @@ class Emitter {
     this.events = {};
   }
 
-  emit(event: CbEvents, data: WSEvent) {
+  emit<E extends CbEvents>(event: E, data: WSEvent<DataOfEvent<E>>) {
     if (this.events[event]) {
       this.events[event].forEach(fn => {
         return fn(data);
@@ -24,7 +25,7 @@ class Emitter {
     return this;
   }
 
-  on(event: CbEvents, fn: Cbfn) {
+  on<E extends CbEvents>(event: E, fn: Cbfn<E>) {
     if (this.events[event]) {
       this.events[event].push(fn);
     } else {
@@ -34,7 +35,7 @@ class Emitter {
     return this;
   }
 
-  off(event: CbEvents, fn: Cbfn) {
+  off<E extends CbEvents>(event: E, fn: Cbfn<E>) {
     if (event && typeof fn === 'function' && this.events[event]) {
       const listeners = this.events[event];
       if (!listeners || listeners.length === 0) {

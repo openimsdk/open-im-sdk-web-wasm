@@ -463,3 +463,36 @@ export type GroupMessageReadInfo = {
   unreadCount: number;
   readMembers: GroupMemberItem[];
 };
+
+export type RtcInviteResults = {
+  liveURL: string;
+  roomID: string;
+  token: string;
+  busyLineUserIDList?: string[];
+};
+
+export type ParticipantInfo = {
+  userInfo: PublicUserItem;
+  groupMemberInfo?: GroupMemberItem;
+  groupInfo?: GroupItem;
+};
+
+export type CallingRoomData = {
+  participant?: ParticipantInfo[];
+  invitation?: RtcInvite;
+  roomID: string;
+};
+
+export type MeetingRecord = {
+  createTime: number;
+  endTime: number;
+  hostUserID: string;
+  joinDisableVideo: boolean;
+  roomID: string;
+  meetingName: string;
+  onlyHostInviteUser: boolean;
+  participantCanEnableVideo: boolean;
+  startTime: number;
+  hostFaceURL?: string;
+  hostNickname?: string;
+};

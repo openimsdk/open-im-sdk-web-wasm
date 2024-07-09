@@ -57,10 +57,6 @@ export type GetHistoryMsgParams = {
   startClientMsgID: string;
   conversationID?: string;
 };
-export type MarkNotiParams = {
-  conversationID: string;
-  clientMsgIDList: string[];
-};
 export type SendGroupReadReceiptParams = {
   conversationID: string;
   clientMsgIDList: string[];
@@ -90,13 +86,13 @@ export type SetMessageLocalExParams = {
   clientMsgID: string;
   localEx: string;
 };
-export type ImageMsgParams = {
+export type ImageMsgParamsByURL = {
   sourcePicture: PicBaseInfo;
   bigPicture: PicBaseInfo;
   snapshotPicture: PicBaseInfo;
   sourcePath: string;
 };
-export type VideoMsgParams = {
+export type VideoMsgParamsByURL = {
   videoPath: string;
   duration: number;
   videoType: string;
@@ -111,7 +107,7 @@ export type VideoMsgParams = {
   snapshotHeight: number;
   snapShotType?: string;
 };
-export type VideoMsgFullParams = {
+export type VideoMsgParamsByFullPath = {
   videoFullPath: string;
   videoType: string;
   duration: number;
@@ -135,7 +131,7 @@ export type AdvancedMsgParams = {
   text: string;
   messageEntityList?: MessageEntity[];
 };
-export type SetPrvParams = {
+export type SetConversationPrivateStateParams = {
   conversationID: string;
   isPrivate: boolean;
 };
@@ -143,22 +139,13 @@ export type SplitConversationParams = {
   offset: number;
   count: number;
 };
-export type SetDraftParams = {
+export type SetConversationDraftParams = {
   conversationID: string;
   draftText: string;
 };
-export type PinCveParams = {
+export type SetConversationPinParams = {
   conversationID: string;
   isPinned: boolean;
-};
-export type IsRecvParams = {
-  conversationIDList: string[];
-  opt: MessageReceiveOptType;
-};
-export type UpdateMemberNameParams = {
-  groupID: string;
-  userID: string;
-  GroupMemberNickname: string;
 };
 export type JoinGroupParams = {
   groupID: string;
@@ -184,7 +171,7 @@ export type TransferGroupParams = {
   groupID: string;
   newOwnerUserID: string;
 };
-export type AccessGroupParams = {
+export type AccessGroupApplicationParams = {
   groupID: string;
   fromUserID: string;
   handleMsg: string;
@@ -212,7 +199,7 @@ export type AtMsgParams = {
   atUsersInfo?: AtUsersInfoItem[];
   message?: MessageItem;
 };
-export type SoundMsgParams = {
+export type SoundMsgParamsByURL = {
   uuid: string;
   soundPath: string;
   sourceUrl: string;
@@ -220,7 +207,7 @@ export type SoundMsgParams = {
   duration: number;
   soundType?: string;
 };
-export type FileMsgParams = {
+export type FileMsgParamsByURL = {
   filePath: string;
   fileName: string;
   uuid: string;
@@ -228,11 +215,11 @@ export type FileMsgParams = {
   fileSize: number;
   fileType?: string;
 };
-export type FileMsgFullParams = {
+export type FileMsgParamsByFullPath = {
   fileFullPath: string;
   fileName: string;
 };
-export type SouondMsgFullParams = {
+export type SoundMsgParamsByFullPath = {
   soundPath: string;
   duration: number;
 };
@@ -249,10 +236,6 @@ export type LocationMsgParams = {
   description: string;
   longitude: number;
   latitude: number;
-};
-export type GroupMsgReadParams = {
-  groupID: string;
-  msgIDList: string[];
 };
 export type InsertSingleMsgParams = {
   message: MessageItem;
@@ -272,19 +255,11 @@ export type TypingUpdateParams = {
   recvID: string;
   msgTip: string;
 };
-export type SplitParams = {
-  offset: number;
-  count: number;
-};
-export type GetOneCveParams = {
-  sourceID: string;
-  sessionType: number;
-};
 export type SetConversationExParams = {
   conversationID: string;
   ex: string;
 };
-export type isRecvParams = {
+export type SetConversationRecvOptParams = {
   conversationID: string;
   opt: MessageReceiveOptType;
 };
@@ -321,7 +296,7 @@ export type SetFriendExParams = {
   toUserIDs: string[];
   ex: string;
 };
-export type AccessFriendParams = {
+export type AccessFriendApplicationParams = {
   toUserID: string;
   handleMsg: string;
 };
@@ -329,7 +304,7 @@ export type AddBlackParams = {
   toUserID: string;
   ex?: string;
 };
-export type InviteGroupParams = {
+export type AccessToGroupParams = {
   groupID: string;
   reason: string;
   userIDList: string[];
@@ -350,9 +325,13 @@ export type SearchGroupMemberParams = {
   offset: number;
   count: number;
 };
-export type SetMemberAuthParams = {
+export type SetMemberPermissionParams = {
   rule: AllowType;
   groupID: string;
+};
+export type OffsetParams = {
+  offset: number;
+  count: number;
 };
 export type CreateGroupParams = {
   memberUserIDs: string[];
@@ -360,7 +339,7 @@ export type CreateGroupParams = {
   adminUserIDs?: string[];
   ownerUserID?: string;
 };
-export type MemberNameParams = {
+export type SetGroupMemberNickParams = {
   groupID: string;
   userID: string;
   groupMemberNickname: string;
@@ -381,7 +360,9 @@ export type UploadFileParams = {
   name: string;
   contentType: string;
   uuid: string;
-  file: File;
+  file?: File;
+  filepath?: string;
+  cause?: string;
 };
 export type PartialUserItem = Partial<SelfUserInfo>;
 
