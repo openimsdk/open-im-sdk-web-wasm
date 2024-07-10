@@ -10,6 +10,7 @@ import {
   subtractMemberCount as databaseSubtractMemberCount,
   addMemberCount as databaseAddMemberCount,
   getGroups as databaseGetGroups,
+  deleteAllGroup as databaseDeleteAllGroup,
   LocalGroup,
 } from '@/sqls';
 import {
@@ -282,6 +283,53 @@ export async function getGroups(groupIDListStr: string): Promise<string> {
       { name: 'groupName' }
     );
     return formatResponse(JSON.stringify(allJoinedGroupList));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function batchInsertGroup(
+  localGroupListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const list = JSON.parse(localGroupListStr) as LocalGroup[];
+
+    list.map(item => {
+      const localGroup = convertToSnakeCaseObject(
+        convertObjectField(item, { groupName: 'name' })
+      ) as LocalGroup;
+      databaseInsertGroup(db, localGroup);
+
+      return null;
+    });
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteAllGroup(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseDeleteAllGroup(db);
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

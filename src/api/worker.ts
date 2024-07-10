@@ -98,6 +98,8 @@ import {
   getJoinedWorkingGroupIDList,
   getJoinedWorkingGroupList,
   getGroups,
+  batchInsertGroup,
+  deleteAllGroup,
 
   // groupRequest
   insertGroupRequest,
@@ -117,6 +119,9 @@ import {
   searchFriendList,
   getFriendInfoList,
   getFriendInfoByFriendUserID,
+  batchInsertFriend,
+  getFriendListCount,
+  deleteAllFriend,
 
   // groupMember
   batchInsertGroupMember,
@@ -140,6 +145,7 @@ import {
   updateGroupMember,
   updateGroupMemberField,
   getUserJoinedGroupIDs,
+  getGroupMemberListByUserIDs,
 
   // temp cache chatlogs
   batchInsertTempCacheMessageList,
@@ -174,6 +180,9 @@ import {
   setSqlWasmPath,
   getAppSDKVersion,
   setAppSDKVersion,
+  getVersionSync,
+  setVersionSync,
+  deleteVersionSync,
 } from '../api/database';
 
 import { getInstance } from './database/instance';
@@ -321,6 +330,10 @@ rpc.registerMethod('setStrangerInfo', setStrangerInfo);
 rpc.registerMethod('getAppSDKVersion', getAppSDKVersion);
 rpc.registerMethod('setAppSDKVersion', setAppSDKVersion);
 
+rpc.registerMethod('getVersionSync', getVersionSync);
+rpc.registerMethod('setVersionSync', setVersionSync);
+rpc.registerMethod('deleteVersionSync', deleteVersionSync);
+
 rpc.registerMethod('getJoinedSuperGroupList', getJoinedSuperGroupList);
 rpc.registerMethod('getJoinedSuperGroupIDList', getJoinedSuperGroupIDList);
 rpc.registerMethod('getSuperGroupInfoByGroupID', getSuperGroupInfoByGroupID);
@@ -377,6 +390,8 @@ rpc.registerMethod('getJoinedWorkingGroupIDList', getJoinedWorkingGroupIDList);
 rpc.registerMethod('getJoinedWorkingGroupList', getJoinedWorkingGroupList);
 rpc.registerMethod('getGroupMemberAllGroupIDs', getGroupMemberAllGroupIDs);
 rpc.registerMethod('getGroups', getGroups);
+rpc.registerMethod('batchInsertGroup', batchInsertGroup);
+rpc.registerMethod('deleteAllGroup', deleteAllGroup);
 
 // groupMembers
 rpc.registerMethod(
@@ -412,6 +427,7 @@ rpc.registerMethod('updateGroupMember', updateGroupMember);
 rpc.registerMethod('updateGroupMemberField', updateGroupMemberField);
 rpc.registerMethod('searchGroupMembers', searchGroupMembers);
 rpc.registerMethod('getUserJoinedGroupIDs', getUserJoinedGroupIDs);
+rpc.registerMethod('getGroupMemberListByUserIDs', getGroupMemberListByUserIDs);
 
 // groupRequest
 rpc.registerMethod('insertGroupRequest', insertGroupRequest);
@@ -433,6 +449,9 @@ rpc.registerMethod('getFriendInfoByFriendUserID', getFriendInfoByFriendUserID);
 rpc.registerMethod('getFriendInfoList', getFriendInfoList);
 rpc.registerMethod('getPageFriendList', getPageFriendList);
 rpc.registerMethod('updateColumnsFriend', updateColumnsFriend);
+rpc.registerMethod('getFriendListCount', getFriendListCount);
+rpc.registerMethod('batchInsertFriend', batchInsertFriend);
+rpc.registerMethod('deleteAllFriend', deleteAllFriend);
 
 // temp cache chatlogs
 rpc.registerMethod(

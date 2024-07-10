@@ -63,6 +63,8 @@ const InternalConstraint = [
   ['upload_id', 'uploadID'],
   ['upload_info', 'uploadInfo'],
   ['expire_time', 'expireTime'],
+  ['entity_id', 'entityID'],
+  ['version_id', 'versionID'],
 ];
 
 function _getInternalCamelCaseBySnakeCase(key: string) {

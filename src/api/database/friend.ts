@@ -9,6 +9,8 @@ import {
   searchFriendList as databasesearchFriendList,
   getFriendInfoByFriendUserID as databaseGetFriendInfoByFriendUserID,
   getFriendInfoList as databaseGetFriendInfoList,
+  getFriendListCount as databaseGetFriendListCount,
+  deleteAllFriend as databaseDeleteAllFriend,
   LocalFriend,
 } from '@/sqls';
 import {
@@ -261,6 +263,74 @@ export async function updateColumnsFriend(
       JSON.parse(friendUserIDListStr),
       localFriend
     );
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getFriendListCount(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetFriendListCount(db);
+
+    return formatResponse(execResult[0]?.values[0]?.[0] ?? 0);
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function batchInsertFriend(
+  localFriendListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const list = JSON.parse(localFriendListStr) as LocalFriend[];
+
+    list.map(item => {
+      const localFriend = convertToSnakeCaseObject(
+        convertObjectField(item, {
+          userID: 'friend_user_id',
+          nickname: 'name',
+        })
+      ) as LocalFriend;
+      databaseInsertFriend(db, localFriend);
+
+      return null;
+    });
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteAllFriend(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseDeleteAllFriend(db);
 
     return formatResponse('');
   } catch (e) {

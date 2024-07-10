@@ -19,7 +19,17 @@ export async function getAppSDKVersion(): Promise<string> {
 
     const execResult = databaseGetAppSDKVersion(db);
 
-    return formatResponse(converSqlExecResult(execResult[0], 'CamelCase', []));
+    if (execResult.length === 0) {
+      return formatResponse(
+        '',
+        DatabaseErrorCode.ErrorNoRecord,
+        'no app version with database'
+      );
+    }
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [])[0]
+    );
   } catch (e) {
     console.error(e);
 
@@ -42,21 +52,18 @@ export async function setAppSDKVersion(
     ) as LocalAppSDKVersion;
 
     const execResult = databaseGetAppSDKVersion(db);
-    const version = converSqlExecResult(execResult[0], 'CamelCase', []);
-    if (version[0].version) {
-      const execResult = databaseUpdateAppSDKVersion(
+
+    const result = converSqlExecResult(execResult[0], 'CamelCase', []);
+    if (result[0] && result[0].version) {
+      databaseUpdateAppSDKVersion(
         db,
-        version[0].version as string,
+        result[0].version as string,
         localAppSDKVersion
       );
-      return formatResponse(
-        converSqlExecResult(execResult[0], 'CamelCase', [])
-      );
+      return formatResponse('');
     } else {
-      const execResult = databaseInsertAppSDKVersion(db, localAppSDKVersion);
-      return formatResponse(
-        converSqlExecResult(execResult[0], 'CamelCase', [])
-      );
+      databaseInsertAppSDKVersion(db, localAppSDKVersion);
+      return formatResponse('');
     }
   } catch (e) {
     console.error(e);

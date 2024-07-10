@@ -240,6 +240,9 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   window.getConversationNormalMsgSeq = registeMethodOnWindow(
     'getConversationNormalMsgSeq'
   );
+  window.getConversationNormalMsgSeqNoInit = registeMethodOnWindow(
+    'getConversationNormalMsgSeq'
+  );
   window.getConversationPeerNormalMsgSeq = registeMethodOnWindow(
     'getConversationPeerNormalMsgSeq'
   );
@@ -349,6 +352,11 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   // app sdk versions
   window.getAppSDKVersion = registeMethodOnWindow('getAppSDKVersion');
   window.setAppSDKVersion = registeMethodOnWindow('setAppSDKVersion');
+
+  // versions sync
+  window.getVersionSync = registeMethodOnWindow('getVersionSync');
+  window.setVersionSync = registeMethodOnWindow('setVersionSync');
+  window.deleteVersionSync = registeMethodOnWindow('deleteVersionSync');
 
   // super groups
   window.getJoinedSuperGroupList = registeMethodOnWindow(
@@ -499,6 +507,9 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   window.getFriendInfoList = registeMethodOnWindow('getFriendInfoList');
   window.getPageFriendList = registeMethodOnWindow('getPageFriendList');
   window.updateColumnsFriend = registeMethodOnWindow('updateColumnsFriend');
+  window.getFriendListCount = registeMethodOnWindow('getFriendListCount');
+  window.batchInsertFriend = registeMethodOnWindow('batchInsertFriend');
+  window.deleteAllFriend = registeMethodOnWindow('deleteAllFriend');
 
   // groups
   window.insertGroup = registeMethodOnWindow('insertGroup');
@@ -522,6 +533,11 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   );
   window.getUserJoinedGroupIDs = registeMethodOnWindow('getUserJoinedGroupIDs');
   window.getGroups = registeMethodOnWindow('getGroups');
+  window.getGroupMemberListByUserIDs = registeMethodOnWindow(
+    'getGroupMemberListByUserIDs'
+  );
+  window.batchInsertGroup = registeMethodOnWindow('batchInsertGroup');
+  window.deleteAllGroup = registeMethodOnWindow('deleteAllGroup');
 
   // groupRequest
   window.insertGroupRequest = registeMethodOnWindow('insertGroupRequest');

@@ -181,6 +181,66 @@ export function getGroupMemberListSplit(
   return db.exec(condition);
 }
 
+export function getGroupMemberListByUserIDs(
+  db: Database,
+  groupID: string,
+  filter: number,
+  userIDs: string[]
+): QueryExecResult[] {
+  const ids = userIDs.map(v => `'${v}'`);
+  let condition = `
+    SELECT * FROM local_group_members 
+        WHERE group_id = "${groupID}" 
+        And user_id IN (${ids.join(',')})
+        ORDER BY role_level DESC,join_time ASC 
+    `;
+  if (filter === 1) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And role_level = 100 
+            And user_id IN (${ids.join(',')})
+        `;
+  }
+  if (filter === 2) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And role_level = 60 
+            And user_id IN (${ids.join(',')})
+        ORDER BY join_time ASC 
+        `;
+  }
+  if (filter === 3) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And role_level = 20 
+            And user_id IN (${ids.join(',')})
+        ORDER BY join_time ASC 
+        `;
+  }
+  if (filter === 4) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And ( role_level = 20 OR role_level = 60 )  
+            And user_id IN (${ids.join(',')})
+        ORDER BY role_level DESC,join_time ASC 
+        `;
+  }
+  if (filter === 5) {
+    condition = `
+        SELECT * FROM local_group_members 
+            WHERE group_id = "${groupID}" 
+            And ( role_level = 100 OR role_level = 60 )  
+            And user_id IN (${ids.join(',')})
+        ORDER BY role_level DESC,join_time ASC 
+        `;
+  }
+  return db.exec(condition);
+}
+
 export function getGroupMemberOwnerAndAdmin(
   db: Database,
   groupID: string

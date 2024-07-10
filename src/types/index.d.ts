@@ -60,6 +60,7 @@ declare global {
     getMessagesByClientMsgIDs: DatabaseApi;
     getMessagesBySeqs: DatabaseApi;
     getConversationNormalMsgSeq: DatabaseApi;
+    getConversationNormalMsgSeqNoInit: DatabaseApi;
     getConversationPeerNormalMsgSeq: DatabaseApi;
     deleteConversationAllMessages: DatabaseApi;
     markDeleteConversationAllMessages: DatabaseApi;
@@ -118,6 +119,10 @@ declare global {
     // app sdk version
     getAppSDKVersion: DatabaseApi;
     setAppSDKVersion: DatabaseApi;
+    // version sync
+    getVersionSync: DatabaseApi;
+    setVersionSync: DatabaseApi;
+    deleteVersionSync: DatabaseApi;
     // unread messages
     deleteConversationUnreadMessageList: DatabaseApi;
     batchInsertConversationUnreadMessageList: DatabaseApi;
@@ -173,6 +178,9 @@ declare global {
     getFriendInfoList: DatabaseApi;
     getPageFriendList: DatabaseApi;
     updateColumnsFriend: DatabaseApi;
+    getFriendListCount: DatabaseApi;
+    batchInsertFriend: DatabaseApi;
+    deleteAllFriend: DatabaseApi;
 
     // groups
     insertGroup: DatabaseApi;
@@ -188,6 +196,8 @@ declare global {
     getGroupMemberAllGroupIDs: DatabaseApi;
     getUserJoinedGroupIDs: DatabaseApi;
     getGroups: DatabaseApi;
+    batchInsertGroup: DatabaseApi;
+    deleteAllGroup: DatabaseApi;
 
     // groupRequest
     insertGroupRequest: DatabaseApi;
@@ -210,6 +220,7 @@ declare global {
     getGroupMemberListSplit: DatabaseApi;
     getGroupMemberOwnerAndAdminDB: DatabaseApi;
     getGroupMemberOwner: DatabaseApi;
+    getGroupMemberListByUserIDs: DatabaseApi;
     getGroupMemberListSplitByJoinTimeFilter: DatabaseApi;
     getGroupOwnerAndAdminByGroupID: DatabaseApi;
     getGroupMemberUIDListByGroupID: DatabaseApi;

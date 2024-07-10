@@ -22,6 +22,7 @@ import {
   updateGroupMemberField as databaseUpdateGroupMemberField,
   searchGroupMembers as databaseSearchGroupMembers,
   getUserJoinedGroupIDs as databaseGetUserJoinedGroupIDs,
+  getGroupMemberListByUserIDs as databaseGetGroupMemberListByUserIDs,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -210,6 +211,37 @@ export async function getGroupMemberListSplit(
       offset,
       count,
       loginUserID
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [], {
+        user_group_face_url: 'faceURL',
+      })
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getGroupMemberListByUserIDs(
+  groupID: string,
+  filter: number,
+  userIDs: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetGroupMemberListByUserIDs(
+      db,
+      groupID,
+      filter,
+      JSON.parse(userIDs)
     );
 
     return formatResponse(

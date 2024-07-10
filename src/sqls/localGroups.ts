@@ -155,3 +155,11 @@ export function getGroups(db: Database, groupIDs: string[]): QueryExecResult[] {
     `
   );
 }
+
+export function deleteAllGroup(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+    DELETE FROM local_groups;
+    `
+  );
+}
