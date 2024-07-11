@@ -25,7 +25,8 @@ export function localGroups(db: Database): QueryExecResult[] {
           'look_member_info'     INTEGER,
           'apply_member_friend'      INTEGER,
           'notification_update_time' INTEGER,
-          'notification_user_id'   TEXT
+          'notification_user_id'   TEXT,
+          'display_is_read'        numeric
       )  
       `
   );
@@ -152,6 +153,14 @@ export function getGroups(db: Database, groupIDs: string[]): QueryExecResult[] {
   return db.exec(
     `
     select * from local_groups where group_id in (${values});
+    `
+  );
+}
+
+export function deleteAllGroup(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+    DELETE FROM local_groups;
     `
   );
 }

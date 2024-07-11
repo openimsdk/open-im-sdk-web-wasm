@@ -10,6 +10,7 @@ import {
   subtractMemberCount as databaseSubtractMemberCount,
   addMemberCount as databaseAddMemberCount,
   getGroups as databaseGetGroups,
+  deleteAllGroup as databaseDeleteAllGroup,
   LocalGroup,
 } from '@/sqls';
 import {
@@ -92,7 +93,9 @@ export async function getJoinedGroupList(): Promise<string> {
     const execResult = databaseGetJoinedGroupList(db);
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], { name: 'groupName' })
+      converSqlExecResult(execResult[0], 'CamelCase', ['displayIsRead'], {
+        name: 'groupName',
+      })
     );
   } catch (e) {
     console.error(e);
@@ -120,7 +123,7 @@ export async function getGroupInfoByGroupID(groupID: string): Promise<string> {
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], {
+      converSqlExecResult(execResult[0], 'CamelCase', ['displayIsRead'], {
         name: 'groupName',
       })[0]
     );
@@ -151,7 +154,9 @@ export async function getAllGroupInfoByGroupIDOrGroupName(
     );
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [], { name: 'groupName' })
+      converSqlExecResult(execResult[0], 'CamelCase', ['displayIsRead'], {
+        name: 'groupName',
+      })
     );
   } catch (e) {
     console.error(e);
@@ -205,7 +210,9 @@ export async function getJoinedWorkingGroupIDList(): Promise<string> {
     const db = await getInstance();
 
     const execResult = databaseGetJoinedGroupList(db);
-    const allJoinedGroupList = converSqlExecResult(execResult[0], 'CamelCase');
+    const allJoinedGroupList = converSqlExecResult(execResult[0], 'CamelCase', [
+      'displayIsRead',
+    ]);
     const filterIDList = [] as string[];
     allJoinedGroupList.forEach(group => {
       if (group.groupType === 2) {
@@ -232,7 +239,7 @@ export async function getJoinedWorkingGroupList(): Promise<string> {
     const allJoinedGroupList = converSqlExecResult(
       execResult[0],
       'CamelCase',
-      [],
+      ['displayIsRead'],
       { name: 'groupName' }
     );
     const filterList = allJoinedGroupList.filter(
@@ -257,7 +264,9 @@ export async function getGroupMemberAllGroupIDs(): Promise<string> {
 
     const execResult = databaseGetGroupMemberAllGroupIDs(db);
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase').map(item => item.groupID)
+      converSqlExecResult(execResult[0], 'CamelCase', ['displayIsRead']).map(
+        item => item.groupID
+      )
     );
   } catch (e) {
     console.error(e);
@@ -278,10 +287,57 @@ export async function getGroups(groupIDListStr: string): Promise<string> {
     const allJoinedGroupList = converSqlExecResult(
       execResult[0],
       'CamelCase',
-      [],
+      ['displayIsRead'],
       { name: 'groupName' }
     );
     return formatResponse(JSON.stringify(allJoinedGroupList));
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function batchInsertGroup(
+  localGroupListStr: string
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const list = JSON.parse(localGroupListStr) as LocalGroup[];
+
+    list.map(item => {
+      const localGroup = convertToSnakeCaseObject(
+        convertObjectField(item, { groupName: 'name' })
+      ) as LocalGroup;
+      databaseInsertGroup(db, localGroup);
+
+      return null;
+    });
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteAllGroup(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseDeleteAllGroup(db);
+
+    return formatResponse('');
   } catch (e) {
     console.error(e);
 

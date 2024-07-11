@@ -176,3 +176,19 @@ export function updateColumnsFriend(
 
   return db.exec(sql);
 }
+
+export function getFriendListCount(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+      SELECT COUNT(*) FROM local_friends;
+      `
+  );
+}
+
+export function deleteAllFriend(db: Database): QueryExecResult[] {
+  return db.exec(
+    `
+      DELETE FROM local_friends;
+      `
+  );
+}

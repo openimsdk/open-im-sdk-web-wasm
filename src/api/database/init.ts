@@ -17,6 +17,7 @@ import {
   localStranger,
   localSendingMessages,
   localAppSDKVersions,
+  localVersionSyncs,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
 import { Database, QueryExecResult } from '@jlongster/sql.js';
@@ -59,6 +60,7 @@ export async function init(userId: string, dir: string): Promise<string> {
     const execResultLocalConversationUnreadMessages =
       localConversationUnreadMessages(db);
     const execResultLocalAppSDKVersions = localAppSDKVersions(db);
+    const execResultLocalVersionSync = localVersionSyncs(db);
     alterTable(db);
     results.push(
       ...[
@@ -79,6 +81,7 @@ export async function init(userId: string, dir: string): Promise<string> {
         execResultLocalNotification,
         execResultLocalSendMessages,
         execResultLocalAppSDKVersions,
+        execResultLocalVersionSync,
       ]
     );
 
