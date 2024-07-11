@@ -65,6 +65,7 @@ const InternalConstraint = [
   ['expire_time', 'expireTime'],
   ['entity_id', 'entityID'],
   ['version_id', 'versionID'],
+  ['display_is_read', 'displayIsRead'],
 ];
 
 function _getInternalCamelCaseBySnakeCase(key: string) {

@@ -25,7 +25,8 @@ export function localGroups(db: Database): QueryExecResult[] {
           'look_member_info'     INTEGER,
           'apply_member_friend'      INTEGER,
           'notification_update_time' INTEGER,
-          'notification_user_id'   TEXT
+          'notification_user_id'   TEXT,
+          'display_is_read'        numeric
       )  
       `
   );
