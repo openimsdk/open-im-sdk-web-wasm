@@ -183,13 +183,14 @@ import {
   getVersionSync,
   setVersionSync,
   deleteVersionSync,
+
+  // notification
+  setNotificationSeq,
+  getNotificationAllSeqs,
+  batchInsertNotificationSeq,
 } from '../api/database';
 
 import { getInstance } from './database/instance';
-import {
-  setNotificationSeq,
-  getNotificationAllSeqs,
-} from './database/notification';
 import {
   fileMapClear,
   fileMapSet,
@@ -462,6 +463,7 @@ rpc.registerMethod('InsertTempCacheMessage', InsertTempCacheMessage);
 
 // notification
 rpc.registerMethod('getNotificationAllSeqs', getNotificationAllSeqs);
+rpc.registerMethod('batchInsertNotificationSeq', batchInsertNotificationSeq);
 rpc.registerMethod('setNotificationSeq', setNotificationSeq);
 
 rpc.registerMethod('exec', async (sql: string) => {

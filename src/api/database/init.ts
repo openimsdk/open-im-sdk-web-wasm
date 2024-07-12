@@ -20,8 +20,9 @@ import {
   localVersionSyncs,
 } from '@/sqls';
 import { formatResponse } from '@/utils';
-import { Database, QueryExecResult } from '@jlongster/sql.js';
+import { QueryExecResult } from '@jlongster/sql.js';
 import { getInstance, resetInstance } from './instance';
+import { alterTable } from './alter';
 
 let sqlWasmPath: string;
 
@@ -114,17 +115,5 @@ export async function close() {
       DatabaseErrorCode.ErrorInit,
       JSON.stringify(e)
     );
-  }
-}
-
-export function alterTable(db: Database) {
-  try {
-    db.exec(
-      `
-        ALTER TABLE local_friends ADD COLUMN is_pinned numeric;
-        `
-    );
-  } catch (error) {
-    // alter table error
   }
 }

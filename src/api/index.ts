@@ -619,6 +619,9 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
     'getNotificationAllSeqs'
   );
   window.setNotificationSeq = registeMethodOnWindow('setNotificationSeq');
+  window.batchInsertNotificationSeq = registeMethodOnWindow(
+    'batchInsertNotificationSeq'
+  );
 }
 
 export const workerPromise = rpc?.connect(5000);
