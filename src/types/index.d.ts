@@ -238,6 +238,7 @@ declare global {
 
     // notification
     getNotificationAllSeqs: DatabaseApi;
+    batchInsertNotificationSeq: DatabaseApi;
     setNotificationSeq: DatabaseApi;
 
     // registered by go wasm

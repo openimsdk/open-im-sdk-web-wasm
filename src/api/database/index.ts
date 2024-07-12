@@ -16,3 +16,4 @@ export * from './stranger';
 export * from './sendingMessages';
 export * from './localAppSdkVersion';
 export * from './versionSync';
+export * from './notification';
