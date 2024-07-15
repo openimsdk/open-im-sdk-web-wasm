@@ -91,6 +91,7 @@ declare global {
     clearConversation: DatabaseApi;
     conversationIfExists: DatabaseApi;
     deleteConversation: DatabaseApi;
+    deleteAllConversation: DatabaseApi;
     getConversationByUserID: DatabaseApi;
     getConversationListSplitDB: DatabaseApi;
     incrConversationUnreadCount: DatabaseApi;
@@ -240,6 +241,9 @@ declare global {
     getNotificationAllSeqs: DatabaseApi;
     batchInsertNotificationSeq: DatabaseApi;
     setNotificationSeq: DatabaseApi;
+
+    // table master
+    getExistedTables: DatabaseApi;
 
     // registered by go wasm
     initSDK: (operationID: string, config: string) => void;

@@ -39,6 +39,7 @@ import {
   clearConversation,
   conversationIfExists,
   deleteConversation,
+  deleteAllConversation,
   getConversationByUserID,
   getConversationListSplit,
   incrConversationUnreadCount,
@@ -188,6 +189,7 @@ import {
   setNotificationSeq,
   getNotificationAllSeqs,
   batchInsertNotificationSeq,
+  getExistedTables,
 } from '../api/database';
 
 import { getInstance } from './database/instance';
@@ -300,6 +302,7 @@ rpc.registerMethod('insertConversation', insertConversation);
 rpc.registerMethod('getConversationByUserID', getConversationByUserID);
 rpc.registerMethod('getConversationListSplit', getConversationListSplit);
 rpc.registerMethod('deleteConversation', deleteConversation);
+rpc.registerMethod('deleteAllConversation', deleteAllConversation);
 rpc.registerMethod('batchUpdateConversationList', batchUpdateConversationList);
 rpc.registerMethod('conversationIfExists', conversationIfExists);
 rpc.registerMethod('resetConversation', resetConversation);
@@ -465,6 +468,8 @@ rpc.registerMethod('InsertTempCacheMessage', InsertTempCacheMessage);
 rpc.registerMethod('getNotificationAllSeqs', getNotificationAllSeqs);
 rpc.registerMethod('batchInsertNotificationSeq', batchInsertNotificationSeq);
 rpc.registerMethod('setNotificationSeq', setNotificationSeq);
+
+rpc.registerMethod('getExistedTables', getExistedTables);
 
 rpc.registerMethod('exec', async (sql: string) => {
   const db = await getInstance();

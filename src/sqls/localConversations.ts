@@ -243,6 +243,12 @@ export function deleteConversation(
   `);
 }
 
+export function deleteAllConversation(db: Database): QueryExecResult[] {
+  return db.exec(`
+    DELETE FROM local_conversation;
+  `);
+}
+
 export function conversationIfExists(
   db: Database,
   conversationID: string
