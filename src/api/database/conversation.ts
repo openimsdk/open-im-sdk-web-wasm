@@ -28,6 +28,7 @@ import {
   setMultipleConversationRecvMsgOpt as databaseSetMultipleConversationRecvMsgOpt,
   getAllConversations as databaseGetAllConversations,
   searchConversations as databaseSearchConversations,
+  deleteAllConversation as databaseDeleteAllConversation,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -399,6 +400,24 @@ export async function deleteConversation(
     const db = await getInstance();
 
     databaseDeleteConversation(db, conversationID);
+
+    return formatResponse('');
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function deleteAllConversation(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    databaseDeleteAllConversation(db);
 
     return formatResponse('');
   } catch (e) {

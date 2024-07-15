@@ -313,6 +313,7 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
     'getConversationListSplit'
   );
   window.deleteConversation = registeMethodOnWindow('deleteConversation');
+  window.deleteAllConversation = registeMethodOnWindow('deleteAllConversation');
   window.batchUpdateConversationList = registeMethodOnWindow(
     'batchUpdateConversationList'
   );
@@ -622,6 +623,8 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   window.batchInsertNotificationSeq = registeMethodOnWindow(
     'batchInsertNotificationSeq'
   );
+
+  window.getExistedTables = registeMethodOnWindow('getExistedTables');
 }
 
 export const workerPromise = rpc?.connect(5000);

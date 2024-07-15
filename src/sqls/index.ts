@@ -17,3 +17,4 @@ export * from './localStranger';
 export * from './localSendingMessages';
 export * from './localAppSdkVersion';
 export * from './localVersionSync';
+export * from './localTableMaster';
