@@ -1158,6 +1158,16 @@ class SDK extends Emitter {
       [operationID, data.groupID, JSON.stringify(data.userIDList)]
     );
   };
+  getUsersInGroup = (
+    data: Omit<AccessToGroupParams, 'reason'>,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<string[]>('getUsersInGroup ', window.getUsersInGroup, [
+      operationID,
+      data.groupID,
+      JSON.stringify(data.userIDList),
+    ]);
+  };
   getGroupMemberListByJoinTimeFilter = (
     data: GetGroupMemberByTimeParams,
     operationID = uuidv4()

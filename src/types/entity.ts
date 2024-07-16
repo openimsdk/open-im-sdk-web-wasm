@@ -174,6 +174,7 @@ export type GroupItem = {
   ex: string;
   applyMemberFriend: AllowType;
   lookMemberInfo: AllowType;
+  displayIsRead: boolean;
 };
 export type GroupMemberItem = {
   groupID: string;
