@@ -650,6 +650,12 @@ declare global {
       reason: string,
       userIDList: string[]
     ) => Promise<string>;
+    getUsersInGroup: (
+      operationID: string,
+      groupID: string,
+      reason: string,
+      userIDList: string[]
+    ) => Promise<string>;
     getGroupMemberListByJoinTimeFilter: (
       operationID: string,
       groupID: string,
