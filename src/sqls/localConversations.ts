@@ -245,7 +245,7 @@ export function deleteConversation(
 
 export function deleteAllConversation(db: Database): QueryExecResult[] {
   return db.exec(`
-    DELETE FROM local_conversation;
+    DELETE FROM local_conversations;
   `);
 }
 
