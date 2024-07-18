@@ -45,8 +45,8 @@ export type EventDataMap = {
   [CbEvents.OnRecvOfflineNewMessages]: MessageItem[];
   [CbEvents.OnSelfInfoUpdated]: SelfUserInfo;
   [CbEvents.OnSyncServerFailed]: void;
-  [CbEvents.OnSyncServerStart]: { reinstalled: boolean };
-  [CbEvents.OnSyncServerProgress]: { progress: number };
+  [CbEvents.OnSyncServerStart]: boolean;
+  [CbEvents.OnSyncServerProgress]: number;
   [CbEvents.OnSyncServerFinish]: void;
   [CbEvents.OnTotalUnreadMessageCountChanged]: number;
   [CbEvents.OnUserStatusChanged]: UserOnlineState;
