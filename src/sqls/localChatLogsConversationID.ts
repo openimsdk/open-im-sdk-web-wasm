@@ -231,6 +231,7 @@ export function batchInsertMessageList(
   conversationID: string,
   messageList: ClientMessage[]
 ): QueryExecResult[] {
+  _initLocalChatLogsTable(db, conversationID);
   const sql = squel
     .insert()
     .into(`'chat_logs_${conversationID}'`)
