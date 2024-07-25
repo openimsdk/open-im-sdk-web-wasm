@@ -42,6 +42,7 @@ export enum Platform {
   iPad = 9,
 }
 export enum LogLevel {
+  Verbose = 6,
   Debug = 5,
   Info = 4,
   Warn = 3,
