@@ -240,7 +240,7 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   window.getConversationNormalMsgSeq = registeMethodOnWindow(
     'getConversationNormalMsgSeq'
   );
-  window.getConversationNormalMsgSeqNoInit = registeMethodOnWindow(
+  window.checkConversationNormalMsgSeq = registeMethodOnWindow(
     'getConversationNormalMsgSeq'
   );
   window.getConversationPeerNormalMsgSeq = registeMethodOnWindow(

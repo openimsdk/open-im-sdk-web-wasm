@@ -60,7 +60,7 @@ declare global {
     getMessagesByClientMsgIDs: DatabaseApi;
     getMessagesBySeqs: DatabaseApi;
     getConversationNormalMsgSeq: DatabaseApi;
-    getConversationNormalMsgSeqNoInit: DatabaseApi;
+    checkConversationNormalMsgSeq: DatabaseApi;
     getConversationPeerNormalMsgSeq: DatabaseApi;
     deleteConversationAllMessages: DatabaseApi;
     markDeleteConversationAllMessages: DatabaseApi;

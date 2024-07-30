@@ -53,6 +53,7 @@ export enum CbEvents {
   UploadComplete = 'UploadComplete',
   OnRecvCustomBusinessMessage = 'OnRecvCustomBusinessMessage',
   OnUserStatusChanged = 'OnUserStatusChanged',
+  OnUploadLogsProgress = 'OnUploadLogsProgress',
 
   // rtc
   OnReceiveNewInvitation = 'OnReceiveNewInvitation',

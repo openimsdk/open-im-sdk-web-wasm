@@ -1,6 +1,6 @@
 {
   "name": "open-im-sdk-wasm",
-  "version": "3.8.0-rc.6",
+  "version": "3.8.0-rc.7",
   "description": "open im sdk for web",
   "source": "src/index.ts",
   "main": "lib/index.js",
