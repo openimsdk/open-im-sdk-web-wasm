@@ -41,13 +41,13 @@ function initWorker() {
   if (isViteEnvironment) {
     workerUrl = workerUrl.href.replace(
       '.vite/deps',
-      'open-im-sdk-wasm/lib'
+      '@openim/wasm-client-sdk/lib'
     ) as unknown as URL;
   }
   if (isNuxtEnvironment) {
     workerUrl = workerUrl.href.replace(
       '.cache/vite/client/deps',
-      'open-im-sdk-wasm/lib'
+      '@openim/wasm-client-sdk/lib'
     ) as unknown as URL;
   }
   worker = new Worker(workerUrl, {
