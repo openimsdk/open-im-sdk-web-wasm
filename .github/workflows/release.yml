@@ -8,10 +8,14 @@ on:
 
 env:
   NPM_TOKEN: ${{secrets.NPM_SECRET}}
+  NODE_AUTH_TOKEN: ${{secrets.NPM_SECRET}}
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Check out code
@@ -21,6 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '21'
+          always-auth: true
 
       - name: Install Dependencies
         run: npm install
