@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+
+env:
+  NPM_TOKEN: ${{secrets.NPM_SECRET}}
 
 jobs:
   build-and-publish:
@@ -26,5 +30,3 @@ jobs:
 
       - name: Publish to npm
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_SECRET}}
