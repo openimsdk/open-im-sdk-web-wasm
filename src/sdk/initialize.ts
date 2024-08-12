@@ -51,27 +51,28 @@ export function getGoExitPromise() {
 }
 
 async function fetchWithCache(url: string): Promise<Response> {
-  try {
-    const cache = await caches.open(CACHE_KEY);
-    const cachedResponse = await cache.match(url);
-    const isResourceUpdated = async () => {
-      const serverResponse = await fetch(url, { method: 'HEAD' });
-      const etag = serverResponse.headers.get('ETag');
-      const lastModified = serverResponse.headers.get('Last-Modified');
-      return (
-        serverResponse.ok &&
-        (etag !== cachedResponse?.headers.get('ETag') ||
-          lastModified !== cachedResponse?.headers.get('Last-Modified'))
-      );
-    };
-    if (cachedResponse && !(await isResourceUpdated())) {
-      return cachedResponse;
-    }
-
-    return fetchAndUpdateCache(url, cache);
-  } catch (error) {
+  if (!('caches' in window)) {
     return fetch(url);
   }
+
+  const isResourceUpdated = async () => {
+    const serverResponse = await fetch(url, { method: 'HEAD' });
+    const etag = serverResponse.headers.get('ETag');
+    const lastModified = serverResponse.headers.get('Last-Modified');
+    return (
+      serverResponse.ok &&
+      (etag !== cachedResponse?.headers.get('ETag') ||
+        lastModified !== cachedResponse?.headers.get('Last-Modified'))
+    );
+  };
+
+  const cache = await caches.open(CACHE_KEY);
+  const cachedResponse = await cache.match(url);
+  if (cachedResponse && !(await isResourceUpdated())) {
+    return cachedResponse;
+  }
+
+  return fetchAndUpdateCache(url, cache);
 }
 
 async function fetchAndUpdateCache(
@@ -79,6 +80,10 @@ async function fetchAndUpdateCache(
   cache: Cache
 ): Promise<Response> {
   const response = await fetch(url, { cache: 'no-cache' });
-  await cache.put(url, response.clone());
+  try {
+    await cache.put(url, response.clone());
+  } catch (error) {
+    console.warn('Failed to put cache');
+  }
   return response;
 }
