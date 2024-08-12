@@ -51,28 +51,27 @@ export function getGoExitPromise() {
 }
 
 async function fetchWithCache(url: string): Promise<Response> {
-  if (!('caches' in window)) {
+  try {
+    const cache = await caches.open(CACHE_KEY);
+    const cachedResponse = await cache.match(url);
+    const isResourceUpdated = async () => {
+      const serverResponse = await fetch(url, { method: 'HEAD' });
+      const etag = serverResponse.headers.get('ETag');
+      const lastModified = serverResponse.headers.get('Last-Modified');
+      return (
+        serverResponse.ok &&
+        (etag !== cachedResponse?.headers.get('ETag') ||
+          lastModified !== cachedResponse?.headers.get('Last-Modified'))
+      );
+    };
+    if (cachedResponse && !(await isResourceUpdated())) {
+      return cachedResponse;
+    }
+
+    return fetchAndUpdateCache(url, cache);
+  } catch (error) {
     return fetch(url);
   }
-
-  const cache = await caches.open(CACHE_KEY);
-  const cachedResponse = await cache.match(url);
-  const isResourceUpdated = async () => {
-    const serverResponse = await fetch(url, { method: 'HEAD' });
-    const etag = serverResponse.headers.get('ETag');
-    const lastModified = serverResponse.headers.get('Last-Modified');
-    return (
-      serverResponse.ok &&
-      (etag !== cachedResponse?.headers.get('ETag') ||
-        lastModified !== cachedResponse?.headers.get('Last-Modified'))
-    );
-  };
-
-  if (cachedResponse && !(await isResourceUpdated())) {
-    return cachedResponse;
-  }
-
-  return fetchAndUpdateCache(url, cache);
 }
 
 async function fetchAndUpdateCache(
