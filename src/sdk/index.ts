@@ -469,7 +469,7 @@ class SDK extends Emitter {
   };
   sendMessage = (params: SendMsgParams, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
-      title: '你有一条新消息',
+      title: 'You have a new message.',
       desc: '',
       ex: '',
       iOSPushSound: '+1',
@@ -486,7 +486,7 @@ class SDK extends Emitter {
   };
   sendMessageNotOss = (params: SendMsgParams, operationID = uuidv4()) => {
     const offlinePushInfo = params.offlinePushInfo ?? {
-      title: '你有一条新消息',
+      title: 'You have a new message.',
       desc: '',
       ex: '',
       iOSPushSound: '+1',
