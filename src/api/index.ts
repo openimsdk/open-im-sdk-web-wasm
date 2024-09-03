@@ -342,6 +342,9 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   );
   window.getAllConversations = registeMethodOnWindow('getAllConversations');
   window.searchConversations = registeMethodOnWindow('searchConversations');
+  window.getLatestActiveMessage = registeMethodOnWindow(
+    'getLatestActiveMessage'
+  );
 
   // users
   window.getLoginUser = registeMethodOnWindow('getLoginUser');

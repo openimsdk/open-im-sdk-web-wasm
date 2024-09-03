@@ -572,3 +572,17 @@ export function searchAllMessageByContentType(
       `
   );
 }
+
+export function getLatestActiveMessage(
+  db: Database,
+  conversationID: string,
+  isReverse: boolean
+): QueryExecResult[] {
+  _initLocalChatLogsTable(db, conversationID);
+  const order = isReverse ? 'ASC' : 'DESC';
+  return db.exec(
+    `
+      SELECT * FROM 'chat_logs_${conversationID}' WHERE status < 4 ORDER BY send_time ${order};
+    `
+  );
+}

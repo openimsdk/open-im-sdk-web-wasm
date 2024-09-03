@@ -31,6 +31,7 @@ import {
   getUnreadMessage as databaseGetUnreadMessage,
   markConversationMessageAsReadBySeqs as databaseMarkConversationMessageAsReadBySeqs,
   markConversationMessageAsRead as databaseMarkConversationMessageAsRead,
+  getLatestActiveMessage as databaseGetLatestActiveMessage,
 } from '@/sqls';
 import {
   converSqlExecResult,
@@ -931,6 +932,37 @@ export async function searchAllMessageByContentType(
       db,
       conversationID,
       JSON.parse(clientMsgIDListStr)
+    );
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase', [
+        'isRead',
+        'isReact',
+        'isExternalExtensions',
+      ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function getLatestActiveMessage(
+  conversationID: string,
+  isReverse: boolean
+): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseGetLatestActiveMessage(
+      db,
+      conversationID,
+      isReverse
     );
 
     return formatResponse(

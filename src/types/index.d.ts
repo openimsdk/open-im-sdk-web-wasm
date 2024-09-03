@@ -73,6 +73,7 @@ declare global {
     insertSendingMessage: DatabaseApi;
     deleteSendingMessage: DatabaseApi;
     getAllSendingMessages: DatabaseApi;
+    getLatestActiveMessage: DatabaseApi;
     // conversation
     getAllConversationListDB: DatabaseApi;
     getAllConversationListToSync: DatabaseApi;
