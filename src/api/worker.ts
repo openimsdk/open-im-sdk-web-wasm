@@ -22,6 +22,7 @@ import {
   insertSendingMessage,
   deleteSendingMessage,
   getAllSendingMessages,
+  getLatestActiveMessage,
 
   // conversation
   getAllConversationList,
@@ -284,6 +285,7 @@ rpc.registerMethod(
 rpc.registerMethod('insertSendingMessage', insertSendingMessage);
 rpc.registerMethod('deleteSendingMessage', deleteSendingMessage);
 rpc.registerMethod('getAllSendingMessages', getAllSendingMessages);
+rpc.registerMethod('getLatestActiveMessage', getLatestActiveMessage);
 
 // conversation
 rpc.registerMethod('getAllConversationList', getAllConversationList);
