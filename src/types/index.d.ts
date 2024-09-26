@@ -1,4 +1,3 @@
-import { CbEvents } from '../constant';
 import { CreateGroupParams } from './params';
 
 type DatabaseApi = (...args: any[]) => Promise<any>;
@@ -600,6 +599,7 @@ declare global {
     ) => Promise<string>;
     getFriendList: (operationID: string) => Promise<string>;
     getFriendListPage: (operationID: string) => Promise<string>;
+    updateFriends: (operationID: string, friends: string) => Promise<string>;
     setFriendRemark: (
       operationID: string,
       toUserID: string,
@@ -795,6 +795,11 @@ declare global {
     ) => Promise<string>;
     getSubscribeUsersStatus: (operationID: string) => Promise<string>;
     getUserStatus: (operationID: string) => Promise<string>;
+    setConversation: (
+      operationID: string,
+      conversationID: string,
+      req: string
+    ) => Promise<string>;
 
     signalingInvite: (...args) => Promise<string>;
     signalingInviteInGroup: (...args) => Promise<string>;

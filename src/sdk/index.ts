@@ -26,7 +26,6 @@ import {
   GetGroupMessageReaderParams,
   GetHistoryMsgParams,
   GetOneConversationParams,
-  GetUserInfoWithCacheParams,
   ImageMsgParamsByURL,
   InitAndLoginConfig,
   InsertGroupMsgParams,
@@ -73,6 +72,9 @@ import {
   SetConversationExParams,
   AddBlackParams,
   OffsetParams,
+  UpdateFriendsParams,
+  SetConversationParams,
+  GetSpecifiedFriendsParams,
 } from '../types/params';
 
 import {
@@ -83,14 +85,14 @@ import {
   ConversationItem,
   FriendApplicationItem,
   FriendshipInfo,
-  FullUserItem,
-  FullUserItemWithCache,
+  FriendUserItem,
   GroupApplicationItem,
   GroupItem,
   GroupMemberItem,
   IMConfig,
   MeetingRecord,
   MessageItem,
+  PublicUserItem,
   RtcInviteResults,
   SearchedFriendsInfo,
   SearchMessageResult,
@@ -99,7 +101,7 @@ import {
   WSEvent,
   WsResponse,
 } from '../types/entity';
-import { LoginStatus, MessageReceiveOptType } from '@/types/enum';
+import { GroupAtType, LoginStatus, MessageReceiveOptType } from '@/types/enum';
 import { logBoxStyleValue } from '@/utils';
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<any>;
@@ -541,14 +543,31 @@ class SDK extends Emitter {
     ]);
   };
 
+  setConversation = <T>(
+    params: SetConversationParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<T>('setConversation', window.setConversation, [
+      operationID,
+      params.conversationID,
+      JSON.stringify(params),
+    ]);
+  };
+
   setConversationPrivateChat = <T>(
     params: SetConversationPrivateStateParams,
     operationID = uuidv4()
   ) => {
     return this._invoker<T>(
       'setConversationPrivateChat',
-      window.setConversationPrivateChat,
-      [operationID, params.conversationID, params.isPrivate]
+      window.setConversation,
+      [
+        operationID,
+        params.conversationID,
+        JSON.stringify({
+          isPrivateChat: params.isPrivate,
+        }),
+      ]
     );
   };
 
@@ -558,8 +577,14 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<T>(
       'setConversationBurnDuration',
-      window.setConversationBurnDuration,
-      [operationID, params.conversationID, params.burnDuration]
+      window.setConversation,
+      [
+        operationID,
+        params.conversationID,
+        JSON.stringify({
+          burnDuration: params.burnDuration,
+        }),
+      ]
     );
   };
 
@@ -606,20 +631,18 @@ class SDK extends Emitter {
   };
 
   getUsersInfo = (data: string[], operationID = uuidv4()) => {
-    return this._invoker<FullUserItem[]>('getUsersInfo', window.getUsersInfo, [
+    return this._invoker<PublicUserItem[]>(
+      'getUsersInfo',
+      window.getUsersInfo,
+      [operationID, JSON.stringify(data)]
+    );
+  };
+
+  SetSelfInfoEx = <T>(data: PartialUserItem, operationID = uuidv4()) => {
+    return this._invoker<T>('SetSelfInfoEx', window.setSelfInfo, [
       operationID,
       JSON.stringify(data),
     ]);
-  };
-  getUsersInfoWithCache = (
-    data: GetUserInfoWithCacheParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<FullUserItemWithCache[]>(
-      'getUsersInfoWithCache',
-      window.getUsersInfoWithCache,
-      [operationID, JSON.stringify(data.userIDList), data.groupID]
-    );
   };
 
   setSelfInfo = <T>(data: PartialUserItem, operationID = uuidv4()) => {
@@ -921,8 +944,14 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<ConversationItem[]>(
       'setConversationEx ',
-      window.setConversationEx,
-      [operationID, data.conversationID, data.ex]
+      window.setConversation,
+      [
+        operationID,
+        data.conversationID,
+        JSON.stringify({
+          ex: data.ex,
+        }),
+      ]
     );
   };
   getConversationIDBySessionType = (
@@ -966,10 +995,12 @@ class SDK extends Emitter {
     data: SetConversationPinParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>('pinConversation ', window.pinConversation, [
+    return this._invoker<T>('pinConversation ', window.setConversation, [
       operationID,
       data.conversationID,
-      data.isPinned,
+      JSON.stringify({
+        isPinned: data.isPinned,
+      }),
     ]);
   };
   getTotalUnreadMsgCount = (operationID = uuidv4()) => {
@@ -992,8 +1023,14 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<T>(
       'setConversationRecvMessageOpt ',
-      window.setConversationRecvMessageOpt,
-      [operationID, data.conversationID, data.opt]
+      window.setConversation,
+      [
+        operationID,
+        data.conversationID,
+        JSON.stringify({
+          recvMsgOpt: data.opt,
+        }),
+      ]
     );
   };
   searchLocalMessages = (data: SearchLocalParams, operationID = uuidv4()) => {
@@ -1016,11 +1053,14 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(data)]
     );
   };
-  getSpecifiedFriendsInfo = (data: string[], operationID = uuidv4()) => {
-    return this._invoker<FullUserItem[]>(
-      'getSpecifiedFriendsInfo ',
+  getSpecifiedFriendsInfo = (
+    data: GetSpecifiedFriendsParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<FriendUserItem[]>(
+      'getSpecifiedFriendsInfo',
       window.getSpecifiedFriendsInfo,
-      [operationID, JSON.stringify(data)]
+      [operationID, JSON.stringify(data.friendUserIDList), data.filterBlack]
     );
   };
   getFriendApplicationListAsRecipient = (operationID = uuidv4()) => {
@@ -1037,36 +1077,54 @@ class SDK extends Emitter {
       [operationID]
     );
   };
-  getFriendList = (operationID = uuidv4()) => {
-    return this._invoker<FullUserItem[]>(
+  getFriendList = (filterBlack = false, operationID = uuidv4()) => {
+    return this._invoker<FriendUserItem[]>(
       'getFriendList ',
       window.getFriendList,
-      [operationID]
+      [operationID, filterBlack]
     );
   };
-  getFriendListPage = (data: OffsetParams, operationID = uuidv4()) => {
-    return this._invoker<FullUserItem[]>(
+  getFriendListPage = (
+    data: OffsetParams & { filterBlack?: boolean },
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<FriendUserItem[]>(
       'getFriendListPage ',
       window.getFriendListPage,
-      [operationID, data.offset, data.count]
+      [operationID, data.offset, data.count, data.filterBlack ?? false]
     );
   };
-  setFriendRemark = <T>(data: RemarkFriendParams, operationID = uuidv4()) => {
-    return this._invoker<T>('setFriendRemark ', window.setFriendRemark, [
+  updateFriends = <T>(data: UpdateFriendsParams, operationID = uuidv4()) => {
+    return this._invoker<T>('updateFriends ', window.updateFriends, [
       operationID,
       JSON.stringify(data),
+    ]);
+  };
+  setFriendRemark = <T>(data: RemarkFriendParams, operationID = uuidv4()) => {
+    return this._invoker<T>('setFriendRemark ', window.updateFriends, [
+      operationID,
+      JSON.stringify({
+        friendUserIDs: [data.toUserID],
+        remark: data.remark,
+      }),
     ]);
   };
   pinFriends = <T>(data: PinFriendParams, operationID = uuidv4()) => {
-    return this._invoker<T>('pinFriends ', window.pinFriends, [
+    return this._invoker<T>('pinFriends ', window.updateFriends, [
       operationID,
-      JSON.stringify(data),
+      JSON.stringify({
+        friendUserIDs: data.toUserIDs,
+        isPinned: data.isPinned,
+      }),
     ]);
   };
   setFriendsEx = <T>(data: SetFriendExParams, operationID = uuidv4()) => {
-    return this._invoker<T>('setFriendsEx ', window.setFriendsEx, [
+    return this._invoker<T>('setFriendsEx ', window.updateFriends, [
       operationID,
-      JSON.stringify(data.toUserIDs),
+      JSON.stringify({
+        friendUserIDs: data.toUserIDs,
+        ex: data.ex,
+      }),
       data.ex,
     ]);
   };
@@ -1200,21 +1258,25 @@ class SDK extends Emitter {
     data: SetMemberPermissionParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
-      'setGroupApplyMemberFriend ',
-      window.setGroupApplyMemberFriend,
-      [operationID, data.groupID, data.rule]
-    );
+    return this._invoker<T>('setGroupApplyMemberFriend ', window.setGroupInfo, [
+      operationID,
+      JSON.stringify({
+        groupID: data.groupID,
+        applyMemberFriend: data.rule,
+      }),
+    ]);
   };
   setGroupLookMemberInfo = <T>(
     data: SetMemberPermissionParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
-      'setGroupLookMemberInfo ',
-      window.setGroupLookMemberInfo,
-      [operationID, data.groupID, data.rule]
-    );
+    return this._invoker<T>('setGroupLookMemberInfo ', window.setGroupInfo, [
+      operationID,
+      JSON.stringify({
+        groupID: data.groupID,
+        lookMemberInfo: data.rule,
+      }),
+    ]);
   };
   getJoinedGroupList = (operationID = uuidv4()) => {
     return this._invoker<GroupItem[]>(
@@ -1251,8 +1313,15 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<T>(
       'setGroupMemberNickname ',
-      window.setGroupMemberNickname,
-      [operationID, data.groupID, data.userID, data.groupMemberNickname]
+      window.setGroupMemberInfo,
+      [
+        operationID,
+        JSON.stringify({
+          groupID: data.groupID,
+          userID: data.userID,
+          nickname: data.groupMemberNickname,
+        }),
+      ]
     );
   };
   setGroupMemberInfo = <T>(
@@ -1358,8 +1427,14 @@ class SDK extends Emitter {
   resetConversationGroupAtType = <T>(data: string, operationID = uuidv4()) => {
     return this._invoker<T>(
       'resetConversationGroupAtType ',
-      window.resetConversationGroupAtType,
-      [operationID, data]
+      window.setConversation,
+      [
+        operationID,
+        data,
+        JSON.stringify({
+          groupAtType: GroupAtType.AtNormal,
+        }),
+      ]
     );
   };
   setGroupMemberRoleLevel = <T>(
@@ -1368,19 +1443,28 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<T>(
       'setGroupMemberRoleLevel ',
-      window.setGroupMemberRoleLevel,
-      [operationID, data.groupID, data.userID, data.roleLevel]
+      window.setGroupMemberInfo,
+      [
+        operationID,
+        JSON.stringify({
+          groupID: data.groupID,
+          userID: data.userID,
+          roleLevel: data.roleLevel,
+        }),
+      ]
     );
   };
   setGroupVerification = <T>(
     data: SetGroupVerificationParams,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
-      'setGroupVerification ',
-      window.setGroupVerification,
-      [operationID, data.groupID, data.verification]
-    );
+    return this._invoker<T>('setGroupVerification ', window.setGroupInfo, [
+      operationID,
+      JSON.stringify({
+        groupID: data.groupID,
+        needVerification: data.verification,
+      }),
+    ]);
   };
   getGroupMemberOwnerAndAdmin = (data: string, operationID = uuidv4()) => {
     return this._invoker<GroupMemberItem[]>(
@@ -1393,11 +1477,10 @@ class SDK extends Emitter {
     opt: MessageReceiveOptType,
     operationID = uuidv4()
   ) => {
-    return this._invoker<T>(
-      'setGlobalRecvMessageOpt ',
-      window.setGlobalRecvMessageOpt,
-      [operationID, opt]
-    );
+    return this._invoker<T>('setGlobalRecvMessageOpt ', window.setSelfInfo, [
+      operationID,
+      JSON.stringify({ globalRecvMsgOpt: opt }),
+    ]);
   };
   findMessageList = (data: FindMessageParams[], operationID = uuidv4()) => {
     return this._invoker<SearchMessageResult>(
@@ -1580,8 +1663,12 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<T>(
       'setConversationIsMsgDestruct ',
-      window.setConversationIsMsgDestruct,
-      [operationID, data.conversationID, data.isMsgDestruct]
+      window.setConversation,
+      [
+        operationID,
+        data.conversationID,
+        JSON.stringify({ isMsgDestruct: data.isMsgDestruct }),
+      ]
     );
   };
   setConversationMsgDestructTime = <T>(
@@ -1590,8 +1677,14 @@ class SDK extends Emitter {
   ) => {
     return this._invoker<T>(
       'setConversationMsgDestructTime ',
-      window.setConversationMsgDestructTime,
-      [operationID, data.conversationID, data.msgDestructTime]
+      window.setConversation,
+      [
+        operationID,
+        data.conversationID,
+        JSON.stringify({
+          msgDestructTime: data.msgDestructTime,
+        }),
+      ]
     );
   };
   fileMapSet = (uuid: string, file: File) => window.fileMapSet(uuid, file);

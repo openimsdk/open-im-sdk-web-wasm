@@ -18,6 +18,7 @@ import {
   GroupMemberFilter,
   LogLevel,
   GroupMessageReaderFilter,
+  GroupAtType,
 } from './enum';
 
 export type WasmPathConfig = {
@@ -131,6 +132,17 @@ export type AdvancedMsgParams = {
   text: string;
   messageEntityList?: MessageEntity[];
 };
+export type SetConversationParams = {
+  conversationID: string;
+  recvMsgOpt?: MessageReceiveOptType;
+  groupAtType?: GroupAtType;
+  burnDuration?: number;
+  msgDestructTime?: number;
+  isPinned?: boolean;
+  isPrivateChat?: boolean;
+  isMsgDestruct?: boolean;
+  ex?: string;
+};
 export type SetConversationPrivateStateParams = {
   conversationID: string;
   isPrivate: boolean;
@@ -188,10 +200,6 @@ export type SetGroupVerificationParams = {
 export type SetBurnDurationParams = {
   conversationID: string;
   burnDuration: number;
-};
-export type GetUserInfoWithCacheParams = {
-  userIDList: string[];
-  groupID?: string;
 };
 export type AtMsgParams = {
   text: string;
@@ -283,6 +291,16 @@ export type SearchFriendParams = {
   isSearchUserID: boolean;
   isSearchNickname: boolean;
   isSearchRemark: boolean;
+};
+export type GetSpecifiedFriendsParams = {
+  friendUserIDList: string[];
+  filterBlack?: boolean;
+};
+export type UpdateFriendsParams = {
+  friendUserIDs: string[];
+  isPinned?: boolean;
+  remark?: boolean;
+  ex?: boolean;
 };
 export type RemarkFriendParams = {
   toUserID: string;
