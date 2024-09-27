@@ -809,13 +809,8 @@ declare global {
     signalingHungUp: (...args) => Promise<string>;
     signalingGetRoomByGroupID: (...args) => Promise<string>;
     signalingGetTokenByRoomID: (...args) => Promise<string>;
+    getSignalingInvitationInfoStartApp: (...args) => Promise<string>;
     signalingSendCustomSignal: (...args) => Promise<string>;
-    signalingCreateMeeting: (...args) => Promise<string>;
-    signalingJoinMeeting: (...args) => Promise<string>;
-    signalingUpdateMeetingInfo: (...args) => Promise<string>;
-    signalingCloseRoom: (...args) => Promise<string>;
-    signalingGetMeetings: (operationID: string) => Promise<string>;
-    signalingOperateStream: (...args) => Promise<string>;
     setConversationIsMsgDestruct: (...args) => Promise<string>;
     setConversationMsgDestructTime: (...args) => Promise<string>;
 

@@ -397,47 +397,6 @@ export type CustomSignalParams = {
   customInfo: string;
 };
 
-export type CreateMeetingParams = {
-  meetingName: string;
-  meetingHostUserID: string;
-  startTime: number;
-  meetingDuration: number;
-  inviteeUserIDList: string[];
-};
-
-export type UpdateMeetingParams = {
-  roomID: string;
-  meetingName: string;
-  startTime: number;
-  endTime: number;
-  participantCanUnmuteSelf: boolean;
-  participantCanEnableVideo: boolean;
-  onlyHostInviteUser: boolean;
-  onlyHostShareScreen: boolean;
-  joinDisableMicrophone: boolean;
-  joinDisableVideo: boolean;
-  isMuteAllVideo: boolean;
-  isMuteAllMicrophone: boolean;
-  addCanScreenUserIDList: string[];
-  reduceCanScreenUserIDList: string[];
-  addDisableMicrophoneUserIDList: string[];
-  reduceDisableMicrophoneUserIDList: string[];
-  addDisableVideoUserIDList: string[];
-  reduceDisableVideoUserIDList: string[];
-  addPinedUserIDList: string[];
-  reducePinedUserIDList: string[];
-  addBeWatchedUserIDList: string[];
-  reduceBeWatchedUserIDList: string[];
-};
-
-export type MeetingOperateStreamParams = {
-  streamType: string;
-  roomID: string;
-  userID?: string;
-  mute: boolean;
-  muteAll: boolean;
-};
-
 export type SetConversationMsgDestructParams = {
   conversationID: string;
   isMsgDestruct: boolean;
