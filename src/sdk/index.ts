@@ -14,7 +14,6 @@ import {
   ChangeGroupMemberMuteParams,
   ChangeGroupMuteParams,
   CreateGroupParams,
-  CreateMeetingParams,
   CustomMsgParams,
   CustomSignalParams,
   FaceMessageParams,
@@ -34,7 +33,6 @@ import {
   SetConversationRecvOptParams,
   JoinGroupParams,
   LocationMsgParams,
-  MeetingOperateStreamParams,
   UpdateMemberInfoParams,
   MergerMsgParams,
   PartialUserItem,
@@ -62,7 +60,6 @@ import {
   SplitConversationParams,
   TransferGroupParams,
   TypingUpdateParams,
-  UpdateMeetingParams,
   UploadFileParams,
   VideoMsgParamsByURL,
   SetGroupMemberNickParams,
@@ -90,7 +87,6 @@ import {
   GroupItem,
   GroupMemberItem,
   IMConfig,
-  MeetingRecord,
   MessageItem,
   PublicUserItem,
   RtcInviteResults,
@@ -1585,6 +1581,13 @@ class SDK extends Emitter {
       [operationID, roomID]
     );
   };
+  getSignalingInvitationInfoStartApp = (operationID = uuidv4()) => {
+    return this._invoker<RtcInviteResults>(
+      'getSignalingInvitationInfoStartApp ',
+      window.getSignalingInvitationInfoStartApp,
+      [operationID]
+    );
+  };
   signalingSendCustomSignal = <T>(
     data: CustomSignalParams,
     operationID = uuidv4()
@@ -1593,68 +1596,6 @@ class SDK extends Emitter {
       'signalingSendCustomSignal ',
       window.signalingSendCustomSignal,
       [operationID, data.customInfo, data.roomID]
-    );
-  };
-  signalingCreateMeeting = (
-    data: CreateMeetingParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<RtcInviteResults>(
-      'signalingCreateMeeting ',
-      window.signalingCreateMeeting,
-      [operationID, JSON.stringify(data)]
-    );
-  };
-  signalingJoinMeeting = (data: string, operationID = uuidv4()) => {
-    return this._invoker<RtcInviteResults>(
-      'signalingJoinMeeting ',
-      window.signalingJoinMeeting,
-      [
-        operationID,
-        JSON.stringify({
-          roomID: data,
-        }),
-      ]
-    );
-  };
-  signalingUpdateMeetingInfo = <T>(
-    data: Partial<UpdateMeetingParams> & { roomID: string },
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<T>(
-      'signalingUpdateMeetingInfo ',
-      window.signalingUpdateMeetingInfo,
-      [operationID, JSON.stringify(data)]
-    );
-  };
-  signalingCloseRoom = <T>(roomID: string, operationID = uuidv4()) => {
-    return this._invoker<T>('signalingCloseRoom ', window.signalingCloseRoom, [
-      operationID,
-      roomID,
-    ]);
-  };
-  signalingGetMeetings = (operationID = uuidv4()) => {
-    return this._invoker<{ meetingInfoList: MeetingRecord[] }>(
-      'signalingGetMeetings ',
-      window.signalingGetMeetings,
-      [operationID]
-    );
-  };
-  signalingOperateStream = <T>(
-    data: MeetingOperateStreamParams,
-    operationID = uuidv4()
-  ) => {
-    return this._invoker<T>(
-      'signalingOperateStream ',
-      window.signalingOperateStream,
-      [
-        operationID,
-        data.streamType,
-        data.roomID,
-        data.userID,
-        data.mute,
-        data.muteAll,
-      ]
     );
   };
   setConversationIsMsgDestruct = <T>(

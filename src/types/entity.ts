@@ -99,17 +99,6 @@ export type FriendApplicationItem = {
   toNickname: string;
   toUserID: string;
 };
-export type FullUserItem = {
-  blackInfo: BlackUserItem | null;
-  friendInfo: FriendUserItem | null;
-  publicInfo: PublicUserItem | null;
-};
-export type FullUserItemWithCache = {
-  blackInfo: BlackUserItem | null;
-  friendInfo: FriendUserItem | null;
-  publicInfo: PublicUserItem | null;
-  groupMemberInfo: GroupMemberItem | null;
-};
 export type PublicUserItem = {
   nickname: string;
   userID: string;
@@ -210,7 +199,7 @@ export type ConversationItem = {
   isPrivateChat: boolean;
   isMsgDestruct: boolean;
   attachedInfo: string;
-  ex: string;
+  ex?: string;
 };
 export type MessageItem = {
   clientMsgID: string;
@@ -230,27 +219,26 @@ export type MessageItem = {
   seq: number;
   isRead: boolean;
   status: MessageStatus;
-  isReact: boolean;
-  isExternalExtensions: boolean;
-  offlinePush: OfflinePush;
-  attachedInfo: string;
-  ex: string;
-  localEx: string;
-  textElem: TextElem;
-  cardElem: CardElem;
-  pictureElem: PictureElem;
-  soundElem: SoundElem;
-  videoElem: VideoElem;
-  fileElem: FileElem;
-  mergeElem: MergeElem;
-  atTextElem: AtTextElem;
-  faceElem: FaceElem;
-  locationElem: LocationElem;
-  customElem: CustomElem;
-  quoteElem: QuoteElem;
-  notificationElem: NotificationElem;
-  advancedTextElem: AdvancedTextElem;
-  typingElem: TypingElem;
+  isReact?: boolean;
+  isExternalExtensions?: boolean;
+  offlinePush?: OfflinePush;
+  ex?: string;
+  localEx?: string;
+  textElem?: TextElem;
+  cardElem?: CardElem;
+  pictureElem?: PictureElem;
+  soundElem?: SoundElem;
+  videoElem?: VideoElem;
+  fileElem?: FileElem;
+  mergeElem?: MergeElem;
+  atTextElem?: AtTextElem;
+  faceElem?: FaceElem;
+  locationElem?: LocationElem;
+  customElem?: CustomElem;
+  quoteElem?: QuoteElem;
+  notificationElem?: NotificationElem;
+  advancedTextElem?: AdvancedTextElem;
+  typingElem?: TypingElem;
   attachedInfoElem: AttachedInfoElem;
 };
 export type TextElem = {
@@ -326,9 +314,8 @@ export type AttachedInfoElem = {
   inEncryptStatus: boolean;
   burnDuration: number;
   hasReadTime: number;
-  notSenderNotificationPush: boolean;
-  messageEntityList: MessageEntity[];
-  uploadProgress: UploadProgress;
+  messageEntityList?: MessageEntity[];
+  uploadProgress?: UploadProgress;
 };
 export type UploadProgress = {
   total: number;
@@ -482,18 +469,4 @@ export type CallingRoomData = {
   participant?: ParticipantInfo[];
   invitation?: RtcInvite;
   roomID: string;
-};
-
-export type MeetingRecord = {
-  createTime: number;
-  endTime: number;
-  hostUserID: string;
-  joinDisableVideo: boolean;
-  roomID: string;
-  meetingName: string;
-  onlyHostInviteUser: boolean;
-  participantCanEnableVideo: boolean;
-  startTime: number;
-  hostFaceURL?: string;
-  hostNickname?: string;
 };
