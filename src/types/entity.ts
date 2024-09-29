@@ -126,6 +126,7 @@ export type FriendUserItem = {
   operatorUserID: string;
   ownerUserID: string;
   remark: string;
+  isPinned: boolean;
   attachedInfo: string;
 };
 export type SearchedFriendsInfo = FriendUserItem & {
