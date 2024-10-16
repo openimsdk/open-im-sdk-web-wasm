@@ -442,6 +442,12 @@ export type UserOnlineState = {
   userID: string;
 };
 
+export type ConversationInputStatus = {
+  conversationID: string;
+  userID: string;
+  platformIDs: Platform[];
+};
+
 export type GroupMessageReceiptInfo = {
   conversationID: string;
   groupMessageReadInfo: GroupMessageReadInfo[];

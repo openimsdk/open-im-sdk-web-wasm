@@ -72,6 +72,8 @@ import {
   UpdateFriendsParams,
   SetConversationParams,
   GetSpecifiedFriendsParams,
+  ChangeInputStatesParams,
+  GetInputstatesParams,
 } from '../types/params';
 
 import {
@@ -97,7 +99,12 @@ import {
   WSEvent,
   WsResponse,
 } from '../types/entity';
-import { GroupAtType, LoginStatus, MessageReceiveOptType } from '@/types/enum';
+import {
+  GroupAtType,
+  LoginStatus,
+  MessageReceiveOptType,
+  Platform,
+} from '@/types/enum';
 import { logBoxStyleValue } from '@/utils';
 class SDK extends Emitter {
   private wasmInitializedPromise: Promise<any>;
@@ -891,6 +898,9 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(data.message), data.groupID, data.sendID]
     );
   };
+  /**
+   * @deprecated Use changeInputStates instead.
+   */
   typingStatusUpdate = <T>(
     data: TypingUpdateParams,
     operationID = uuidv4()
@@ -899,6 +909,23 @@ class SDK extends Emitter {
       operationID,
       data.recvID,
       data.msgTip,
+    ]);
+  };
+  changeInputStates = (
+    data: ChangeInputStatesParams,
+    operationID = uuidv4()
+  ) => {
+    return this._invoker<void>('changeInputStates ', window.changeInputStates, [
+      operationID,
+      data.conversationID,
+      data.focus,
+    ]);
+  };
+  getInputstates = (data: GetInputstatesParams, operationID = uuidv4()) => {
+    return this._invoker<Platform[]>('getInputstates ', window.getInputstates, [
+      operationID,
+      data.conversationID,
+      data.userID,
     ]);
   };
   clearConversationAndDeleteAllMsg = <T>(
