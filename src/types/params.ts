@@ -263,6 +263,14 @@ export type TypingUpdateParams = {
   recvID: string;
   msgTip: string;
 };
+export type ChangeInputStatesParams = {
+  conversationID: string;
+  focus: boolean;
+};
+export type GetInputstatesParams = {
+  conversationID: string;
+  userID: string;
+};
 export type SetConversationExParams = {
   conversationID: string;
   ex: string;

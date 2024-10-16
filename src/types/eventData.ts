@@ -1,6 +1,7 @@
 import { CbEvents } from '..';
 import {
   BlackUserItem,
+  ConversationInputStatus,
   ConversationItem,
   FriendApplicationItem,
   FriendUserItem,
@@ -36,13 +37,16 @@ export type EventDataMap = {
   [CbEvents.OnJoinedGroupAdded]: GroupItem;
   [CbEvents.OnJoinedGroupDeleted]: GroupItem;
   [CbEvents.OnNewConversation]: ConversationItem[];
+  [CbEvents.OnConversationUserInputStatusChanged]: ConversationInputStatus;
   [CbEvents.OnNewRecvMessageRevoked]: RevokedInfo;
   [CbEvents.OnRecvC2CReadReceipt]: ReceiptInfo[];
   [CbEvents.OnRecvGroupReadReceipt]: GroupMessageReceiptInfo;
   [CbEvents.OnRecvNewMessage]: MessageItem;
   [CbEvents.OnRecvNewMessages]: MessageItem[];
   [CbEvents.OnRecvOfflineNewMessage]: MessageItem;
+  [CbEvents.OnRecvOnlineOnlyMessage]: MessageItem;
   [CbEvents.OnRecvOfflineNewMessages]: MessageItem[];
+  [CbEvents.OnRecvOnlineOnlyMessages]: MessageItem[];
   [CbEvents.OnSelfInfoUpdated]: SelfUserInfo;
   [CbEvents.OnSyncServerFailed]: void;
   [CbEvents.OnSyncServerStart]: boolean;
