@@ -557,6 +557,9 @@ class SDK extends Emitter {
     ]);
   };
 
+  /**
+   * @deprecated Use setConversation instead.
+   */
   setConversationPrivateChat = <T>(
     params: SetConversationPrivateStateParams,
     operationID = uuidv4()
@@ -574,6 +577,9 @@ class SDK extends Emitter {
     );
   };
 
+  /**
+   * @deprecated Use setConversation instead.
+   */
   setConversationBurnDuration = <T>(
     params: SetBurnDurationParams,
     operationID = uuidv4()
@@ -641,6 +647,9 @@ class SDK extends Emitter {
     );
   };
 
+  /**
+   * @deprecated Use setSelfInfo instead.
+   */
   SetSelfInfoEx = <T>(data: PartialUserItem, operationID = uuidv4()) => {
     return this._invoker<T>('SetSelfInfoEx', window.setSelfInfo, [
       operationID,
@@ -961,6 +970,9 @@ class SDK extends Emitter {
   //     [operationID, data.offset, data.count]
   //   );
   // };
+  /**
+   * @deprecated Use setConversation instead.
+   */
   setConversationEx = (
     data: SetConversationExParams,
     operationID = uuidv4()
@@ -1003,6 +1015,9 @@ class SDK extends Emitter {
     ]);
   };
 
+  /**
+   * @deprecated Use setConversation instead.
+   */
   setConversationDraft = <T>(
     data: SetConversationDraftParams,
     operationID = uuidv4()
@@ -1014,6 +1029,9 @@ class SDK extends Emitter {
     );
   };
 
+  /**
+   * @deprecated Use setConversation instead.
+   */
   pinConversation = <T>(
     data: SetConversationPinParams,
     operationID = uuidv4()
@@ -1033,6 +1051,7 @@ class SDK extends Emitter {
       [operationID]
     );
   };
+
   getConversationRecvMessageOpt = (data: string[], operationID = uuidv4()) => {
     return this._invoker<ConversationItem[]>(
       'getConversationRecvMessageOpt ',
@@ -1040,6 +1059,10 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(data)]
     );
   };
+
+  /**
+   * @deprecated Use setConversation instead.
+   */
   setConversationRecvMessageOpt = <T>(
     data: SetConversationRecvOptParams,
     operationID = uuidv4()
@@ -1123,6 +1146,9 @@ class SDK extends Emitter {
       JSON.stringify(data),
     ]);
   };
+  /**
+   * @deprecated Use updateFriends instead.
+   */
   setFriendRemark = <T>(data: RemarkFriendParams, operationID = uuidv4()) => {
     return this._invoker<T>('setFriendRemark ', window.updateFriends, [
       operationID,
@@ -1132,6 +1158,9 @@ class SDK extends Emitter {
       }),
     ]);
   };
+  /**
+   * @deprecated Use updateFriends instead.
+   */
   pinFriends = <T>(data: PinFriendParams, operationID = uuidv4()) => {
     return this._invoker<T>('pinFriends ', window.updateFriends, [
       operationID,
@@ -1141,6 +1170,9 @@ class SDK extends Emitter {
       }),
     ]);
   };
+  /**
+   * @deprecated Use updateFriends instead.
+   */
   setFriendsEx = <T>(data: SetFriendExParams, operationID = uuidv4()) => {
     return this._invoker<T>('setFriendsEx ', window.updateFriends, [
       operationID,
@@ -1277,6 +1309,9 @@ class SDK extends Emitter {
       [operationID, JSON.stringify(data)]
     );
   };
+  /**
+   * @deprecated Use setGroupInfo instead.
+   */
   setGroupApplyMemberFriend = <T>(
     data: SetMemberPermissionParams,
     operationID = uuidv4()
@@ -1289,6 +1324,9 @@ class SDK extends Emitter {
       }),
     ]);
   };
+  /**
+   * @deprecated Use setGroupInfo instead.
+   */
   setGroupLookMemberInfo = <T>(
     data: SetMemberPermissionParams,
     operationID = uuidv4()
@@ -1330,6 +1368,9 @@ class SDK extends Emitter {
       JSON.stringify(data),
     ]);
   };
+  /**
+   * @deprecated Use setGroupMemberInfo instead.
+   */
   setGroupMemberNickname = <T>(
     data: SetGroupMemberNickParams,
     operationID = uuidv4()
@@ -1447,6 +1488,9 @@ class SDK extends Emitter {
       [operationID, data.groupID, data.fromUserID, data.handleMsg]
     );
   };
+  /**
+   * @deprecated Use setConversation instead.
+   */
   resetConversationGroupAtType = <T>(data: string, operationID = uuidv4()) => {
     return this._invoker<T>(
       'resetConversationGroupAtType ',
@@ -1460,6 +1504,9 @@ class SDK extends Emitter {
       ]
     );
   };
+  /**
+   * @deprecated Use setGroupMemberInfo instead.
+   */
   setGroupMemberRoleLevel = <T>(
     data: SetGroupRoleParams,
     operationID = uuidv4()
@@ -1477,6 +1524,9 @@ class SDK extends Emitter {
       ]
     );
   };
+  /**
+   * @deprecated Use setGroupInfo instead.
+   */
   setGroupVerification = <T>(
     data: SetGroupVerificationParams,
     operationID = uuidv4()
@@ -1496,6 +1546,9 @@ class SDK extends Emitter {
       [operationID, data]
     );
   };
+  /**
+   * @deprecated Use setSelfInfo instead.
+   */
   setGlobalRecvMessageOpt = <T>(
     opt: MessageReceiveOptType,
     operationID = uuidv4()
