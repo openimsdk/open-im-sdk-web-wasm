@@ -263,6 +263,14 @@ export type TypingUpdateParams = {
   recvID: string;
   msgTip: string;
 };
+export type ChangeInputStatesParams = {
+  conversationID: string;
+  focus: boolean;
+};
+export type GetInputstatesParams = {
+  conversationID: string;
+  userID: string;
+};
 export type SetConversationExParams = {
   conversationID: string;
   ex: string;
@@ -299,8 +307,8 @@ export type GetSpecifiedFriendsParams = {
 export type UpdateFriendsParams = {
   friendUserIDs: string[];
   isPinned?: boolean;
-  remark?: boolean;
-  ex?: boolean;
+  remark?: string;
+  ex?: string;
 };
 export type RemarkFriendParams = {
   toUserID: string;

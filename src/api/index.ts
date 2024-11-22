@@ -337,6 +337,9 @@ export function initDatabaseAPI(isLogStandardOutput = true): void {
   window.getAllSingleConversationIDList = registeMethodOnWindow(
     'getAllSingleConversationIDList'
   );
+  window.findAllUnreadConversationConversationID = registeMethodOnWindow(
+    'findAllUnreadConversationConversationID'
+  );
   window.getAllConversationIDList = registeMethodOnWindow(
     'getAllConversationIDList'
   );

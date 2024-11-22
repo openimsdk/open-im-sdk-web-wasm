@@ -1,3 +1,4 @@
+import { Platform } from './enum';
 import { CreateGroupParams } from './params';
 
 type DatabaseApi = (...args: any[]) => Promise<any>;
@@ -102,6 +103,7 @@ declare global {
     setMultipleConversationRecvMsgOpt: DatabaseApi;
     unPinConversation: DatabaseApi;
     getAllSingleConversationIDList: DatabaseApi;
+    findAllUnreadConversationConversationID: DatabaseApi;
     getAllConversationIDList: DatabaseApi;
     getAllConversations: DatabaseApi;
     searchConversations: DatabaseApi;
@@ -512,6 +514,16 @@ declare global {
       recvID: string,
       msgTip: string
     ) => Promise<string>;
+    changeInputStates: (
+      operationID: string,
+      conversationID: string,
+      focus: boolean
+    ) => Promise<void>;
+    getInputstates: (
+      operationID: string,
+      conversationID: string,
+      userID: string
+    ) => Promise<Platform[]>;
     markNotifyMessageHasRead: (
       operationID: string,
       conversationID: string
