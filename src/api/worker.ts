@@ -153,6 +153,7 @@ import {
   batchInsertTempCacheMessageList,
   InsertTempCacheMessage,
   getAllSingleConversationIDList,
+  findAllUnreadConversationConversationID,
   getAllConversationIDList,
   getPageFriendList,
   getGroupMemberAllGroupIDs,
@@ -318,6 +319,10 @@ rpc.registerMethod('incrConversationUnreadCount', incrConversationUnreadCount);
 rpc.registerMethod(
   'setMultipleConversationRecvMsgOpt',
   setMultipleConversationRecvMsgOpt
+);
+rpc.registerMethod(
+  'findAllUnreadConversationConversationID',
+  findAllUnreadConversationConversationID
 );
 rpc.registerMethod(
   'getAllSingleConversationIDList',

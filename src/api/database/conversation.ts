@@ -8,6 +8,7 @@ import {
   getConversation as databaseGetConversation,
   getHiddenConversationList as databaseGetHiddenConversationList,
   getAllSingleConversationIDList as databaseGetAllSingleConversationIDList,
+  findAllUnreadConversationConversationID as databaseFindAllUnreadConversationConversationID,
   getAllConversationIDList as databaseGetAllConversationIDList,
   updateColumnsConversation as databaseUpdateColumnsConversation,
   getTotalUnreadMsgCount as databaseGetTotalUnreadMsgCount,
@@ -75,6 +76,28 @@ export async function getAllConversationListToSync(): Promise<string> {
         'isNotInGroup',
         'isMsgDestruct',
       ])
+    );
+  } catch (e) {
+    console.error(e);
+
+    return formatResponse(
+      undefined,
+      DatabaseErrorCode.ErrorInit,
+      JSON.stringify(e)
+    );
+  }
+}
+
+export async function findAllUnreadConversationConversationID(): Promise<string> {
+  try {
+    const db = await getInstance();
+
+    const execResult = databaseFindAllUnreadConversationConversationID(db);
+
+    return formatResponse(
+      converSqlExecResult(execResult[0], 'CamelCase').map(
+        item => item.conversationID
+      )
     );
   } catch (e) {
     console.error(e);

@@ -8,6 +8,7 @@ export function localAppSDKVersions(db: Database): QueryExecResult[] {
     `
       create table if not exists 'local_app_sdk_version' (
         'version'         varchar(255),
+        'installed'       numeric,
         primary key  ('version')
     ) 
       `

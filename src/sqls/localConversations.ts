@@ -65,6 +65,16 @@ export function getAllConversationListToSync(db: Database): QueryExecResult[] {
   );
 }
 
+export function findAllUnreadConversationConversationID(
+  db: Database
+): QueryExecResult[] {
+  return db.exec(
+    `
+        select conversation_id from local_conversations where unread_count > 0;
+    `
+  );
+}
+
 export function getAllSingleConversationIDList(
   db: Database
 ): QueryExecResult[] {

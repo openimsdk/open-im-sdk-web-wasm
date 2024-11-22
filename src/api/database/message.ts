@@ -113,6 +113,9 @@ export async function getMessageList(
   startTime: number,
   isReverse = false
 ): Promise<string> {
+  if (startTime <= 0) {
+    return getMessageListNoTime(conversationID, count, isReverse);
+  }
   try {
     const db = await getInstance();
 

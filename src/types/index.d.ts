@@ -103,6 +103,7 @@ declare global {
     setMultipleConversationRecvMsgOpt: DatabaseApi;
     unPinConversation: DatabaseApi;
     getAllSingleConversationIDList: DatabaseApi;
+    findAllUnreadConversationConversationID: DatabaseApi;
     getAllConversationIDList: DatabaseApi;
     getAllConversations: DatabaseApi;
     searchConversations: DatabaseApi;

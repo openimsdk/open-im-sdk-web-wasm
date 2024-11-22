@@ -28,7 +28,7 @@ export async function getAppSDKVersion(): Promise<string> {
     }
 
     return formatResponse(
-      converSqlExecResult(execResult[0], 'CamelCase', [])[0]
+      converSqlExecResult(execResult[0], 'CamelCase', ['installed'])[0]
     );
   } catch (e) {
     console.error(e);
@@ -53,7 +53,9 @@ export async function setAppSDKVersion(
 
     const execResult = databaseGetAppSDKVersion(db);
 
-    const result = converSqlExecResult(execResult[0], 'CamelCase', []);
+    const result = converSqlExecResult(execResult[0], 'CamelCase', [
+      'installed',
+    ]);
     if (result[0] && result[0].version) {
       databaseUpdateAppSDKVersion(
         db,
