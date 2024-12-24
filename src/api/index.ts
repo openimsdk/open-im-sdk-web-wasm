@@ -33,8 +33,8 @@ function initWorker() {
   // use for webpack5+ or vite
   const isViteEnvironment = import.meta.url.includes('.vite/deps');
   const isNuxtEnvironment = import.meta.url.includes('_nuxt/node_modules');
+  const isQuasarEnvironment = import.meta.url.includes('.q-cache');
   const isSupportModuleWorker = supportsModuleWorkers();
-
   let workerUrl = isSupportModuleWorker
     ? new URL('worker.js', import.meta.url)
     : new URL('worker-legacy.js', import.meta.url);
@@ -47,6 +47,12 @@ function initWorker() {
   if (isNuxtEnvironment) {
     workerUrl = workerUrl.href.replace(
       '.cache/vite/client/deps',
+      '@openim/wasm-client-sdk/lib'
+    ) as unknown as URL;
+  }
+  if (isQuasarEnvironment) {
+    workerUrl = workerUrl.href.replace(
+      /\.q-cache\/dev-spa\/[^/]+\/deps/,
       '@openim/wasm-client-sdk/lib'
     ) as unknown as URL;
   }
